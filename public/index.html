@@ -9,9 +9,27 @@ and open the template in the editor.
         <title>Pelimaailma</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css">
     </head>
-    <body>
-        <div>Hei</div>
-        <p>tämä tulee olemaan mahtava peli</p>
+    <body ng-app="PeliApp">
+        <header>
+            <nav class="navbar navbar-default">
+                <ul class="nav navbar-nav">
+                    <li><a ng-href="#/">Index</a></li>
+                    <li><a ng-href="#/game">Game</a></li>
+                </ul>
+            </nav>
+        </header>
+        <div ng-view="main-container">
+        </div>
+        
+        <script src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        
+        <script src="bower_components/angular/angular.min.js"></script>
+        <script src="bower_components/angular-route/angular-route.min.js"></script>
+        
+        <script src="app/app.js"></script>
+        <script src="app/components/game/game_controller.js"></script>
     </body>
 </html>
