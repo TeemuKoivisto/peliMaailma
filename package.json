@@ -1,0 +1,22 @@
+{
+  "name": "peli-maailma",
+  "version": "1.0.0",
+  "description": "vitun kova peli",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TeemuKoivisto/peliMaailma.git"
+  },
+  "author": "minä",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TeemuKoivisto/peliMaailma/issues"
+  },
+  "homepage": "https://github.com/TeemuKoivisto/peliMaailma#readme",
+  "dependencies": {
+    "express": "^4.13.3"
+  }
+}
