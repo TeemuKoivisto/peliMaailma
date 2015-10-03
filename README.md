@@ -5,13 +5,13 @@ Sitten node.js ja npm.
 
 Sitten voit käynnistää tämän ohjelman tässä juuressa missä tämä tiedosto on kirjoittamalla git shelliin: node index.js
 
-Sitten localhost:3000:een käynnistää node palvelin ja se pitää aina käynnistää jos haluaa muutokset näkymään. Eli control+c katkasee serverin.
+Sitten localhost:3000:een käynnistyy node palvelin ja se pitää aina käynnistää uudelleen jos haluaa muutokset näkymään. Ja shellissä control+c katkasee serverin.
 
-Luultavasti tämä tulee olemaan single page app eli angularilla eli serveri pyörittää periaatteessa vain yhtä sivua eli index.html:ää.
+Luultavasti tämä tulee olemaan single page app eli käyteteään angularia eli serveri pyörittää periaatteessa vain yhtä sivua eli index.html:ää.
 
-Kirjastot ladataan backendiin npm:llä menemällä juureen (missä olet) ja kirjoittamalla npm install --save(jos haluat tallentaa riippuvuuden, luultavasti joo) <kirjaston nimi>
+Kirjastot ladataan backendiin npm:llä menemällä juureen (missä olet) ja kirjoittamalla npm install --save(jos haluat tallentaa riippuvuuden, luultavasti joo) esim. gulp
 
-Ja fronttiin sitten bowerilla bower install --save esim. angular.
+Ja fronttiin sitten bowerilla bower install --save esim. angular
 
 Jaa ei kai muuta. Kyl se tästä. Ei oo vaikeet. Javascript on helppoo. Heh heh.
 
