@@ -1,0 +1,20 @@
+<link rel="stylesheet" type="text/css" href="app/components/shakki/shakki_css.css">
+
+<div>
+    <p class="square">PELIÄ POJAT</p>
+    <p>{{game}}</p>
+</div>
+
+<div>
+    <img src="images/fairy_white/white_mine.png">
+</div>
+
+<div style="padding-left: 50px; width:560px; height:560px;">
+    <div ng-repeat="row in table">
+        <!--<div style="">-->
+            <div ng-repeat="column in row">
+                <square holder="table[$parent.$index][$index].holder" row="$parent.$index" column="$index"></square>
+            </div>
+        <!--</div>-->
+    </div>
+</div>
