@@ -1,6 +1,9 @@
-PeliApp.controller('ShakkiController', function ($scope) {
+PeliApp.controller('ShakkiController', function ($scope, ShakkiFactory) {
 
-    $scope.game = "vähän tyhjältä näyttää";
+    $scope.game = {};
+    $scope.shakki = ShakkiFactory;
+
+    console.log("", $scope.shakki);
 
     $scope.table = [
         [],
@@ -20,33 +23,38 @@ PeliApp.controller('ShakkiController', function ($scope) {
                 case(7):
                     row[column] = {
                         holder: "tower",
-                        color: color
+                        color: color,
+                        active: false
                     };
                     break;
                 case(1):
                 case(6):
                     row[column] = {
                         holder: "knight",
-                        color: color
+                        color: color,
+                        active: false
                     };
                     break;
                 case(2):
                 case(5):
                     row[column] = {
                         holder: "bishop",
-                        color: color
+                        color: color,
+                        active: false
                     };
                     break;
                 case(3):
                     row[column] = {
                         holder: "king",
-                        color: color
+                        color: color,
+                        active: false
                     };
                     break;
                 case(4):
                     row[column] = {
                         holder: "queen",
-                        color: color
+                        color: color,
+                        active: false
                     };
                     break;
             }
@@ -57,7 +65,8 @@ PeliApp.controller('ShakkiController', function ($scope) {
         for(var column = 0; column < 8; column++) {
             row[column] = {
                 holder: type,
-                color: color
+                color: color,
+                active: false
             };
         }
     };
@@ -89,4 +98,17 @@ PeliApp.controller('ShakkiController', function ($scope) {
     
     $scope.initTable($scope.table);
     console.log("", $scope.table);
+    
+    $scope.testa = function() {
+        $scope.table[0][0].holder = "penis";
+    };
+    
+    $scope.activated = [0, 0];
+    $scope.activateSquare = function(row, column) {
+//        $scope.table[row][column].holder = "penis";
+        $scope.table[$scope.activated[0]][$scope.activated[1]].active = false;        
+        $scope.table[row][column].active = true;
+        $scope.activated[0] = row;
+        $scope.activated[1] = column;
+    };
 });

@@ -1,22 +1,33 @@
 PeliApp.directive('square', function() {
     return {
         restrict: 'E',
-        template: '<div class="square">{{holder}}</span>',
+        template: '<div class="square">{{data.holder}}</span>',
 //        replace: true,
         scope: {
-            holder: '=',
+            data: '=',
             row: '=',
             column: '='
         },
         link: function(scope, element, attrs) {
             var span = $(element).find('div')[0];
+            var color = "";
             if ((scope.row + scope.column + 1)%2===0) {
-                $(span).addClass('black');
-//                $(span).css({'background-color:': 'black'});
+                color = 'black';
+//                $(span).addClass(color);
+                $(span).css({'background-color:': 'black'});
             } else {
-                $(span).addClass('white');
-//                $(span).css({'background-color': 'white'});
+                color = 'white';
+//                $(span).addClass(color);
+                $(span).css({'background-color': 'white'});
             }
+            
+            scope.$watch('data', function(newVal, oldVal) {
+                if (newVal.active) {
+                    $(span).css({'background-color': 'red'});
+                } else if (!newVal.active) {
+                    $(span).css({'background-color': color});
+                }
+            }, true);
         }
     };
 });
