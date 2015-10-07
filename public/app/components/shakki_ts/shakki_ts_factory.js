@@ -1,16 +1,8 @@
-module PeliApp {
-	
-    import Square = PeliApp.ShakkiSquare;
-    
-	export class ShakkiEngine {
-        //table:Array<Array<Object>>;
-        table:[[Object]];
-
-        types:[string];
-        //squares:[[Square]];
-        squares:any;
-
-		constructor() {
+var PeliApp;
+(function (PeliApp) {
+    var Square = PeliApp.ShakkiSquare;
+    var ShakkiEngine = (function () {
+        function ShakkiEngine() {
             this.table = [
                 [{}],
                 [{}],
@@ -21,7 +13,7 @@ module PeliApp {
                 [{}],
                 [{}]
             ];
-            this.squares=[
+            this.squares = [
                 [Square],
                 [Square],
                 [Square],
@@ -30,73 +22,70 @@ module PeliApp {
                 [Square],
                 [Square],
                 [Square]
-            ]
-
-            this.types= ['soldier', 'rook', 'knight', 'bishop', 'queen', 'king'];
-			this.initTable(this.table);
+            ];
+            this.types = ['soldier', 'rook', 'knight', 'bishop', 'queen', 'king'];
+            this.initTable(this.table);
             this.generateSquares(this.squares);
-		}
-		
-		initTable(table: Array<Array<Object>>): void {
-			for(var row = 0; row < 8; row++) {
-				switch(row) {
-					case(0):
+        }
+        ShakkiEngine.prototype.initTable = function (table) {
+            for (var row = 0; row < 8; row++) {
+                switch (row) {
+                    case (0):
                         this.initSpecialRow(table[row], "black");
                         break;
-                    case(1):
+                    case (1):
                         this.initRow(table[row], "soldier", "black");
                         break;
-                    case(2):
-                    case(3):
-                    case(4):
-                    case(5):
+                    case (2):
+                    case (3):
+                    case (4):
+                    case (5):
                         this.initRow(table[row], "empty", "white");
                         break;
-                    case(6):
+                    case (6):
                         this.initRow(table[row], "soldier", "white");
                         break;
-                    case(7):
+                    case (7):
                         this.initSpecialRow(table[row], "white");
                         break;
-				}
-			}
-		}
-	
-        initSpecialRow(row: Object[], color:string): void {
+                }
+            }
+        };
+        ShakkiEngine.prototype.initSpecialRow = function (row, color) {
             for (var column = 0; column < 8; column++) {
                 switch (column) {
-                    case(0):
-                    case(7):
+                    case (0):
+                    case (7):
                         row[column] = {
                             holder: "rook",
                             color: color,
                             active: false
                         };
                         break;
-                    case(1):
-                    case(6):
+                    case (1):
+                    case (6):
                         row[column] = {
                             holder: "knight",
                             color: color,
                             active: false
                         };
                         break;
-                    case(2):
-                    case(5):
+                    case (2):
+                    case (5):
                         row[column] = {
                             holder: "bishop",
                             color: color,
                             active: false
                         };
                         break;
-                    case(3):
+                    case (3):
                         row[column] = {
                             holder: "king",
                             color: color,
                             active: false
                         };
                         break;
-                    case(4):
+                    case (4):
                         row[column] = {
                             holder: "queen",
                             color: color,
@@ -105,9 +94,8 @@ module PeliApp {
                         break;
                 }
             }
-        }
-        
-        initRow(row:Array<Object>, type:string, color:string) {
+        };
+        ShakkiEngine.prototype.initRow = function (row, type, color) {
             for (var column = 0; column < 8; column++) {
                 row[column] = {
                     holder: type,
@@ -116,9 +104,9 @@ module PeliApp {
                 };
             }
         };
-        
-        createMovesTable(table:[[Object]]) {
-            for(var row= 0; row < 8; row++) {
+        ;
+        ShakkiEngine.prototype.createMovesTable = function (table) {
+            for (var row = 0; row < 8; row++) {
                 for (var column = 0; column < 8; column++) {
                     var square = {
                         x: column,
@@ -136,14 +124,13 @@ module PeliApp {
                             queen: [],
                             king: []
                         }
-                    }
+                    };
                     table[row].push(square);
                 }
             }
-        }
-        
-        generateSquares(table:[[Square]]) {
-            for(var row= 0; row < 8; row++) {
+        };
+        ShakkiEngine.prototype.generateSquares = function (table) {
+            for (var row = 0; row < 8; row++) {
                 for (var column = 0; column < 8; column++) {
                     var sq = new Square(row, column);
                     this.generateMovesForSquare(sq, row, column);
@@ -151,65 +138,57 @@ module PeliApp {
                     table[row].push(sq);
                 }
             }
-        }
-
-        generateMovesForSquare(sq:Square, y:number, x:number){
+        };
+        ShakkiEngine.prototype.generateMovesForSquare = function (sq, y, x) {
             for (var index in this.types) {
                 var type = this.types[index];
-                switch(type) {
-                    case('soldier'):
-                        if (y!==0) sq.setMove(type, 'white', x, (y-1));
-                        if (y!==7) sq.setMove(type, 'black', x, (y+1));
-                        if (y===1) sq.setMove(type, 'black', x, (y+2));
-                        if (y===6) sq.setMove(type, 'white', x, (y-2));
-                        if (x!==0) {
-                            sq.setAttack(type, 'white', (x-1), (y-1));
-                            sq.setAttack(type, 'black', (x-1), (y+1));
+                switch (type) {
+                    case ('soldier'):
+                        if (y !== 0)
+                            sq.setMove(type, 'white', x, (y - 1));
+                        if (y !== 7)
+                            sq.setMove(type, 'black', x, (y + 1));
+                        if (y === 1)
+                            sq.setMove(type, 'black', x, (y + 2));
+                        if (y === 6)
+                            sq.setMove(type, 'white', x, (y - 2));
+                        if (x !== 0) {
+                            sq.setAttack(type, 'white', (x - 1), (y - 1));
+                            sq.setAttack(type, 'black', (x - 1), (y + 1));
                         }
-                        if (x!==7) {
-                            sq.setAttack(type, 'white', (x+1), (y-1));
-                            sq.setAttack(type, 'black', (x+1), (y+1));
+                        if (x !== 7) {
+                            sq.setAttack(type, 'white', (x + 1), (y - 1));
+                            sq.setAttack(type, 'black', (x + 1), (y + 1));
                         }
                         break;
-                    case('rook'):
-                        sq.setMove2(type, 'both', {horizontal: true});
-                        sq.setMove2(type, 'both', {vertical: true});
+                    case ('rook'):
+                        sq.setMove2(type, 'both', { horizontal: true });
+                        sq.setMove2(type, 'both', { vertical: true });
                         break;
-                    case('knight'):
+                    case ('knight'):
                         // TODO
-                        sq.setMove2(type, 'both', {horizontal: true});
-                        sq.setMove2(type, 'both', {vertical: true});
+                        sq.setMove2(type, 'both', { horizontal: true });
+                        sq.setMove2(type, 'both', { vertical: true });
                         break;
-                    case('bishop'):
-                        sq.setMove2(type, 'both', {diagonal: true});
+                    case ('bishop'):
+                        sq.setMove2(type, 'both', { diagonal: true });
                         break;
-                    case('queen'):
-                        sq.setMove2(type, 'both', {horizontal: true});
-                        sq.setMove2(type, 'both', {vertical: true});
-                        sq.setMove2(type, 'both', {diagonal: true});
+                    case ('queen'):
+                        sq.setMove2(type, 'both', { horizontal: true });
+                        sq.setMove2(type, 'both', { vertical: true });
+                        sq.setMove2(type, 'both', { diagonal: true });
                         break;
-                    case('king'):
+                    case ('king'):
                         // TODO
-                        sq.setMove2(type, 'both', {horizontal: true});
-                        sq.setMove2(type, 'both', {vertical: true});
+                        sq.setMove2(type, 'both', { horizontal: true });
+                        sq.setMove2(type, 'both', { vertical: true });
                         break;
                 }
             }
             return sq;
-        }
-        //if (y!==0) sq.moves.soldier.white.push({x: x, y: y-1});
-        //if (y!=7) sq.moves.soldier.black.push({x: x, Y: y+1});
-        //if (y===1) sq.moves.soldier.black.push({x: x, y: y+2});
-        //if (y==6) sq.moves.soldier.white.push({x: x, y: y-2});
-        //if (x!=0) {
-        //    sq.attacks.soldier.white.push({x: x-1, y: y-1});
-        //    sq.attacks.soldier.black.push({x: x-1, y: y+1});
-        //}
-        //if (x!=7) {
-        //    sq.attacks.soldier.white.push({x: x+1, y: y-1});
-        //    sq.attacks.soldier.black.push({x: x+1, y: y+1});
-        //}
-        //break;
-    }
+        };
+        return ShakkiEngine;
+    })();
+    PeliApp.ShakkiEngine = ShakkiEngine;
     angular.module('PeliApp').service('ShakkiEngine', ShakkiEngine);
-}
+})(PeliApp || (PeliApp = {}));

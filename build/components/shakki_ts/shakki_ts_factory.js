@@ -1,9 +1,7 @@
 var peliApp;
 (function (peliApp) {
     var ShakkiEngine = (function () {
-        function ShakkiEngine() {
-            this.initTable(this.table);
-        }
+        
         ShakkiEngine.prototype.initTable = function (table) {
             for (var row = 0; row < 8; row++) {
                 switch (row) {
@@ -82,6 +80,9 @@ var peliApp;
             }
         };
         ;
+		function ShakkiEngine() {
+            this.initTable(this.table);
+        }
         return ShakkiEngine;
     })();
     peliApp.ShakkiEngine = ShakkiEngine;

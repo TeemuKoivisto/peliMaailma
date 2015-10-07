@@ -11,5 +11,5 @@ gulp.task('ts', function() {
             .pipe(tsc(tsconfig));
     
     return compiledJs.js
-            .pipe(gulp.dest('./build'));
+            .pipe(gulp.dest('./public/app'));
 });
