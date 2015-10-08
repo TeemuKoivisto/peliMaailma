@@ -1,23 +1,8 @@
 PeliApp.controller('ShakkiController', function ($scope, ShakkiFactory, ShakkiEngine) {
 
     $scope.game = {};
-    //$scope.shakki = ShakkiFactory;
-    //$scope.shakki_ts = ShakkiEngine;
 
-    //console.log("", $scope.shakki);
-	//console.log("", $scope.shakki_ts);
-
-    //$scope.table = [
-    //    [],
-    //    [],
-    //    [],
-    //    [],
-    //    [],
-    //    [],
-    //    [],
-    //    []
-    //];
-
+    $scope.name="";
     $scope.table = ShakkiEngine.table;
 
     $scope.activated = [0, 0];
@@ -28,4 +13,15 @@ PeliApp.controller('ShakkiController', function ($scope, ShakkiFactory, ShakkiEn
         $scope.activated[0] = row;
         $scope.activated[1] = column;
     };
+
+    $scope.logAll = function() {
+        console.log("", ShakkiEngine.table);
+        console.log("", ShakkiEngine.pieces);
+        console.log("", ShakkiEngine.squares);
+    }
+
+    $scope.calcMovesFor = function() {
+        var moves = ShakkiEngine.calculatePossibleMovesForPiece($scope.name);
+        console.log("", moves);
+    }
 });

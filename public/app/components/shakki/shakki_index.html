@@ -3,9 +3,11 @@
 <div>
     <p class="square">PELIÄ POJAT</p>
     <p>{{game}}</p>
+    <input ng-model="name">
+    <button ng-click="calcMovesFor()">calc</button>
 </div>
 
-<button ng-click="testa()">hei</button>
+<button ng-click="logAll()">log</button>
 
 <div>
     <img src="images/fairy_white/white_mine.png">

@@ -1,0 +1,23 @@
+github for windows ja konsoli-sovellus
+node.js -> internetist‰
+npm package manager (luultavasti tuli noden mukana)
+
+sitten asennettaan globaalista package managerilla
+npm install -g bower (frontin kirjastojen hallinta)
+npm install -g gulp (automaattinen taskien suorittaja)
+
+npm install -g tsd (moduuli typescriptille, joka auttaa ide:‰ ymm‰rt‰m‰‰n)
+npm install -g typescript (typescript, javan superscript)
+
+sitten t‰ss‰ rootissa
+npm install
+
+sitten app:iin, jossa bower.json
+bower install
+
+
+ja kuten kerrottua node k‰ynnistyy komentorivilt‰ kun menee roottiin ja kirjoittaa node index.js
+
+ja kun typescript tiedostoihin tekee muutoksia pit‰‰ typescript compilee uudestaan rootista komennolla
+gulp ts
+

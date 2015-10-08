@@ -5,9 +5,9 @@ module PeliApp {
 	export class ShakkiEngine {
         //table:Array<Array<Object>>;
         table:[[Object]];
-
+        pieces: {};
+        quantity: {};
         types:[string];
-        //squares:[[Square]];
         squares:any;
 
 		constructor() {
@@ -21,19 +21,39 @@ module PeliApp {
                 [{}],
                 [{}]
             ];
-            this.squares=[
-                [Square],
-                [Square],
-                [Square],
-                [Square],
-                [Square],
-                [Square],
-                [Square],
-                [Square]
-            ]
+            this.pieces = {};
+            this.quantity = {
+                white: {
+                    soldier: 0,
+                    rook: 0,
+                    knight: 0,
+                    bishop: 0,
+                    queen: 0,
+                    king: 0
+                    },
+                black: {
+                    soldier: 0,
+                    rook: 0,
+                    knight: 0,
+                    bishop: 0,
+                    queen: 0,
+                    king: 0
+                }
+            };
+            this.squares = [
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                []
+            ];
 
             this.types= ['soldier', 'rook', 'knight', 'bishop', 'queen', 'king'];
 			this.initTable(this.table);
+            this.initPieces(this.pieces);
             this.generateSquares(this.squares);
 		}
 		
@@ -115,31 +135,75 @@ module PeliApp {
                     active: false
                 };
             }
-        };
-        
-        createMovesTable(table:[[Object]]) {
-            for(var row= 0; row < 8; row++) {
-                for (var column = 0; column < 8; column++) {
-                    var square = {
+        }
+
+        initPieces(pieces:{}) {
+            for(var row = 0; row < 8; row++) {
+                for(var column = 0; column < 8; column++) {
+                    var holder = this.table[row][column].holder;
+                    if (holder==='empty') continue;
+                    var color = this.table[row][column].color;
+                    var number = this.quantity[color][holder]+1;
+                    var name = color + "-" + holder + number;
+                    pieces[name] = {
                         x: column,
                         y: row,
-                        moves: {
-                            soldier: {
-                                white: [],
-                                black: [],
-                                white_attack: [],
-                                black_attack: []
-                            },
-                            rook: [],
-                            knight: [],
-                            bishop: [],
-                            queen: [],
-                            king: []
-                        }
+                        type: holder
                     }
-                    table[row].push(square);
+                    this.quantity[color][holder]++;
                 }
             }
+        }
+
+        calculatePossibleMovesForPiece(name: string) {
+            var piece = this.pieces[name];
+            if (typeof piece === "undefined") return [];
+            var x = piece.x;
+            var y = piece.y;
+            var availablemoves = [];
+            if (piece.type!=='soldier') {
+                var moves = this.squares[piece.y][piece.x].moves[piece.type];
+                for(var property in moves) {
+                    if (moves[property] === 'horizontal') {
+                        for(var minusx = x-1; minusx >= 0; minusx--) {
+                            if (this.table[y][minusx].holder==='empty') {
+                                availablemoves.push({x: minusx, y: y});
+                            } else {
+                                break;
+                            }
+                        }
+                        for(var plusx = x+1; plusx < 8; plusx++) {
+                            if (this.table[y][plusx].holder==='empty') {
+                                availablemoves.push({x: plusx, y: y});
+                            } else {
+                                break;
+                            }
+                        }
+                    } else if (moves[property] === 'vertical') {
+                        for(var minusy = y-1; minusy >= 0; minusy--) {
+                            if (this.table[y][minusy].holder==='empty') {
+                                availablemoves.push({x: x, y: minusy});
+                            } else {
+                                break;
+                            }
+                        }
+                        for(var plusy = y+1; plusy < 8; plusy++) {
+                            if (this.table[y][plusy].holder==='empty') {
+                                availablemoves.push({x: x, y: plusy});
+                            } else {
+                                break;
+                            }
+                        }
+                    } else if (moves[property] === 'diagonal') {
+                        availablemoves.push({x: 666, y: 666});
+                    } else {
+                        availablemoves.push({x: 666, y: 666});
+                    }
+                }
+            } else {
+                throw('fug');
+            }
+            return availablemoves;
         }
         
         generateSquares(table:[[Square]]) {
@@ -147,7 +211,7 @@ module PeliApp {
                 for (var column = 0; column < 8; column++) {
                     var sq = new Square(row, column);
                     this.generateMovesForSquare(sq, row, column);
-                    //console.log("", sq);
+                    //console.log("pushing " + row + ":" + column, sq);
                     table[row].push(sq);
                 }
             }
@@ -195,7 +259,6 @@ module PeliApp {
                         break;
                 }
             }
-            return sq;
         }
         //if (y!==0) sq.moves.soldier.white.push({x: x, y: y-1});
         //if (y!=7) sq.moves.soldier.black.push({x: x, Y: y+1});
