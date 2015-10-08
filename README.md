@@ -17,7 +17,7 @@ Jaa ei kai muuta. Kyl se tästä. Ei oo vaikeet. Javascript on helppoo. Heh heh.
 
 JAA git basics:
 git add -A >> lisää kaiken
-git commit -m "olipa hyvä commit" >> luo commitin eli niinku snapshot projektista
+git commit -m "olipa hyvä commit" >> luo commitin eli niinku projektin sen hetkinen tilanne
 git push >> lähettää commitin internettiin 
 
 Luultavasti parempi jos forkkaat tai luot oman branchin:
