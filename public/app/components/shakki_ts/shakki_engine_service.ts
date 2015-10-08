@@ -3,8 +3,7 @@ module PeliApp {
     import Square = PeliApp.ShakkiSquare;
     
 	export class ShakkiEngine {
-        //table:Array<Array<Object>>;
-        table:[[Object]];
+        table:[[{}]];
         pieces: {};
         quantity: {};
         types:[string];
@@ -57,7 +56,7 @@ module PeliApp {
             this.generateSquares(this.squares);
 		}
 		
-		initTable(table: Array<Array<Object>>): void {
+		initTable(table: [[{}]]): void {
 			for(var row = 0; row < 8; row++) {
 				switch(row) {
 					case(0):
@@ -82,7 +81,7 @@ module PeliApp {
 			}
 		}
 	
-        initSpecialRow(row: Object[], color:string): void {
+        initSpecialRow(row: [{}], color:string): void {
             for (var column = 0; column < 8; column++) {
                 switch (column) {
                     case(0):
@@ -127,7 +126,7 @@ module PeliApp {
             }
         }
         
-        initRow(row:Array<Object>, type:string, color:string) {
+        initRow(row:[{}], type:string, color:string) {
             for (var column = 0; column < 8; column++) {
                 row[column] = {
                     holder: type,
@@ -148,8 +147,9 @@ module PeliApp {
                     pieces[name] = {
                         x: column,
                         y: row,
-                        type: holder
-                    }
+                        type: holder,
+                        color: color
+                    };
                     this.quantity[color][holder]++;
                 }
             }
@@ -157,55 +157,80 @@ module PeliApp {
 
         calculatePossibleMovesForPiece(name: string) {
             var piece = this.pieces[name];
-            if (typeof piece === "undefined") return [];
+            if (typeof piece === "undefined") return {moves:[], eatings:[]};
             var x = piece.x;
             var y = piece.y;
-            var availablemoves = [];
+            var available = {
+                moves: [],
+                eatings: []
+            }
             if (piece.type!=='soldier') {
                 var moves = this.squares[piece.y][piece.x].moves[piece.type];
                 for(var property in moves) {
-                    if (moves[property] === 'horizontal') {
-                        for(var minusx = x-1; minusx >= 0; minusx--) {
-                            if (this.table[y][minusx].holder==='empty') {
-                                availablemoves.push({x: minusx, y: y});
-                            } else {
-                                break;
-                            }
-                        }
-                        for(var plusx = x+1; plusx < 8; plusx++) {
-                            if (this.table[y][plusx].holder==='empty') {
-                                availablemoves.push({x: plusx, y: y});
-                            } else {
-                                break;
-                            }
-                        }
-                    } else if (moves[property] === 'vertical') {
-                        for(var minusy = y-1; minusy >= 0; minusy--) {
-                            if (this.table[y][minusy].holder==='empty') {
-                                availablemoves.push({x: x, y: minusy});
-                            } else {
-                                break;
-                            }
-                        }
-                        for(var plusy = y+1; plusy < 8; plusy++) {
-                            if (this.table[y][plusy].holder==='empty') {
-                                availablemoves.push({x: x, y: plusy});
-                            } else {
-                                break;
-                            }
-                        }
-                    } else if (moves[property] === 'diagonal') {
-                        availablemoves.push({x: 666, y: 666});
+                    //console.log("", moves);
+                    //console.log(moves[property]);
+                    //console.log(moves[property].horizontal);
+                    if (moves[property]['horizontal']) {
+                        this.loopUntilBorderOrPiece(piece, x-1, y, -1, 0, available);
+                        this.loopUntilBorderOrPiece(piece, x+1, y, 1, 0, available);
+                    } else if (moves[property]['vertical']) {
+                        this.loopUntilBorderOrPiece(piece, x, y-1, 0, -1, available);
+                        this.loopUntilBorderOrPiece(piece, x, y+1, 0, 1, available);
+                    } else if (moves[property]['diagonal']) {
+                        //available.moves.push({x: 666, y: 666});
+                        this.loopUntilBorderOrPiece(piece, x-1, y-1, -1, -1, available);
+                        this.loopUntilBorderOrPiece(piece, x-1, y+1, -1, 1, available);
+                        this.loopUntilBorderOrPiece(piece, x+1, y+1, 1, 1, available);
+                        this.loopUntilBorderOrPiece(piece, x+1, y-1, 1, -1, available);
                     } else {
-                        availablemoves.push({x: 666, y: 666});
+                        available.moves.push({x: 100, y: 100});
+                        this.checkAndAddIfValidMove(piece, moves[property].x, moves[property].y, available);
                     }
                 }
             } else {
                 throw('fug');
             }
-            return availablemoves;
+            return available;
         }
-        
+
+        loopUntilBorderOrPiece(piece:{}, x:number, y:number, xdir:number, ydir:number, available:{}) {
+            console.log("tullaan " + x + ":" + y);
+            while(x!==-1 && x!==8 && y!==-1 && y!==8) {
+                //console.log("nyt x " + x + " ja y " + y);
+                if (!this.checkAndAddIfValidMove(piece, x, y, available)) {
+                    break;
+                }
+                //if (this.table[y][x].holder==='empty') {
+                //    available.moves.push({x: x, y: y});
+                //} else {
+                //    if (this.table[y][x].color !== piece.color) {
+                //        available.eatings.push({
+                //            x: x,
+                //            y: y
+                //        });
+                //    }
+                //    break;
+                //}
+                x+=xdir;
+                y+=ydir;
+            }
+        }
+
+        checkAndAddIfValidMove(piece:{}, x:number, y:number, available:{}) : boolean{
+            if (this.table[y][x].holder==='empty') {
+                available.moves.push({x: x, y: y});
+                return true;
+            } else {
+                if (this.table[y][x].color !== piece.color) {
+                    available.eatings.push({
+                        x: x,
+                        y: y
+                    });
+                }
+                return false;
+            }
+        }
+
         generateSquares(table:[[Square]]) {
             for(var row= 0; row < 8; row++) {
                 for (var column = 0; column < 8; column++) {
@@ -222,10 +247,10 @@ module PeliApp {
                 var type = this.types[index];
                 switch(type) {
                     case('soldier'):
-                        if (y!==0) sq.setMove(type, 'white', x, (y-1));
-                        if (y!==7) sq.setMove(type, 'black', x, (y+1));
-                        if (y===1) sq.setMove(type, 'black', x, (y+2));
-                        if (y===6) sq.setMove(type, 'white', x, (y-2));
+                        if (y!==0) sq.setMove(type, 'white', {x:x, y:(y-1)});
+                        if (y!==7) sq.setMove(type, 'black', {x:x, y:(y+1)});
+                        if (y===1) sq.setMove(type, 'black', {x:x, y:(y+2)});
+                        if (y===6) sq.setMove(type, 'white', {x:x, y:(y-2)});
                         if (x!==0) {
                             sq.setAttack(type, 'white', (x-1), (y-1));
                             sq.setAttack(type, 'black', (x-1), (y+1));
@@ -236,43 +261,74 @@ module PeliApp {
                         }
                         break;
                     case('rook'):
-                        sq.setMove2(type, 'both', {horizontal: true});
-                        sq.setMove2(type, 'both', {vertical: true});
+                        sq.setMove(type, 'both', {horizontal: true});
+                        sq.setMove(type, 'both', {vertical: true});
                         break;
                     case('knight'):
-                        // TODO
-                        sq.setMove2(type, 'both', {horizontal: true});
-                        sq.setMove2(type, 'both', {vertical: true});
+                        sq.setManyMoves(type, 'both', this.generateKnightMoves(x, y));
                         break;
                     case('bishop'):
-                        sq.setMove2(type, 'both', {diagonal: true});
+                        sq.setMove(type, 'both', {diagonal: true});
                         break;
                     case('queen'):
-                        sq.setMove2(type, 'both', {horizontal: true});
-                        sq.setMove2(type, 'both', {vertical: true});
-                        sq.setMove2(type, 'both', {diagonal: true});
+                        sq.setMove(type, 'both', {horizontal: true});
+                        sq.setMove(type, 'both', {vertical: true});
+                        sq.setMove(type, 'both', {diagonal: true});
                         break;
                     case('king'):
-                        // TODO
-                        sq.setMove2(type, 'both', {horizontal: true});
-                        sq.setMove2(type, 'both', {vertical: true});
+                        sq.setManyMoves(type, 'both', this.generateKingMoves(x, y));
                         break;
                 }
             }
         }
-        //if (y!==0) sq.moves.soldier.white.push({x: x, y: y-1});
-        //if (y!=7) sq.moves.soldier.black.push({x: x, Y: y+1});
-        //if (y===1) sq.moves.soldier.black.push({x: x, y: y+2});
-        //if (y==6) sq.moves.soldier.white.push({x: x, y: y-2});
-        //if (x!=0) {
-        //    sq.attacks.soldier.white.push({x: x-1, y: y-1});
-        //    sq.attacks.soldier.black.push({x: x-1, y: y+1});
+
+        //// TODO
+        //generateSoldierMoves(x:number, y:number) {
+        //
         //}
-        //if (x!=7) {
-        //    sq.attacks.soldier.white.push({x: x+1, y: y-1});
-        //    sq.attacks.soldier.black.push({x: x+1, y: y+1});
+
+        generateKingMoves(x:number, y:number) : [{}] {
+            var moves = [];
+            // left side
+            this.checkAndPushCoords(x, y-1, moves);
+            this.checkAndPushCoords(x-1, y-1, moves);
+            this.checkAndPushCoords(x-1, y, moves);
+            this.checkAndPushCoords(x-1, y+1, moves);
+            // right side
+            this.checkAndPushCoords(x, y+1, moves);
+            this.checkAndPushCoords(x+1, y+1, moves);
+            this.checkAndPushCoords(x+1, y, moves);
+            this.checkAndPushCoords(x+1, y-1, moves);
+            return moves;
+        }
+
+        generateKnightMoves(x:number, y:number) : [{}] {
+            var moves = [];
+            // left side
+            this.checkAndPushCoords(x-1, y-2, moves);
+            this.checkAndPushCoords(x-2, y-1, moves);
+            this.checkAndPushCoords(x-2, y+1, moves);
+            this.checkAndPushCoords(x-1, y+2, moves);
+            // right side
+            this.checkAndPushCoords(x+1, y+2, moves);
+            this.checkAndPushCoords(x+2, y+1, moves);
+            this.checkAndPushCoords(x+2, y-1, moves);
+            this.checkAndPushCoords(x+1, y-2, moves);
+            return moves;
+        }
+
+        checkAndPushCoords(x, y, list) {
+            if (x!==-1 && x!==8 && y!==-1 && y!==8) {
+                list.push({x: x, y:y});
+            }
+        }
+
+        //checkIfOutOfBounds(coords:{}) {
+        //    if (coords.x===-1 || coords.x===8 || coords.y===-1 || coords.y===8) {
+        //        return false;
+        //    }
+        //    return true;
         //}
-        //break;
     }
     angular.module('PeliApp').service('ShakkiEngine', ShakkiEngine);
 }

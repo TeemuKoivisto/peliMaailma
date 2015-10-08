@@ -136,7 +136,8 @@ var PeliApp;
                     pieces[name] = {
                         x: column,
                         y: row,
-                        type: holder
+                        type: holder,
+                        color: color
                     };
                     this.quantity[color][holder]++;
                 }
@@ -145,61 +146,81 @@ var PeliApp;
         ShakkiEngine.prototype.calculatePossibleMovesForPiece = function (name) {
             var piece = this.pieces[name];
             if (typeof piece === "undefined")
-                return [];
+                return { moves: [], eatings: [] };
             var x = piece.x;
             var y = piece.y;
-            var availablemoves = [];
+            var available = {
+                moves: [],
+                eatings: []
+            };
             if (piece.type !== 'soldier') {
                 var moves = this.squares[piece.y][piece.x].moves[piece.type];
                 for (var property in moves) {
-                    if (moves[property] === 'horizontal') {
-                        for (var minusx = x - 1; minusx >= 0; minusx--) {
-                            if (this.table[y][minusx].holder === 'empty') {
-                                availablemoves.push({ x: minusx, y: y });
-                            }
-                            else {
-                                break;
-                            }
-                        }
-                        for (var plusx = x + 1; plusx < 8; plusx++) {
-                            if (this.table[y][plusx].holder === 'empty') {
-                                availablemoves.push({ x: plusx, y: y });
-                            }
-                            else {
-                                break;
-                            }
-                        }
+                    //console.log("", moves);
+                    //console.log(moves[property]);
+                    //console.log(moves[property].horizontal);
+                    if (moves[property]['horizontal']) {
+                        this.loopUntilBorderOrPiece(piece, x - 1, y, -1, 0, available);
+                        this.loopUntilBorderOrPiece(piece, x + 1, y, 1, 0, available);
                     }
-                    else if (moves[property] === 'vertical') {
-                        for (var minusy = y - 1; minusy >= 0; minusy--) {
-                            if (this.table[y][minusy].holder === 'empty') {
-                                availablemoves.push({ x: x, y: minusy });
-                            }
-                            else {
-                                break;
-                            }
-                        }
-                        for (var plusy = y + 1; plusy < 8; plusy++) {
-                            if (this.table[y][plusy].holder === 'empty') {
-                                availablemoves.push({ x: x, y: plusy });
-                            }
-                            else {
-                                break;
-                            }
-                        }
+                    else if (moves[property]['vertical']) {
+                        this.loopUntilBorderOrPiece(piece, x, y - 1, 0, -1, available);
+                        this.loopUntilBorderOrPiece(piece, x, y + 1, 0, 1, available);
                     }
-                    else if (moves[property] === 'diagonal') {
-                        availablemoves.push({ x: 666, y: 666 });
+                    else if (moves[property]['diagonal']) {
+                        //available.moves.push({x: 666, y: 666});
+                        this.loopUntilBorderOrPiece(piece, x - 1, y - 1, -1, -1, available);
+                        this.loopUntilBorderOrPiece(piece, x - 1, y + 1, -1, 1, available);
+                        this.loopUntilBorderOrPiece(piece, x + 1, y + 1, 1, 1, available);
+                        this.loopUntilBorderOrPiece(piece, x + 1, y - 1, 1, -1, available);
                     }
                     else {
-                        availablemoves.push({ x: 666, y: 666 });
+                        available.moves.push({ x: 100, y: 100 });
+                        this.checkAndAddIfValidMove(piece, moves[property].x, moves[property].y, available);
                     }
                 }
             }
             else {
                 throw ('fug');
             }
-            return availablemoves;
+            return available;
+        };
+        ShakkiEngine.prototype.loopUntilBorderOrPiece = function (piece, x, y, xdir, ydir, available) {
+            console.log("tullaan " + x + ":" + y);
+            while (x !== -1 && x !== 8 && y !== -1 && y !== 8) {
+                //console.log("nyt x " + x + " ja y " + y);
+                if (!this.checkAndAddIfValidMove(piece, x, y, available)) {
+                    break;
+                }
+                //if (this.table[y][x].holder==='empty') {
+                //    available.moves.push({x: x, y: y});
+                //} else {
+                //    if (this.table[y][x].color !== piece.color) {
+                //        available.eatings.push({
+                //            x: x,
+                //            y: y
+                //        });
+                //    }
+                //    break;
+                //}
+                x += xdir;
+                y += ydir;
+            }
+        };
+        ShakkiEngine.prototype.checkAndAddIfValidMove = function (piece, x, y, available) {
+            if (this.table[y][x].holder === 'empty') {
+                available.moves.push({ x: x, y: y });
+                return true;
+            }
+            else {
+                if (this.table[y][x].color !== piece.color) {
+                    available.eatings.push({
+                        x: x,
+                        y: y
+                    });
+                }
+                return false;
+            }
         };
         ShakkiEngine.prototype.generateSquares = function (table) {
             for (var row = 0; row < 8; row++) {
@@ -217,13 +238,13 @@ var PeliApp;
                 switch (type) {
                     case ('soldier'):
                         if (y !== 0)
-                            sq.setMove(type, 'white', x, (y - 1));
+                            sq.setMove(type, 'white', { x: x, y: (y - 1) });
                         if (y !== 7)
-                            sq.setMove(type, 'black', x, (y + 1));
+                            sq.setMove(type, 'black', { x: x, y: (y + 1) });
                         if (y === 1)
-                            sq.setMove(type, 'black', x, (y + 2));
+                            sq.setMove(type, 'black', { x: x, y: (y + 2) });
                         if (y === 6)
-                            sq.setMove(type, 'white', x, (y - 2));
+                            sq.setMove(type, 'white', { x: x, y: (y - 2) });
                         if (x !== 0) {
                             sq.setAttack(type, 'white', (x - 1), (y - 1));
                             sq.setAttack(type, 'black', (x - 1), (y + 1));
@@ -234,28 +255,61 @@ var PeliApp;
                         }
                         break;
                     case ('rook'):
-                        sq.setMove2(type, 'both', { horizontal: true });
-                        sq.setMove2(type, 'both', { vertical: true });
+                        sq.setMove(type, 'both', { horizontal: true });
+                        sq.setMove(type, 'both', { vertical: true });
                         break;
                     case ('knight'):
-                        // TODO
-                        sq.setMove2(type, 'both', { horizontal: true });
-                        sq.setMove2(type, 'both', { vertical: true });
+                        sq.setManyMoves(type, 'both', this.generateKnightMoves(x, y));
                         break;
                     case ('bishop'):
-                        sq.setMove2(type, 'both', { diagonal: true });
+                        sq.setMove(type, 'both', { diagonal: true });
                         break;
                     case ('queen'):
-                        sq.setMove2(type, 'both', { horizontal: true });
-                        sq.setMove2(type, 'both', { vertical: true });
-                        sq.setMove2(type, 'both', { diagonal: true });
+                        sq.setMove(type, 'both', { horizontal: true });
+                        sq.setMove(type, 'both', { vertical: true });
+                        sq.setMove(type, 'both', { diagonal: true });
                         break;
                     case ('king'):
-                        // TODO
-                        sq.setMove2(type, 'both', { horizontal: true });
-                        sq.setMove2(type, 'both', { vertical: true });
+                        sq.setManyMoves(type, 'both', this.generateKingMoves(x, y));
                         break;
                 }
+            }
+        };
+        //// TODO
+        //generateSoldierMoves(x:number, y:number) {
+        //
+        //}
+        ShakkiEngine.prototype.generateKingMoves = function (x, y) {
+            var moves = [];
+            // left side
+            this.checkAndPushCoords(x, y - 1, moves);
+            this.checkAndPushCoords(x - 1, y - 1, moves);
+            this.checkAndPushCoords(x - 1, y, moves);
+            this.checkAndPushCoords(x - 1, y + 1, moves);
+            // right side
+            this.checkAndPushCoords(x, y + 1, moves);
+            this.checkAndPushCoords(x + 1, y + 1, moves);
+            this.checkAndPushCoords(x + 1, y, moves);
+            this.checkAndPushCoords(x + 1, y - 1, moves);
+            return moves;
+        };
+        ShakkiEngine.prototype.generateKnightMoves = function (x, y) {
+            var moves = [];
+            // left side
+            this.checkAndPushCoords(x - 1, y - 2, moves);
+            this.checkAndPushCoords(x - 2, y - 1, moves);
+            this.checkAndPushCoords(x - 2, y + 1, moves);
+            this.checkAndPushCoords(x - 1, y + 2, moves);
+            // right side
+            this.checkAndPushCoords(x + 1, y + 2, moves);
+            this.checkAndPushCoords(x + 2, y + 1, moves);
+            this.checkAndPushCoords(x + 2, y - 1, moves);
+            this.checkAndPushCoords(x + 1, y - 2, moves);
+            return moves;
+        };
+        ShakkiEngine.prototype.checkAndPushCoords = function (x, y, list) {
+            if (x !== -1 && x !== 8 && y !== -1 && y !== 8) {
+                list.push({ x: x, y: y });
             }
         };
         return ShakkiEngine;

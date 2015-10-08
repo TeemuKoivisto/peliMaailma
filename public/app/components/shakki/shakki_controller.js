@@ -21,7 +21,8 @@ PeliApp.controller('ShakkiController', function ($scope, ShakkiFactory, ShakkiEn
     }
 
     $scope.calcMovesFor = function() {
-        var moves = ShakkiEngine.calculatePossibleMovesForPiece($scope.name);
-        console.log("", moves);
+        var available = ShakkiEngine.calculatePossibleMovesForPiece($scope.name);
+        console.log("moves", available.moves);
+        console.log("eatings", available.eatings);
     }
 });

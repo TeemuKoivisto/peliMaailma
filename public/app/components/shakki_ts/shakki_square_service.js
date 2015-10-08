@@ -22,20 +22,22 @@ var PeliApp;
                 }
             };
         }
-        ShakkiSquare.prototype.setMove = function (type, color, x, y) {
-            if (type === 'soldier') {
-                this.moves[type][color].push({ x: x, y: y });
-            }
-            else {
-                this.moves[type].push({ x: x, y: y });
-            }
-        };
-        ShakkiSquare.prototype.setMove2 = function (type, color, move) {
+        ShakkiSquare.prototype.setMove = function (type, color, move) {
             if (type === 'soldier') {
                 this.moves[type][color].push(move);
             }
             else {
                 this.moves[type].push(move);
+            }
+        };
+        ShakkiSquare.prototype.setManyMoves = function (type, color, newmoves) {
+            if (type === 'soldier') {
+                this.moves[type][color].push.apply(newmoves);
+            }
+            else {
+                //console.log('tulee', newmoves);
+                //this.moves[type].push.apply(newmoves);
+                Array.prototype.push.apply(this.moves[type], newmoves);
             }
         };
         ShakkiSquare.prototype.setAttack = function (type, color, x, y) {

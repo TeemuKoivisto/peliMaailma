@@ -28,19 +28,22 @@ module PeliApp {
 			}
 		}
 
-		public setMove(type:string, color:string, x:number, y:number) {
-			if (type === 'soldier') {
-				this.moves[type][color].push({x: x, y: y});
-			} else {
-				this.moves[type].push({x: x, y: y});
-			}
-		}
-
-		public setMove2(type:string, color:string, move:{}) {
+		public setMove(type:string, color:string, move:{}) {
 			if (type === 'soldier') {
 				this.moves[type][color].push(move);
 			} else {
 				this.moves[type].push(move);
+			}
+		}
+
+		public setManyMoves(type:string, color:string, newmoves:[{}]) {
+			if (type === 'soldier') {
+				this.moves[type][color].push.apply(newmoves);
+			} else {
+				//console.log('tulee', newmoves);
+				//this.moves[type].push.apply(newmoves);
+				Array.prototype.push.apply(this.moves[type], newmoves);
+				//console.log("meni sisälle", this.moves[type]);
 			}
 		}
 
