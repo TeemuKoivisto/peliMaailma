@@ -2,7 +2,6 @@ PeliApp.directive('square', function() {
     return {
         restrict: 'E',
         template: '<div class="square">{{data.color}} {{data.holder}} (x{{column}}:y{{row}})</span>',
-//        replace: true,
         scope: {
             data: '=',
             row: '=',
