@@ -1,7 +1,7 @@
 PeliApp.directive('square', function() {
     return {
         restrict: 'E',
-        template: '<div class="square">{{data.holder}}</span>',
+        template: '<div class="square">{{data.color}} {{data.holder}} (x{{column}}:y{{row}})</span>',
 //        replace: true,
         scope: {
             data: '=',
@@ -24,7 +24,11 @@ PeliApp.directive('square', function() {
             scope.$watch('data', function(newVal, oldVal) {
                 if (newVal.active) {
                     $(span).css({'background-color': 'red'});
-                } else if (!newVal.active) {
+                } else if (newVal.movable) {
+                    $(span).css({'background-color': 'green'});
+                } else if (newVal.edible) {
+                    $(span).css({'background-color': 'orange'});
+                } else {
                     $(span).css({'background-color': color});
                 }
             }, true);

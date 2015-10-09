@@ -2,7 +2,6 @@
 
 <div>
     <p class="square">PELIÄ POJAT</p>
-    <p>{{game}}</p>
     <input ng-model="name">
     <button ng-click="calcMovesFor()">calc</button>
 </div>
@@ -13,12 +12,22 @@
     <img src="images/fairy_white/white_mine.png">
 </div>
 
-<div style="padding-left: 50px; width:560px; height:560px;">
-    <div ng-repeat="row in table">
-        <!--<div style="">-->
+<div>
+    <div style="float:left; padding-left: 50px; width:560px; height:560px;">
+        <div ng-repeat="row in table">
             <div ng-repeat="column in row" ng-click="activateSquare($parent.$index, $index)">
                 <square data="table[$parent.$index][$index]" row="$parent.$index" column="$index"></square>
             </div>
-        <!--</div>-->
+        </div>
     </div>
+    <div class="white outerbox">
+        <div class="white innerbox">
+            {{turncolor}}
+        </div>
+    </div>
+    <!--<div style="background-color: black;">-->
+        <!--<div style="color: red;">-->
+            <!--hei-->
+        <!--</div>-->
+    <!--</div>-->
 </div>

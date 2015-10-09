@@ -15,7 +15,7 @@ var PeliApp;
                 queen: [],
                 king: []
             };
-            this.attacks = {
+            this.edibles = {
                 soldier: {
                     white: [],
                     black: []
@@ -42,7 +42,7 @@ var PeliApp;
         };
         ShakkiSquare.prototype.setAttack = function (type, color, x, y) {
             if (type === 'soldier') {
-                this.attacks[type][color].push({ x: x, y: y });
+                this.edibles[type][color].push({ x: x, y: y });
             }
         };
         return ShakkiSquare;

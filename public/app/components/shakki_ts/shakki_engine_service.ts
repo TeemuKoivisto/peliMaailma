@@ -88,38 +88,53 @@ module PeliApp {
                     case(7):
                         row[column] = {
                             holder: "rook",
+                            occupier: "none",
                             color: color,
-                            active: false
+                            active: false,
+                            movable: false,
+                            edible: false
                         };
                         break;
                     case(1):
                     case(6):
                         row[column] = {
                             holder: "knight",
+                            occupier: "none",
                             color: color,
-                            active: false
+                            active: false,
+                            movable: false,
+                            edible: false
                         };
                         break;
                     case(2):
                     case(5):
                         row[column] = {
                             holder: "bishop",
+                            occupier: "none",
                             color: color,
-                            active: false
+                            active: false,
+                            movable: false,
+                            edible: false
                         };
                         break;
                     case(3):
                         row[column] = {
                             holder: "king",
+                            occupier: "none",
                             color: color,
-                            active: false
+                            active: false,
+                            movable: false,
+                            edible: false
                         };
                         break;
                     case(4):
                         row[column] = {
                             holder: "queen",
+                            occupier: "none",
                             color: color,
-                            active: false
+                            active: false,
+                            movable: false,
+                            edible: false
                         };
                         break;
                 }
@@ -130,8 +145,11 @@ module PeliApp {
             for (var column = 0; column < 8; column++) {
                 row[column] = {
                     holder: type,
+                    occupier: "none",
                     color: color,
-                    active: false
+                    active: false,
+                    movable: false,
+                    edible: false
                 };
             }
         }
@@ -142,27 +160,57 @@ module PeliApp {
                     var holder = this.table[row][column].holder;
                     if (holder==='empty') continue;
                     var color = this.table[row][column].color;
-                    var number = this.quantity[color][holder]+1;
+                    this.quantity[color][holder]++;
+                    var number = this.quantity[color][holder];
                     var name = color + "-" + holder + number;
                     pieces[name] = {
+                        name: name,
                         x: column,
                         y: row,
                         type: holder,
-                        color: color
+                        color: color,
+                        moves: [],
+                        edibles: []
                     };
-                    this.quantity[color][holder]++;
+                    this.table[row][column].occupier = name;
                 }
             }
         }
 
+        movePiece(piece:{}, row:number, column:number) {
+            var target = this.table[row][column];
+            if (target.occupier!=="none") {
+                // eat
+                // vois myös hakee pieces objektista tyypin eikä tarvis holderia
+                this.quantity[target.color][target.holder]--;
+
+            }
+            this.table[row][column].holder = piece.type;
+            this.table[row][column].occupier = piece.name;
+            this.table[row][column].color = piece.color;
+
+            this.table[piece.y][piece.x].holder = "empty";
+            this.table[piece.y][piece.x].occupier = "none";
+            this.pieces[piece.name].x = column;
+            this.pieces[piece.name].y = row;
+
+            //this.checkForMateOrCheckMate();
+        }
+
+        //// TODO
+        //checkForMateOrCheckMate() {
+        //
+        //}
+
         calculatePossibleMovesForPiece(name: string) {
             var piece = this.pieces[name];
-            if (typeof piece === "undefined") return {moves:[], eatings:[]};
+            if (typeof piece === "undefined") return {moves:[], edibles:[]};
+
             var x = piece.x;
             var y = piece.y;
             var available = {
                 moves: [],
-                eatings: []
+                edibles: []
             }
             if (piece.type!=='soldier') {
                 var moves = this.squares[piece.y][piece.x].moves[piece.type];
@@ -183,38 +231,56 @@ module PeliApp {
                         this.loopUntilBorderOrPiece(piece, x+1, y+1, 1, 1, available);
                         this.loopUntilBorderOrPiece(piece, x+1, y-1, 1, -1, available);
                     } else {
-                        available.moves.push({x: 100, y: 100});
+                        //available.moves.push({x: 100, y: 100});
+                        //console.log("prop", moves[property]);
                         this.checkAndAddIfValidMove(piece, moves[property].x, moves[property].y, available);
                     }
                 }
             } else {
-                throw('fug');
+                var moves = this.squares[y][x].moves[piece.type][piece.color];
+                for(var property in moves) {
+                    if (this.table[moves[property].y][moves[property].x].holder==='empty') {
+                        available.moves.push({x: moves[property].x, y: moves[property].y});
+                    }
+                    //this.checkValidMove(piece, moves[property].x, moves[property].y, available);
+                }
+                var edibles = this.squares[piece.y][piece.x].edibles[piece.type][piece.color];
+                for(var property in edibles) {
+                    if (this.table[edibles[property].y][edibles[property].x].holder!=='empty' && this.table[edibles[property].y][edibles[property].x].color !== piece.color) {
+                        available.edibles.push({x: edibles[property].x, y: edibles[property].y});
+                    }
+                    //this.checkValidAttack(piece, edibles[property].x, edibles[property].y, available);
+                }
+                //return {moves:[], edibles:[]};
             }
+            this.pieces[name].moves = available.moves;
+            this.pieces[name].edibles = available.edibles;
             return available;
         }
 
         loopUntilBorderOrPiece(piece:{}, x:number, y:number, xdir:number, ydir:number, available:{}) {
-            console.log("tullaan " + x + ":" + y);
+            //console.log("tullaan " + x + ":" + y);
             while(x!==-1 && x!==8 && y!==-1 && y!==8) {
                 //console.log("nyt x " + x + " ja y " + y);
                 if (!this.checkAndAddIfValidMove(piece, x, y, available)) {
                     break;
                 }
-                //if (this.table[y][x].holder==='empty') {
-                //    available.moves.push({x: x, y: y});
-                //} else {
-                //    if (this.table[y][x].color !== piece.color) {
-                //        available.eatings.push({
-                //            x: x,
-                //            y: y
-                //        });
-                //    }
-                //    break;
-                //}
                 x+=xdir;
                 y+=ydir;
             }
         }
+
+        //checkValidMove(piece:{}, x:number, y:number, available:{}) {
+        //    if (this.table[y][x].holder==='empty') {
+        //        available.moves.push({x: x, y: y});
+        //    }
+        //}
+        //
+        //checkValidAttack(piece:{}, x:number, y:number, available:{}) {
+        //    if (this.table[y][x].holder!=='empty' && this.table[y][x].color !== piece.color) {
+        //        available.edibles.push({x: x, y: y});
+        //    }
+        //}
 
         checkAndAddIfValidMove(piece:{}, x:number, y:number, available:{}) : boolean{
             if (this.table[y][x].holder==='empty') {
@@ -222,7 +288,7 @@ module PeliApp {
                 return true;
             } else {
                 if (this.table[y][x].color !== piece.color) {
-                    available.eatings.push({
+                    available.edibles.push({
                         x: x,
                         y: y
                     });
@@ -284,7 +350,12 @@ module PeliApp {
 
         //// TODO
         //generateSoldierMoves(x:number, y:number) {
-        //
+        //    var moves = [];
+        //    this.checkAndPushCoords(x, y-1, moves);
+        //    this.checkAndPushCoords(x, y+1, moves);
+        //    this.checkAndPushCoords(x, y, moves);
+        //    this.checkAndPushCoords(x, y+1, moves);
+        //    return moves;
         //}
 
         generateKingMoves(x:number, y:number) : [{}] {
@@ -318,8 +389,8 @@ module PeliApp {
         }
 
         checkAndPushCoords(x, y, list) {
-            if (x!==-1 && x!==8 && y!==-1 && y!==8) {
-                list.push({x: x, y:y});
+            if (x>=0 && x<8 && y>=0 && y<8) {
+                list.push({x: x, y: y});
             }
         }
 

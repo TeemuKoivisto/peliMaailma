@@ -4,7 +4,7 @@ module PeliApp {
 		public x:number;
 		public y: number;
 		public moves: {};
-		public attacks: {};
+		public edibles: {};
 		constructor(row:number, column:number) {
 			this.x=column;
 			this.y=row;
@@ -20,7 +20,7 @@ module PeliApp {
 				queen: [],
 				king: []
 			};
-			this.attacks={
+			this.edibles={
 				soldier: {
 					white: [],
 					black: []
@@ -49,9 +49,9 @@ module PeliApp {
 
 		public setAttack(type:string, color:string, x:number, y:number) {
 			if (type === 'soldier') {
-				this.attacks[type][color].push({x: x, y: y});
+				this.edibles[type][color].push({x: x, y: y});
 			//} else {
-			//	this.attacks[type].push({x: x, y: y});
+			//	this.edibles[type].push({x: x, y: y});
 			}
 		}
 	}
