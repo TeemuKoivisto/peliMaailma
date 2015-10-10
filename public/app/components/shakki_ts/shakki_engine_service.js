@@ -3,50 +3,17 @@ var PeliApp;
     var Igniter = PeliApp.ShakkiIgniter;
     var ShakkiEngine = (function () {
         function ShakkiEngine() {
-            this.table = [
-                [{}],
-                [{}],
-                [{}],
-                [{}],
-                [{}],
-                [{}],
-                [{}],
-                [{}]
-            ];
+            this.table = [];
             this.pieces = {};
-            this.quantity = {
-                white: {
-                    soldier: 0,
-                    rook: 0,
-                    knight: 0,
-                    bishop: 0,
-                    queen: 0,
-                    king: 0
-                },
-                black: {
-                    soldier: 0,
-                    rook: 0,
-                    knight: 0,
-                    bishop: 0,
-                    queen: 0,
-                    king: 0
-                }
+            this.quantity = {};
+            this.squares = [];
+            this.checks = { 'white-king1': [], 'black-king1': [] };
+            this.edibleby = {
+                white: {},
+                black: {}
             };
-            this.squares = [
-                [],
-                [],
-                [],
-                [],
-                [],
-                [],
-                [],
-                []
-            ];
             var igniter = new Igniter();
             igniter.initAll(this.table, this.pieces, this.quantity, this.squares);
-            //igniter.initTable(this.table);
-            //igniter.initPieces(this.pieces, this.table, this.quantity);
-            //igniter.generateSquares(this.squares);
         }
         ShakkiEngine.prototype.movePiece = function (piece, row, column) {
             var target = this.table[row][column];
@@ -62,12 +29,13 @@ var PeliApp;
             this.table[piece.y][piece.x].occupier = "none";
             this.pieces[piece.name].x = column;
             this.pieces[piece.name].y = row;
-            //this.checkForMateOrCheckMate();
         };
         //// TODO
-        //checkForMateOrCheckMate() {
+        //checkForCheckMate() {
         //
         //}
+        ShakkiEngine.prototype.checkIfEdible = function () {
+        };
         ShakkiEngine.prototype.calculatePossibleMovesForPiece = function (name) {
             var piece = this.pieces[name];
             if (typeof piece === "undefined")
@@ -120,7 +88,7 @@ var PeliApp;
         };
         ShakkiEngine.prototype.loopUntilBorderOrPiece = function (piece, x, y, xdir, ydir, available) {
             //console.log("tullaan " + x + ":" + y);
-            while (x !== -1 && x !== 8 && y !== -1 && y !== 8) {
+            while (x >= 0 && x < 8 && y >= 0 && y < 8) {
                 //console.log("nyt x " + x + " ja y " + y);
                 if (!this.checkAndAddIfValidMove(piece, x, y, available)) {
                     break;
@@ -147,6 +115,9 @@ var PeliApp;
             }
             else {
                 if (this.table[y][x].color !== piece.color) {
+                    if (this.table[y][x].holder === 'king') {
+                        this.checks[this.table[y][x].occupier].push(piece);
+                    }
                     available.edibles.push({
                         x: x,
                         y: y

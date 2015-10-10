@@ -1,26 +1,38 @@
-PeliApp.controller('ShakkiController', function ($scope, ShakkiFactory, ShakkiEngine) {
+PeliApp.controller('ShakkiController', function ($scope, ShakkiEngine) {
 
+    $scope.message = "White starts";
     $scope.table = ShakkiEngine.table;
     $scope.turncolor = "white";
 
     $scope.activatedpiece = {};
-    $scope.activated = [0, 0];
 
     $scope.activateSquare = function(row, column) {
         if($scope.checkIfAvailableSquareClicked(row, column)) {
             $scope.movePiece(row, column);
-        } else if ($scope.table[row][column].occupier !== 'none' && $scope.table[row][column].color===$scope.turncolor) {
-            $scope.table[$scope.activated[0]][$scope.activated[1]].active = false;
-            $scope.showOrHideMovesAndEdibles(false);
+        } else if ($scope.table[row][column].color===$scope.turncolor && $scope.table[row][column].occupier !== 'none') {
+            if (ShakkiEngine.checks[$scope.turncolor+'-king1'].length!==0) {
+                if ($scope.table[row][column].holder==='king') {
 
-            //console.log("who", ShakkiEngine.table[row][column].occupier);
+                } else {
+                    return;
+                }
+            }
+            if (typeof $scope.activatedpiece.y!== "undefined") {
+                $scope.table[$scope.activatedpiece.y][$scope.activatedpiece.x].active = false;
+                $scope.showOrHideMovesAndEdibles(false);
+            }
             $scope.activatedpiece = ShakkiEngine.pieces[ShakkiEngine.table[row][column].occupier];
-            //console.log("piece ", $scope.activatedpiece);
             $scope.table[row][column].active = true;
             $scope.showOrHideMovesAndEdibles(true);
 
-            $scope.activated[0] = row;
-            $scope.activated[1] = column;
+        //} else if ($scope.table[row][column].occupier !== 'none' && $scope.table[row][column].color===$scope.turncolor) {
+        //    if (typeof $scope.activatedpiece.y!== "undefined") {
+        //        $scope.table[$scope.activatedpiece.y][$scope.activatedpiece.x].active = false;
+        //        $scope.showOrHideMovesAndEdibles(false);
+        //    }
+        //    $scope.activatedpiece = ShakkiEngine.pieces[ShakkiEngine.table[row][column].occupier];
+        //    $scope.table[row][column].active = true;
+        //    $scope.showOrHideMovesAndEdibles(true);
         }
     };
 
@@ -47,7 +59,7 @@ PeliApp.controller('ShakkiController', function ($scope, ShakkiFactory, ShakkiEn
     };
 
     $scope.checkIfAvailableSquareClicked = function(row, column) {
-        if (typeof $scope.activatedpiece !== 'undefined') {
+        if (typeof $scope.activatedpiece.y !== 'undefined') {
             for(var index in $scope.activatedpiece.moves) {
                 var coords = $scope.activatedpiece.moves[index];
                 if (row === coords.y && column === coords.x) {
@@ -64,21 +76,26 @@ PeliApp.controller('ShakkiController', function ($scope, ShakkiFactory, ShakkiEn
         return false;
     };
 
+    // TODO
+    // see if soldier can be promoted
+
     $scope.movePiece = function(row, column) {
-        $scope.table[$scope.activated[0]][$scope.activated[1]].active = false;
+        $scope.table[$scope.activatedpiece.y][$scope.activatedpiece.x].active = false;
         $scope.showOrHideMovesAndEdibles(false);
 
         ShakkiEngine.movePiece($scope.activatedpiece, row, column);
         $scope.calcAllMoves();
+        //ShakkiEngine.checkForCheckMate();
 
         $scope.activatedpiece = {};
         var oldcolor = $scope.turncolor;
         $scope.turncolor = $scope.turncolor==='white' ? 'black' : 'white';
-        $("."+oldcolor).addClass($scope.turncolor);
-        $("."+oldcolor).removeClass(oldcolor);
+        $("."+oldcolor).removeClass(oldcolor).addClass($scope.turncolor);
     };
 
     $scope.calcAllMoves = function() {
+        ShakkiEngine.checks['white-king1']=[];
+        ShakkiEngine.checks['black-king1']=[];
         for(var name in ShakkiEngine.pieces) {
             ShakkiEngine.calculatePossibleMovesForPiece(name);
         }

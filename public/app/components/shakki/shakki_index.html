@@ -1,14 +1,10 @@
 <link rel="stylesheet" type="text/css" href="app/components/shakki/shakki_css.css">
 
-<div>
-    <p class="square">PELIÄ POJAT</p>
-</div>
-
 <button ng-click="logAll()">log</button>
 
-<div>
-    <img src="images/fairy_white/white_mine.png">
-</div>
+<!--<div>-->
+    <!--<img src="images/fairy_white/white_mine.png">-->
+<!--</div>-->
 
 <div>
     <div style="float:left; padding-left: 50px; width:560px; height:560px;">
@@ -22,5 +18,36 @@
         <div class="white innerbox">
             {{turncolor}}
         </div>
+    </div>
+    <div class="messagebox">
+        {{message}}
+    </div>
+    <div class="scoreboard">
+        <table>
+            <thead>
+                <tr>
+                    <td></td>
+                    <td>White</td>
+                    <td>Black</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Soldier</td>
+                    <td>white</td>
+                    <td>black</td>
+                </tr>
+                <tr>
+                    <td>Rook</td>
+                    <td>white</td>
+                    <td>black</td>
+                </tr>
+                <tr>
+                    <td>Knight</td>
+                    <td>white</td>
+                    <td>black</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>

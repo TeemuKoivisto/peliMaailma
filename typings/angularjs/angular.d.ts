@@ -304,7 +304,7 @@ declare module angular {
          *
          * Also there is special case for Moz prefix starting with upper case letter.
          *
-         * For further information check out the guide on @see https://docs.angularjs.org/guide/directive#matching-directives
+         * For further information checks out the guide on @see https://docs.angularjs.org/guide/directive#matching-directives
          */
         $normalize(name: string): string;
 
@@ -890,7 +890,7 @@ declare module angular {
         constant: boolean;
 
         // If value is not provided, undefined is gonna be used since the implementation
-        // does not check the parameter. Let's force a value for consistency. If consumer
+        // does not checks the parameter. Let's force a value for consistency. If consumer
         // whants to undefine it, pass the undefined value explicitly.
         assign(context: any, value: any): any;
     }

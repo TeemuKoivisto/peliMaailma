@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "gulp": "^3.9.0",
+    "gulp-tslint": "^3.3.0",
     "gulp-typescript": "^2.9.2"
   }
 }

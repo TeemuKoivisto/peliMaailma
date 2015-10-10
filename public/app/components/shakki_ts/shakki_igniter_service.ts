@@ -9,7 +9,66 @@ module PeliApp {
             this.types= ['soldier', 'rook', 'knight', 'bishop', 'queen', 'king'];
         }
 
-        public initAll(table: [[{}]], pieces:{}, quantity:{}, squares:[[Square]]) {
+        public initAll(table: [], pieces:{}, quantity:{}, squares:[]) {
+            for(var i = 0; i<8; i++) {
+                table.push([{}]);
+                squares.push([]);
+            }
+            //table = [
+            //    [{}],
+            //    [{}],
+            //    [{}],
+            //    [{}],
+            //    [{}],
+            //    [{}],
+            //    [{}],
+            //    [{}]
+            //];
+            quantity['white'] = {
+                soldier: 0,
+                rook: 0,
+                knight: 0,
+                bishop: 0,
+                queen: 0,
+                king: 0
+            };
+            quantity['black'] = {
+                soldier: 0,
+                rook: 0,
+                knight: 0,
+                bishop: 0,
+                queen: 0,
+                king: 0
+            };
+            //quantity = {
+            //    white: {
+            //        soldier: 0,
+            //        rook: 0,
+            //        knight: 0,
+            //        bishop: 0,
+            //        queen: 0,
+            //        king: 0
+            //    },
+            //    black: {
+            //        soldier: 0,
+            //        rook: 0,
+            //        knight: 0,
+            //        bishop: 0,
+            //        queen: 0,
+            //        king: 0
+            //    }
+            //};
+            //squares = [
+            //    [],
+            //    [],
+            //    [],
+            //    [],
+            //    [],
+            //    [],
+            //    [],
+            //    []
+            //];
+
             this.initTable(table);
             this.initPieces(pieces, table, quantity);
             this.generateSquares(squares);
@@ -156,11 +215,11 @@ module PeliApp {
                         if (y!==7) sq.setMove(type, 'black', {x:x, y:(y+1)});
                         if (y===1) sq.setMove(type, 'black', {x:x, y:(y+2)});
                         if (y===6) sq.setMove(type, 'white', {x:x, y:(y-2)});
-                        if (x!==0) {
+                        if (x!==0 && y!==0 && y!==7) {
                             sq.setAttack(type, 'white', (x-1), (y-1));
                             sq.setAttack(type, 'black', (x-1), (y+1));
                         }
-                        if (x!==7) {
+                        if (x!==7 && y!==0 && y!==7) {
                             sq.setAttack(type, 'white', (x+1), (y-1));
                             sq.setAttack(type, 'black', (x+1), (y+1));
                         }

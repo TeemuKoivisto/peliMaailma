@@ -447,7 +447,7 @@ jQuery.extend({
 			fn = tmp;
 		}
 
-		// Quick check to determine if target is callable, in the spec
+		// Quick checks to determine if target is callable, in the spec
 		// this throws a TypeError, but we will just return undefined.
 		if ( !jQuery.isFunction( fn ) ) {
 			return undefined;
@@ -480,7 +480,7 @@ jQuery.each("Boolean Number String Function Array Date RegExp Object Error".spli
 function isArraylike( obj ) {
 
 	// Support: iOS 8.2 (not reproducible in simulator)
-	// `in` check used to prevent JIT error (gh-2145)
+	// `in` checks used to prevent JIT error (gh-2145)
 	// hasOwn isn't used here due to false negatives
 	// regarding Nodelist length in IE
 	var length = "length" in obj && obj.length,

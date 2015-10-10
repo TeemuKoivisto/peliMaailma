@@ -323,7 +323,7 @@ function forEach(obj, iterator, context) {
   if (obj) {
     if (isFunction(obj)) {
       for (key in obj) {
-        // Need to check if hasOwnProperty exists,
+        // Need to checks if hasOwnProperty exists,
         // as on IE8 the result of querySelectorAll is an object without a hasOwnProperty function
         if (key != 'prototype' && key != 'length' && key != 'name' && (!obj.hasOwnProperty || obj.hasOwnProperty(key))) {
           iterator.call(context, obj[key], key, obj);
@@ -339,12 +339,12 @@ function forEach(obj, iterator, context) {
     } else if (obj.forEach && obj.forEach !== forEach) {
         obj.forEach(iterator, context, obj);
     } else if (isBlankObject(obj)) {
-      // createMap() fast path --- Safe to avoid hasOwnProperty check because prototype chain is empty
+      // createMap() fast path --- Safe to avoid hasOwnProperty checks because prototype chain is empty
       for (key in obj) {
         iterator.call(context, obj[key], key, obj);
       }
     } else if (typeof obj.hasOwnProperty === 'function') {
-      // Slow path for objects inheriting Object.prototype, hasOwnProperty check needed
+      // Slow path for objects inheriting Object.prototype, hasOwnProperty checks needed
       for (key in obj) {
         if (obj.hasOwnProperty(key)) {
           iterator.call(context, obj[key], key, obj);
@@ -553,7 +553,7 @@ function hasCustomToString(obj) {
  * @description
  * Determines if a reference is undefined.
  *
- * @param {*} value Reference to check.
+ * @param {*} value Reference to checks.
  * @returns {boolean} True if `value` is undefined.
  */
 function isUndefined(value) {return typeof value === 'undefined';}
@@ -568,7 +568,7 @@ function isUndefined(value) {return typeof value === 'undefined';}
  * @description
  * Determines if a reference is defined.
  *
- * @param {*} value Reference to check.
+ * @param {*} value Reference to checks.
  * @returns {boolean} True if `value` is defined.
  */
 function isDefined(value) {return typeof value !== 'undefined';}
@@ -584,7 +584,7 @@ function isDefined(value) {return typeof value !== 'undefined';}
  * Determines if a reference is an `Object`. Unlike `typeof` in JavaScript, `null`s are not
  * considered to be objects. Note that JavaScript arrays are objects.
  *
- * @param {*} value Reference to check.
+ * @param {*} value Reference to checks.
  * @returns {boolean} True if `value` is an `Object` but not `null`.
  */
 function isObject(value) {
@@ -612,7 +612,7 @@ function isBlankObject(value) {
  * @description
  * Determines if a reference is a `String`.
  *
- * @param {*} value Reference to check.
+ * @param {*} value Reference to checks.
  * @returns {boolean} True if `value` is a `String`.
  */
 function isString(value) {return typeof value === 'string';}
@@ -633,7 +633,7 @@ function isString(value) {return typeof value === 'string';}
  * [`isFinite'](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/isFinite)
  * method.
  *
- * @param {*} value Reference to check.
+ * @param {*} value Reference to checks.
  * @returns {boolean} True if `value` is a `Number`.
  */
 function isNumber(value) {return typeof value === 'number';}
@@ -648,7 +648,7 @@ function isNumber(value) {return typeof value === 'number';}
  * @description
  * Determines if a value is a date.
  *
- * @param {*} value Reference to check.
+ * @param {*} value Reference to checks.
  * @returns {boolean} True if `value` is a `Date`.
  */
 function isDate(value) {
@@ -665,7 +665,7 @@ function isDate(value) {
  * @description
  * Determines if a reference is an `Array`.
  *
- * @param {*} value Reference to check.
+ * @param {*} value Reference to checks.
  * @returns {boolean} True if `value` is an `Array`.
  */
 var isArray = Array.isArray;
@@ -679,7 +679,7 @@ var isArray = Array.isArray;
  * @description
  * Determines if a reference is a `Function`.
  *
- * @param {*} value Reference to check.
+ * @param {*} value Reference to checks.
  * @returns {boolean} True if `value` is a `Function`.
  */
 function isFunction(value) {return typeof value === 'function';}
@@ -689,7 +689,7 @@ function isFunction(value) {return typeof value === 'function';}
  * Determines if a value is a regular expression object.
  *
  * @private
- * @param {*} value Reference to check.
+ * @param {*} value Reference to checks.
  * @returns {boolean} True if `value` is a `RegExp`.
  */
 function isRegExp(value) {
@@ -701,7 +701,7 @@ function isRegExp(value) {
  * Checks if `obj` is a window object.
  *
  * @private
- * @param {*} obj Object to check
+ * @param {*} obj Object to checks
  * @returns {boolean} True if `obj` is a window obj.
  */
 function isWindow(obj) {
@@ -767,7 +767,7 @@ var escapeForRegexp = function(s) {
  * @description
  * Determines if a reference is a DOM element (or wrapped jQuery element).
  *
- * @param {*} value Reference to check.
+ * @param {*} value Reference to checks.
  * @returns {boolean} True if `value` is a DOM element (or wrapped jQuery element).
  */
 function isElement(node) {
@@ -934,7 +934,7 @@ function copy(source, destination, stackSource, stackDest) {
         });
       }
       if (isBlankObject(source)) {
-        // createMap() fast path --- Safe to avoid hasOwnProperty check because prototype chain is empty
+        // createMap() fast path --- Safe to avoid hasOwnProperty checks because prototype chain is empty
         for (key in source) {
           destination[key] = copy(source[key], null, stackSource, stackDest);
         }
@@ -1303,7 +1303,7 @@ function startingTag(element) {
  * Tries to decode the URI component without throwing an exception.
  *
  * @private
- * @param str value potential URI component to check.
+ * @param str value potential URI component to checks.
  * @returns {boolean} True if `value` can be decoded
  * with the decodeURIComponent function.
  */
@@ -3024,7 +3024,7 @@ var JQLitePrototype = JQLite.prototype = {
       fn();
     }
 
-    // check if document is already loaded
+    // checks if document is already loaded
     if (document.readyState === 'complete') {
       setTimeout(trigger);
     } else {
@@ -3073,7 +3073,7 @@ var ALIASED_ATTR = {
 };
 
 function getBooleanAttrName(element, name) {
-  // check dom last since we will most likely fail on name
+  // checks dom last since we will most likely fail on name
   var booleanAttr = BOOLEAN_ATTR[name.toLowerCase()];
 
   // booleanAttr is here twice to minimize DOM access
@@ -4952,7 +4952,7 @@ var $$CoreAnimateQueueProvider = function() {
  *
  * In order to enable animations the `ngAnimate` module has to be loaded.
  *
- * To see the functional implementation check out `src/ngAnimate/animate.js`.
+ * To see the functional implementation checks out `src/ngAnimate/animate.js`.
  */
 var $AnimateProvider = ['$provide', function($provide) {
   var provider = this;
@@ -5739,7 +5739,7 @@ function Browser(window, document, $log, $sniffer) {
 
   /**
    * Checks whether the url has changed outside of Angular.
-   * Needs to be exported to be able to check for changes that have been done in sync,
+   * Needs to be exported to be able to checks for changes that have been done in sync,
    * as hashchange/popstate events fire in async.
    */
   self.$$checkUrlChange = fireUrlChange;
@@ -7234,7 +7234,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
        *
        * Also there is special case for Moz prefix starting with upper case letter.
        *
-       * For further information check out the guide on {@link guide/directive#matching-directives Matching Directives}
+       * For further information checks out the guide on {@link guide/directive#matching-directives Matching Directives}
        *
        * @param {string} name Name to normalize
        */
@@ -7349,7 +7349,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
           // sanitize img[srcset] values
           var result = "";
 
-          // first check if there are spaces because it's not the same pattern
+          // first checks if there are spaces because it's not the same pattern
           var trimmedSrcset = trim(value);
           //                (   999x   ,|   999w   ,|   ,|,   )
           var srcPattern = /(\s+\d+x\s*,|\s+\d+w\s*,|\s+,|,\s+)/;
@@ -7927,7 +7927,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
 
         if (directiveValue = directive.scope) {
 
-          // skip the check for directives with async templates, we'll check the derived sync
+          // skip the checks for directives with async templates, we'll checks the derived sync
           // directive when the template arrives
           if (!directive.templateUrl) {
             if (isObject(directiveValue)) {
@@ -9063,9 +9063,9 @@ function $ControllerProvider() {
      *    controller constructor function. Otherwise it's considered to be a string which is used
      *    to retrieve the controller constructor using the following steps:
      *
-     *    * check if a controller with given name is registered via `$controllerProvider`
-     *    * check if evaluating the string on the current scope returns a constructor
-     *    * if $controllerProvider#allowGlobals, check `window[constructor]` on the global
+     *    * checks if a controller with given name is registered via `$controllerProvider`
+     *    * checks if evaluating the string on the current scope returns a constructor
+     *    * if $controllerProvider#allowGlobals, checks `window[constructor]` on the global
      *      `window` object (not recommended)
      *
      *    The string can use the `controller as property` syntax, where the controller instance is published
@@ -9687,7 +9687,7 @@ function $HttpProvider() {
      * For unit testing applications that use `$http` service, see
      * {@link ngMock.$httpBackend $httpBackend mock}.
      *
-     * For a higher level of abstraction, please check out the {@link ngResource.$resource
+     * For a higher level of abstraction, please checks out the {@link ngResource.$resource
      * $resource} service.
      *
      * The $http API is based on the {@link ng.$q deferred/promise APIs} exposed by
@@ -12555,7 +12555,7 @@ function getStringValue(name, fullExpression) {
 }
 
 function ensureSafeObject(obj, fullExpression) {
-  // nifty check if obj is Function that is fast and works across iframes and other contexts
+  // nifty checks if obj is Function that is fast and works across iframes and other contexts
   if (obj) {
     if (obj.constructor === obj) {
       throw $parseMinErr('isecfn',
@@ -13007,7 +13007,7 @@ AST.prototype = {
   },
 
   constant: function() {
-    // TODO check that it is a constant
+    // TODO checks that it is a constant
     return { type: AST.Literal, value: this.consume().value };
   },
 
@@ -14284,7 +14284,7 @@ function $ParseProvider() {
           return false;
         }
 
-        // fall-through to the primitive equality check
+        // fall-through to the primitive equality checks
       }
 
       //Primitive or NaN
@@ -14296,7 +14296,7 @@ function $ParseProvider() {
       var lastResult;
 
       if (inputExpressions.length === 1) {
-        var oldInputValueOf = expressionInputDirtyCheck; // init to something unique so that equals check fails
+        var oldInputValueOf = expressionInputDirtyCheck; // init to something unique so that equals checks fails
         inputExpressions = inputExpressions[0];
         return scope.$watch(function expressionInputWatch(scope) {
           var newInputValue = inputExpressions(scope);
@@ -14311,7 +14311,7 @@ function $ParseProvider() {
       var oldInputValueOfValues = [];
       var oldInputValues = [];
       for (var i = 0, ii = inputExpressions.length; i < ii; i++) {
-        oldInputValueOfValues[i] = expressionInputDirtyCheck; // init to something unique so that equals check fails
+        oldInputValueOfValues[i] = expressionInputDirtyCheck; // init to something unique so that equals checks fails
         oldInputValues[i] = null;
       }
 
@@ -15589,10 +15589,10 @@ function $RootScopeProvider() {
         $watchCollectionInterceptor.$stateful = true;
 
         var self = this;
-        // the current value, updated on each dirty-check run
+        // the current value, updated on each dirty-checks run
         var newValue;
-        // a shallow copy of the newValue from the last dirty-check run,
-        // updated to match newValue during dirty-check run
+        // a shallow copy of the newValue from the last dirty-checks run,
+        // updated to match newValue during dirty-checks run
         var oldValue;
         // a shallow copy of the newValue from when the last change happened
         var veryOldValue;
@@ -16317,7 +16317,7 @@ function $RootScopeProvider() {
           // Insanity Warning: scope depth-first traversal
           // yes, this code is a bit crazy, but it works and we have tests to prove it!
           // this piece should be kept in sync with the traversal in $digest
-          // (though it differs due to having the extra check for $$listenerCount)
+          // (though it differs due to having the extra checks for $$listenerCount)
           if (!(next = ((current.$$listenerCount[name] && current.$$childHead) ||
               (current !== target && current.$$nextSibling)))) {
             while (current !== target && !(next = current.$$nextSibling)) {
@@ -18133,7 +18133,7 @@ function $$CookieReaderProvider() {
  *       // return the filter function which uses the greet service
  *       // to generate salutation
  *       return function(text) {
- *         // filters need to be forgiving so check input validity
+ *         // filters need to be forgiving so checks input validity
  *         return text && greet(text) || text;
  *       };
  *     });
@@ -19775,11 +19775,11 @@ var htmlAnchorDirective = valueFn({
  * @example
     <example>
       <file name="index.html">
-        <label>Check me to check both: <input type="checkbox" ng-model="master"></label><br/>
+        <label>Check me to checks both: <input type="checkbox" ng-model="master"></label><br/>
         <input id="checkSlave" type="checkbox" ng-checked="master" aria-label="Slave input">
       </file>
       <file name="protractor.js" type="protractor">
-        it('should check both checkBoxes', function() {
+        it('should checks both checkBoxes', function() {
           expect(element(by.id('checkSlave')).getAttribute('checked')).toBeFalsy();
           element(by.model('master')).click();
           expect(element(by.id('checkSlave')).getAttribute('checked')).toBeTruthy();
@@ -19883,7 +19883,7 @@ var htmlAnchorDirective = valueFn({
  * @example
      <example>
        <file name="index.html">
-         <label>Check me check multiple: <input type="checkbox" ng-model="open"></label><br/>
+         <label>Check me checks multiple: <input type="checkbox" ng-model="open"></label><br/>
          <details id="details" ng-open="open">
             <summary>Show/Hide me</summary>
          </details>
@@ -22351,7 +22351,7 @@ var ngValueDirective = function() {
        </div>
      </file>
      <file name="protractor.js" type="protractor">
-       it('should check ng-bind', function() {
+       it('should checks ng-bind', function() {
          var nameInput = element(by.model('name'));
 
          expect(element(by.binding('name')).getText()).toBe('Whirled');
@@ -22413,7 +22413,7 @@ var ngBindDirective = ['$compile', function($compile) {
        </div>
      </file>
      <file name="protractor.js" type="protractor">
-       it('should check ng-bind', function() {
+       it('should checks ng-bind', function() {
          var salutationElem = element(by.binding('salutation'));
          var salutationInput = element(by.model('salutation'));
          var nameInput = element(by.model('name'));
@@ -22487,7 +22487,7 @@ var ngBindTemplateDirective = ['$interpolate', '$compile', function($interpolate
      </file>
 
      <file name="protractor.js" type="protractor">
-       it('should check ng-bind-html', function() {
+       it('should checks ng-bind-html', function() {
          expect(element(by.binding('myHTML')).getText()).toBe(
              'I am an HTMLstring with links! and other stuff');
        });
@@ -22865,7 +22865,7 @@ function classDirective(name, selector) {
        }
      </file>
      <file name="protractor.js" type="protractor">
-       it('should check ng-class', function() {
+       it('should checks ng-class', function() {
          expect(element(by.css('.base-class')).getAttribute('class')).not.
            toMatch(/my-class/);
 
@@ -22929,7 +22929,7 @@ var ngClassDirective = classDirective('', true);
        }
      </file>
      <file name="protractor.js" type="protractor">
-       it('should check ng-class-odd and ng-class-even', function() {
+       it('should checks ng-class-odd and ng-class-even', function() {
          expect(element(by.repeater('name in names').row(0).column('name')).getAttribute('class')).
            toMatch(/odd/);
          expect(element(by.repeater('name in names').row(1).column('name')).getAttribute('class')).
@@ -22977,7 +22977,7 @@ var ngClassOddDirective = classDirective('Odd', 0);
        }
      </file>
      <file name="protractor.js" type="protractor">
-       it('should check ng-class-odd and ng-class-even', function() {
+       it('should checks ng-class-odd and ng-class-even', function() {
          expect(element(by.repeater('name in names').row(0).column('name')).getAttribute('class')).
            toMatch(/odd/);
          expect(element(by.repeater('name in names').row(1).column('name')).getAttribute('class')).
@@ -23158,7 +23158,7 @@ var ngCloakDirective = ngDirective({
  *    };
  *   </file>
  *   <file name="protractor.js" type="protractor">
- *     it('should check controller as', function() {
+ *     it('should checks controller as', function() {
  *       var container = element(by.id('ctrl-as-exmpl'));
  *         expect(container.element(by.model('settings.name'))
  *           .getAttribute('value')).toBe('John Smith');
@@ -23241,7 +23241,7 @@ var ngCloakDirective = ngDirective({
  *   }
  *  </file>
  *  <file name="protractor.js" type="protractor">
- *    it('should check controller', function() {
+ *    it('should checks controller', function() {
  *      var container = element(by.id('ctrl-exmpl'));
  *
  *      expect(container.element(by.model('name'))
@@ -23335,7 +23335,7 @@ var ngControllerDirective = [function() {
  *
  *
  * * No declaration means that Angular will assume that you can do inline styles, but it will do
- * a runtime check for unsafe-eval. E.g. `<body>`. This is backwardly compatible with previous versions
+ * a runtime checks for unsafe-eval. E.g. `<body>`. This is backwardly compatible with previous versions
  * of Angular.
  *
  * * A simple `ng-csp` (or `data-ng-csp`) attribute will tell Angular to deactivate both inline
@@ -23346,7 +23346,7 @@ var ngControllerDirective = [function() {
  * inline styles. E.g. `<body ng-csp="no-unsafe-eval">`.
  *
  * * Specifying only `no-inline-style` tells Angular that we must not inject styles, but that we can
- * run eval - no automcatic check for unsafe eval will occur. E.g. `<body ng-csp="no-inline-style">`
+ * run eval - no automcatic checks for unsafe eval will occur. E.g. `<body ng-csp="no-inline-style">`
  *
  * * Specifying both `no-unsafe-eval` and `no-inline-style` tells Angular that we must not inject
  * styles nor use eval, which is the same as an empty: ng-csp.
@@ -23509,7 +23509,7 @@ var ngControllerDirective = [function() {
       </span>
      </file>
      <file name="protractor.js" type="protractor">
-       it('should check ng-click', function() {
+       it('should checks ng-click', function() {
          expect(element(by.binding('count')).getText()).toMatch('0');
          element(by.css('button')).click();
          expect(element(by.binding('count')).getText()).toMatch('1');
@@ -23846,7 +23846,7 @@ forEach(
       </form>
      </file>
      <file name="protractor.js" type="protractor">
-       it('should check ng-submit', function() {
+       it('should checks ng-submit', function() {
          expect(element(by.binding('list')).getText()).toBe('list=[]');
          element(by.css('#submit')).click();
          expect(element(by.binding('list')).getText()).toContain('hello');
@@ -24894,7 +24894,7 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
    * default. The `checkboxInputType` directive does this because in its case a value of `false`
    * implies empty.
    *
-   * @param {*} value The value of the input to check for emptiness.
+   * @param {*} value The value of the input to checks for emptiness.
    * @returns {boolean} True if `value` is "empty".
    */
   this.$isEmpty = function(value) {
@@ -25110,7 +25110,7 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
       // If there was no change in validity, don't update the model
       // This prevents changing an invalid modelValue to undefined
       if (!allowInvalid && prevValid !== allValid) {
-        // Note: Don't check ctrl.$valid here, as we could have
+        // Note: Don't checks ctrl.$valid here, as we could have
         // external validators (e.g. calculated on the server),
         // that just call $setValidity and need the model value
         // to calculate their validity.
@@ -25128,7 +25128,7 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
     currentValidationRunId++;
     var localValidationRunId = currentValidationRunId;
 
-    // check parser error
+    // checks parser error
     if (!processParseErrors()) {
       validationDone(false);
       return;
@@ -25277,7 +25277,7 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
     // This can happen if e.g. $setViewValue is called from inside a parser
     ctrl.$$runValidators(modelValue, ctrl.$$lastCommittedViewValue, function(allValid) {
       if (!allowInvalid) {
-        // Note: Don't check ctrl.$valid here, as we could have
+        // Note: Don't checks ctrl.$valid here, as we could have
         // external validators (e.g. calculated on the server),
         // that just call $setValidity and need the model value
         // to calculate their validity.
@@ -25970,7 +25970,7 @@ function isObjectEmpty(obj) {
         <div ng-non-bindable>Ignored: {{1 + 2}}</div>
       </file>
       <file name="protractor.js" type="protractor">
-       it('should check ng-non-bindable', function() {
+       it('should checks ng-non-bindable', function() {
          expect(element(by.binding('1 + 2')).getText()).toContain('3');
          expect(element.all(by.css('div')).last().getText()).toMatch(/1 \+ 2/);
        });
@@ -26179,7 +26179,7 @@ var ngOptionsMinErr = minErr('ngOptions');
         </div>
       </file>
       <file name="protractor.js" type="protractor">
-         it('should check ng-options', function() {
+         it('should checks ng-options', function() {
            expect(element(by.binding('{selected_color:myColor}')).getText()).toMatch('red');
            element.all(by.model('myColor')).first().click();
            element.all(by.css('select[ng-model="myColor"] option')).first().click();
@@ -26923,12 +26923,12 @@ var ngPluralizeDirective = ['$locale', '$interpolate', '$log', function($locale,
 
         if (!countIsNaN && !(count in whens)) {
           // If an explicit number rule such as 1, 2, 3... is defined, just use it.
-          // Otherwise, check it against pluralization rules in $locale service.
+          // Otherwise, checks it against pluralization rules in $locale service.
           count = $locale.pluralCat(count - offset);
         }
 
         // If both `count` and `lastCount` are NaN, we don't need to re-register a watch.
-        // In JS `NaN !== NaN`, so we have to exlicitly check.
+        // In JS `NaN !== NaN`, so we have to exlicitly checks.
         if ((count !== lastCount) && !(countIsNaN && isNumber(lastCount) && isNaN(lastCount))) {
           watchRemover();
           var whenExpFn = whensExpFns[count];
@@ -27583,13 +27583,13 @@ var NG_HIDE_IN_PROGRESS_CLASS = 'ng-hide-animate';
       Click me: <input type="checkbox" ng-model="checked" aria-label="Toggle ngHide"><br/>
       <div>
         Show:
-        <div class="check-element animate-show" ng-show="checked">
+        <div class="checks-element animate-show" ng-show="checked">
           <span class="glyphicon glyphicon-thumbs-up"></span> I show up when your checkbox is checked.
         </div>
       </div>
       <div>
         Hide:
-        <div class="check-element animate-show" ng-hide="checked">
+        <div class="checks-element animate-show" ng-hide="checked">
           <span class="glyphicon glyphicon-thumbs-down"></span> I hide when your checkbox is checked.
         </div>
       </div>
@@ -27616,7 +27616,7 @@ var NG_HIDE_IN_PROGRESS_CLASS = 'ng-hide-animate';
         padding: 0 10px;
       }
 
-      .check-element {
+      .checks-element {
         padding: 10px;
         border: 1px solid black;
         background: white;
@@ -27626,7 +27626,7 @@ var NG_HIDE_IN_PROGRESS_CLASS = 'ng-hide-animate';
       var thumbsUp = element(by.css('span.glyphicon-thumbs-up'));
       var thumbsDown = element(by.css('span.glyphicon-thumbs-down'));
 
-      it('should check ng-show / ng-hide', function() {
+      it('should checks ng-show / ng-hide', function() {
         expect(thumbsUp.isDisplayed()).toBeFalsy();
         expect(thumbsDown.isDisplayed()).toBeTruthy();
 
@@ -27747,13 +27747,13 @@ var ngShowDirective = ['$animate', function($animate) {
       Click me: <input type="checkbox" ng-model="checked" aria-label="Toggle ngShow"><br/>
       <div>
         Show:
-        <div class="check-element animate-hide" ng-show="checked">
+        <div class="checks-element animate-hide" ng-show="checked">
           <span class="glyphicon glyphicon-thumbs-up"></span> I show up when your checkbox is checked.
         </div>
       </div>
       <div>
         Hide:
-        <div class="check-element animate-hide" ng-hide="checked">
+        <div class="checks-element animate-hide" ng-hide="checked">
           <span class="glyphicon glyphicon-thumbs-down"></span> I hide when your checkbox is checked.
         </div>
       </div>
@@ -27777,7 +27777,7 @@ var ngShowDirective = ['$animate', function($animate) {
         padding: 0 10px;
       }
 
-      .check-element {
+      .checks-element {
         padding: 10px;
         border: 1px solid black;
         background: white;
@@ -27787,7 +27787,7 @@ var ngShowDirective = ['$animate', function($animate) {
       var thumbsUp = element(by.css('span.glyphicon-thumbs-up'));
       var thumbsDown = element(by.css('span.glyphicon-thumbs-down'));
 
-      it('should check ng-show / ng-hide', function() {
+      it('should checks ng-show / ng-hide', function() {
         expect(thumbsUp.isDisplayed()).toBeFalsy();
         expect(thumbsDown.isDisplayed()).toBeTruthy();
 
@@ -27851,7 +27851,7 @@ var ngHideDirective = ['$animate', function($animate) {
      <file name="protractor.js" type="protractor">
        var colorSpan = element(by.css('span'));
 
-       it('should check ng-style', function() {
+       it('should checks ng-style', function() {
          expect(colorSpan.getCssValue('color')).toBe('rgba(0, 0, 0, 1)');
          element(by.css('input[value=\'set color\']')).click();
          expect(colorSpan.getCssValue('color')).toBe('rgba(255, 0, 0, 1)');
@@ -28533,7 +28533,7 @@ var selectDirective = function() {
       // doesn't trigger rendering if only an item in the array changes.
       if (attr.multiple) {
 
-        // Read value now needs to check each option to see if it is selected
+        // Read value now needs to checks each option to see if it is selected
         selectCtrl.readValue = function readMultipleValue() {
           var array = [];
           forEach(element.find('option'), function(option) {
@@ -28595,7 +28595,7 @@ var optionDirective = ['$interpolate', function($interpolate) {
     compile: function(element, attr) {
 
       if (isDefined(attr.value)) {
-        // If the value attribute is defined, check if it contains an interpolation
+        // If the value attribute is defined, checks if it contains an interpolation
         var valueInterpolated = $interpolate(attr.value, true);
       } else {
         // If the value attribute is not defined then we fall back to the

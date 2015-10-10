@@ -6,54 +6,23 @@ module PeliApp {
         table:[[{}]];
         pieces: {};
         quantity: {};
-        squares:any;
+        squares:[[]];
+        checks:{};
+        edibleby:{};
 
 		constructor() {
-            this.table = [
-                [{}],
-                [{}],
-                [{}],
-                [{}],
-                [{}],
-                [{}],
-                [{}],
-                [{}]
-            ];
+            this.table = [];
             this.pieces = {};
-            this.quantity = {
-                white: {
-                    soldier: 0,
-                    rook: 0,
-                    knight: 0,
-                    bishop: 0,
-                    queen: 0,
-                    king: 0
-                },
-                black: {
-                    soldier: 0,
-                    rook: 0,
-                    knight: 0,
-                    bishop: 0,
-                    queen: 0,
-                    king: 0
-                }
+            this.quantity = {};
+            this.squares = [];
+            this.checks = {'white-king1': [], 'black-king1': []};
+            this.edibleby = {
+                white: {},
+                black: {}
             };
-            this.squares = [
-                [],
-                [],
-                [],
-                [],
-                [],
-                [],
-                [],
-                []
-            ];
 
             var igniter = new Igniter();
             igniter.initAll(this.table, this.pieces, this.quantity, this.squares);
-            //igniter.initTable(this.table);
-            //igniter.initPieces(this.pieces, this.table, this.quantity);
-            //igniter.generateSquares(this.squares);
 		}
 
         movePiece(piece:{}, row:number, column:number) {
@@ -72,14 +41,16 @@ module PeliApp {
             this.table[piece.y][piece.x].occupier = "none";
             this.pieces[piece.name].x = column;
             this.pieces[piece.name].y = row;
-
-            //this.checkForMateOrCheckMate();
         }
 
         //// TODO
-        //checkForMateOrCheckMate() {
+        //checkForCheckMate() {
         //
         //}
+
+        checkIfEdible() {
+
+        }
 
         calculatePossibleMovesForPiece(name: string) {
             var piece = this.pieces[name];
@@ -132,7 +103,7 @@ module PeliApp {
 
         loopUntilBorderOrPiece(piece:{}, x:number, y:number, xdir:number, ydir:number, available:{}) {
             //console.log("tullaan " + x + ":" + y);
-            while(x!==-1 && x!==8 && y!==-1 && y!==8) {
+            while(x>=0 && x<8 && y>=0 && y<8) {
                 //console.log("nyt x " + x + " ja y " + y);
                 if (!this.checkAndAddIfValidMove(piece, x, y, available)) {
                     break;
@@ -160,6 +131,9 @@ module PeliApp {
                 return true;
             } else {
                 if (this.table[y][x].color !== piece.color) {
+                    if (this.table[y][x].holder === 'king') {
+                        this.checks[this.table[y][x].occupier].push(piece);
+                    }
                     available.edibles.push({
                         x: x,
                         y: y

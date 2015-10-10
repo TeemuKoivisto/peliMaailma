@@ -806,7 +806,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 				( indexOf( sortInput, a ) - indexOf( sortInput, b ) ) :
 				0;
 
-		// If the nodes are siblings, we can do a quick check
+		// If the nodes are siblings, we can do a quick checks
 		} else if ( aup === bup ) {
 			return siblingCheck( a, b );
 		}
@@ -827,7 +827,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 		}
 
 		return i ?
-			// Do a sibling check if the nodes have a common ancestor
+			// Do a sibling checks if the nodes have a common ancestor
 			siblingCheck( ap[i], bp[i] ) :
 
 			// Otherwise nodes in our document sort first
@@ -1195,7 +1195,7 @@ Expr = Sizzle.selectors = {
 							}
 						}
 
-						// Incorporate the offset, then check against cycle size
+						// Incorporate the offset, then checks against cycle size
 						diff -= last;
 						return diff === first || ( diff % first === 0 && diff / first >= 0 );
 					}
@@ -1888,7 +1888,7 @@ compile = Sizzle.compile = function( selector, match /* Internal Use Only */ ) {
 		cached = compilerCache[ selector + " " ];
 
 	if ( !cached ) {
-		// Generate a function of recursive functions that can be used to check each element
+		// Generate a function of recursive functions that can be used to checks each element
 		if ( !match ) {
 			match = tokenize( selector );
 		}
