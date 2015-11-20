@@ -3,6 +3,7 @@ node_js:
 - 4.2.2
 script: node_modules/karma/bin/karma start karma.conf.js --single-run
 before_script:
+- npm install bower -g
 - bower install
 deploy:
   provider: heroku
