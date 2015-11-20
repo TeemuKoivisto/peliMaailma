@@ -1,6 +1,14 @@
 language: node_js
 node_js:
-  - "0.12"
+  - 4.2.2
 script: node_modules/karma/bin/karma start karma.conf.js --single-run
 before_script:
-  - npm install
+  - npm install bower -g
+  - cd client
+  - bower install
+  - cd ..
+deploy:
+  app: peli-maailma
+  provider: heroku
+  api_key:
+    secure: FWv/cxG4df/mbEgJ2G7lvfQoE/7Bi3aa9LwKI2FGk+bv7uiwypCF3MXexGof6v5eb5P2FDrrUqidkSjMgKnT/nt+zwGlHMAtn+jv36mJ0OlRcqbtexB/AdQfMJhQh07ddG9RHYyCgbWGp0mxtGVoFWYyshuM/ZLTFXkvZuV1MCW+YXG6+a0P3McMtsd7rXTaI9joiY/6WVUZk8qNQ+mCjZYvD3z1UYUIT0VVGgtkDK45NMWovvKWabo7YQX9hRL1mErsZF5rtptTMRPYrSmyc2goqGOS99c1q1KbYeV56t1cQMPCF7r4s2ySYsGQ/hCzP/qGJhNwR8NVich3CWfBJktvEQI1WeIdbJpXeTdIX8hgUGmIZG24uQCSQ62SlYe4wA+HOKGkgF+QhI/FDhNbRpx0SyRgMrixpZfQRnfiFXYT/T+WIEycoUTiKHNg+tRg+wMli8zDAMXiJBCL0Wi+VS7p3ndE/SjNZZoLbc5hj6LECWqA1yu6S92LmAamZwJQ8kt/e8kr3FtBx8eIv8qmlSnxzbd/4oDrNBOFESIbO01Zp0V3YzAFTCYKwMT9+V+o0LHRL4Z+GR/ak9f6VvI7sDcWau9dnQp67LKydDSghimkZ7kQe45QdEtv92slMlg4l0clU5N81LQ1K3niisF9KsZgJFTsiriEvQMFMid1sGA=
