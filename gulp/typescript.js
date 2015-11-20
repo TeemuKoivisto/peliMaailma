@@ -2,7 +2,6 @@ var gulp = require('gulp'),
     tsc = require('gulp-typescript'),
 	tslint = require('gulp-tslint'),
     tsconfig = require('../tsconfig.json'),
-	concat = require('gulp-concat'),
 	config = require('../gulp.config');
     
 gulp.task('ts', function() {
@@ -15,12 +14,6 @@ gulp.task('ts', function() {
     
     return compiledJs.js
             .pipe(gulp.dest('./client/app'));
-});
-
-gulp.task('concat', function() {
-	gulp.src('client/app/**/*.js')
-	.pipe(concat('all.js'))
-	.pipe(gulp.dest('client/'))
 });
 
 gulp.task('ts-lint', function() {

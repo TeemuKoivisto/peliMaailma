@@ -8,7 +8,7 @@ module PeliApp {
         quantity: {};
         squares:[[]];
         checks:{};
-        edibleby:{};
+        edibleby:{}; 
 
 		constructor() {
             this.table = [];
