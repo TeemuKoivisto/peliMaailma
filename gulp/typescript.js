@@ -1,33 +1,33 @@
 var gulp = require('gulp'),
     tsc = require('gulp-typescript'),
 	tslint = require('gulp-tslint'),
-    tsconfig = require('./tsconfig.json'),
+    tsconfig = require('../tsconfig.json'),
 	concat = require('gulp-concat'),
-	config = require('./gulp.config');
+	config = require('../gulp.config');
     
 gulp.task('ts', function() {
     var sourceTsFiles = [
-        './public/app/**/*.ts',
+        './client/app/**/*.ts',
         './typings/**/*.d.ts'];
     
     var compiledJs = gulp.src(sourceTsFiles)
             .pipe(tsc(tsconfig));
     
     return compiledJs.js
-            .pipe(gulp.dest('./public/app'));
+            .pipe(gulp.dest('./client/app'));
 });
 
 gulp.task('concat', function() {
-	gulp.src('public/app/**/*.js')
+	gulp.src('client/app/**/*.js')
 	.pipe(concat('all.js'))
-	.pipe(gulp.dest('public/'))
+	.pipe(gulp.dest('client/'))
 });
 
 gulp.task('ts-lint', function() {
 	var sourceTsFiles = [
-	'./public/app/**/*.ts',
+	'./client/app/**/*.ts',
 	'./typings/**/*.d.ts'];
-	// ['./public/app/**/*.ts']
+	// ['./client/app/**/*.ts']
 	return gulp.src(config.allTs)
 		// .pipe(tslint())
 		// // .pipe(tslint.report('verbose'))

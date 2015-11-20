@@ -1,10 +1,7 @@
 var express = require('express');
 var app = express();
-//var bodyParser = require('body-parser');
 
 app.use(express.static(__dirname + '/client'));
-//app.use(bodyParser.json());
-//app.use(bodyParser.urlencoded({extended: false}));
 
 app.set('port', (process.env.PORT || 3000));
 
