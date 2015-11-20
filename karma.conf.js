@@ -15,15 +15,15 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      /*
-		"public/bower_components/angular/angular.min.js",
-		"public/bower_components/angular-route/angular-route.min.js",
-		"public/bower_components/jquery/dist/jquery.min.js",
-		"public/bower_components/bootstrap/dist/js/bootsrap.min.js",
+      
+		"client/bower_components/angular/angular.min.js",
+		"client/bower_components/angular-route/angular-route.min.js",
+		"client/bower_components/jquery/dist/jquery.min.js",
+		"client/bower_components/bootstrap/dist/js/bootsrap.min.js",
 
 		'node_modules/angular-mocks/angular-mocks.js',
 
-		"public/app/all.js",*/
+		"client/app/all.js",
 		"test/**/*.js"
 		],
 
@@ -36,7 +36,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-		"public/app/all.js": ['coverage']
+		"client/app/all.js": ['coverage']
     },
 
 	coverageReporter: {
@@ -65,7 +65,11 @@ module.exports = function(config) {
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
 
-
+	plugins : [
+      'karma-phantomjs-launcher',
+	  'karma-coverage',
+      'karma-jasmine'
+    ],
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     // browsers: ['Chrome'],

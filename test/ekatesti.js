@@ -10,9 +10,5 @@ describe("I shall live", function() {
 		it('should just pass', function() {
 			expect(true).toBe(true);
 		});
-		
-		it('should just pass', function() {
-			expect("hite").toBe("blue");
-		});
 	})
 })
