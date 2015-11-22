@@ -16,35 +16,35 @@
 }
 
 .shakki-container {
-	display: flex;
-	flex-direction: row;
+    display: flex;
+    flex-direction: row;
 }
 
 .shakki-table {
-	order: 1;
-	padding-left: 50px; 
-	flex: 0 0 560px; 
-	/* width: 560px; */
-	height:560px;
+    order: 1;
+    padding-left: 50px; 
+    flex: 0 0 560px; 
+    /* width: 560px; */
+    height:560px;
 }
 
 .flexed-container {
-	order: 2;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	height: 230px;
+    order: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 230px;
 }
 
 .turnbox-outer {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	order: 1;
-	/* flex: 0 0 100px; */
-	width: 100px;
-	height: 100px;
-	border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    order: 1;
+    /* flex: 0 0 100px; */
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
     border: 1px solid black;
 }
 
@@ -56,15 +56,15 @@
 }
 
 .messagebox {
-	order: 2;
-	width: auto;
-	border-radius: 8px;
+    order: 2;
+    width: auto;
+    border-radius: 8px;
     border: 1px solid black;
-	text-align: center;
+    text-align: center;
 }
 
 .scoreboard {
-	order: 3;
+    order: 3;
     border-radius: 8px;
     border: 1px solid black;
 }
