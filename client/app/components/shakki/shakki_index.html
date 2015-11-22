@@ -6,7 +6,56 @@
     <!--<img src="images/fairy_white/white_mine.png">-->
 <!--</div>-->
 
-<div>
+<div class='shakki-container'>
+    <div class='shakki-table'>
+        <div ng-repeat="row in table">
+            <div ng-repeat="column in row" ng-click="activateSquare($parent.$index, $index)">
+                <square data="table[$parent.$index][$index]" row="$parent.$index" column="$index"></square>
+            </div>
+        </div>
+    </div>
+	
+	<div class='flexed-container'>
+		<div class="white turnbox-outer">
+			<div class="white turnbox-inner">
+				{{turncolor}}
+			</div>
+		</div>
+		<div class="messagebox">
+			{{message}}
+		</div>
+		<div class="scoreboard">
+			<table>
+				<thead>
+					<tr>
+						<td></td>
+						<td>White</td>
+						<td>Black</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Soldier</td>
+						<td>white</td>
+						<td>black</td>
+					</tr>
+					<tr>
+						<td>Rook</td>
+						<td>white</td>
+						<td>black</td>
+					</tr>
+					<tr>
+						<td>Knight</td>
+						<td>white</td>
+						<td>black</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<!-- <div>
     <div style="float:left; padding-left: 50px; width:560px; height:560px;">
         <div ng-repeat="row in table">
             <div ng-repeat="column in row" ng-click="activateSquare($parent.$index, $index)">
@@ -51,3 +100,4 @@
         </table>
     </div>
 </div>
+ -->

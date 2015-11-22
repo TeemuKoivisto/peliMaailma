@@ -15,20 +15,40 @@
     color: black;
 }
 
-.outerbox {
-    position: relative;
-    float: left;
-    width: 100px;
-    height: 100px;
-    border-radius: 8px;
+.shakki-container {
+	display: flex;
+	flex-direction: row;
+}
+
+.shakki-table {
+	order: 1;
+	padding-left: 50px; 
+	flex: 0 0 560px; 
+	/* width: 560px; */
+	height:560px;
+}
+
+.flexed-container {
+	order: 2;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 230px;
+}
+
+.turnbox-outer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	order: 1;
+	/* flex: 0 0 100px; */
+	width: 100px;
+	height: 100px;
+	border-radius: 8px;
     border: 1px solid black;
 }
 
-.innerbox {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.turnbox-inner {
     border-radius: 3px;
     padding: 3px;
     font-size: x-large;
@@ -36,19 +56,15 @@
 }
 
 .messagebox {
-    float: left;
-    position: relative;
-    top: 110px;
-    left: -100px;
-    border-radius: 8px;
+	order: 2;
+	width: auto;
+	border-radius: 8px;
     border: 1px solid black;
+	text-align: center;
 }
 
 .scoreboard {
-    float: left;
-    position: relative;
-    top: 220px;
-    left: -100px;
+	order: 3;
     border-radius: 8px;
     border: 1px solid black;
 }
