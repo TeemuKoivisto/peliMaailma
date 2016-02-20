@@ -1,4 +1,4 @@
-PeliApp.controller('RistinollaController', function($scope) {
+PeliApp.controller('TictactoeController', function($scope) {
     $scope.hei = "ristinolla yo";
     $scope.peli = [
         ['a', 's', 'd'],

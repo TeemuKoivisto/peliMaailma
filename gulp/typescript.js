@@ -6,21 +6,21 @@ var gulp = require('gulp'),
     
 gulp.task('ts', function() {
     var sourceTsFiles = [
-        './client/app/**/*.ts',
+        './public/app/**/*.ts',
         './typings/**/*.d.ts'];
     
     var compiledJs = gulp.src(sourceTsFiles)
             .pipe(tsc(tsconfig));
     
     return compiledJs.js
-            .pipe(gulp.dest('./client/app'));
+            .pipe(gulp.dest('./public/app'));
 });
 
 gulp.task('ts-lint', function() {
     var sourceTsFiles = [
-    './client/app/**/*.ts',
+    './public/app/**/*.ts',
     './typings/**/*.d.ts'];
-    // ['./client/app/**/*.ts']
+    // ['./public/app/**/*.ts']
     return gulp.src(config.allTs)
         // .pipe(tslint())
         // // .pipe(tslint.report('verbose'))

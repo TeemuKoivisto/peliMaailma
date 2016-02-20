@@ -1,18 +1,21 @@
-var PeliApp = angular.module('PeliApp', ['ngRoute']);
+var PeliApp = angular.module('PeliApp', ['ui.router']);
 
-PeliApp.config(function($routeProvider) {
-    $routeProvider
-            .when('/chess', {
-                controller: 'ChessController',
-                templateUrl: 'app/components/chess/chess.html'
-            })
-            .when('/ristinolla', {
-                controller: 'RistinollaController',
-                templateUrl: 'app/components/ristinolla/ristinolla_index.html'
-            })
-            .otherwise({
-                redirectTo: '/'
-            });
+PeliApp.config(function($stateProvider, $urlRouterProvider) {
+	$urlRouterProvider.otherwise("/chess");
+	
+    $stateProvider
+		.state('chess', {
+			url: '/chess',
+			controller: 'ChessController',
+			// controllerAs: 'game',
+			templateUrl: 'app/components/chess/chess.html'
+		})
+		.state('tictactoe', {
+			url: '/tictactoe',
+			controller: 'TictactoeController',
+			// controllerAs: 'game',
+			templateUrl: 'app/components/tictactoe/tictactoe.html'
+		})
     });
 PeliApp.controller('ChessController', function ($scope, ChessEngine) {
 
@@ -729,7 +732,7 @@ var PeliApp;
     angular.module('PeliApp').service('ChessSquare', ChessSquare);
 })(PeliApp || (PeliApp = {}));
 
-PeliApp.controller('RistinollaController', function($scope) {
+PeliApp.controller('TictactoeController', function($scope) {
     $scope.hei = "ristinolla yo";
     $scope.peli = [
         ['a', 's', 'd'],

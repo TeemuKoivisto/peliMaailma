@@ -16,14 +16,14 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       
-		"client/bower_components/angular/angular.min.js",
-		"client/bower_components/angular-route/angular-route.min.js",
-		"client/bower_components/jquery/dist/jquery.min.js",
-		"client/bower_components/bootstrap/dist/js/bootsrap.min.js",
+		"public/bower_components/angular/angular.min.js",
+		"public/bower_components/angular-ui-router/release/angular-ui-router.min.js",
+		"public/bower_components/jquery/dist/jquery.min.js",
+		"public/bower_components/bootstrap/dist/js/bootsrap.min.js",
 
 		'node_modules/angular-mocks/angular-mocks.js',
 
-		"client/app/all.js",
+		"public/app/all.js",
 		"test/**/*.js"
 		],
 
@@ -36,7 +36,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-		"client/app/all.js": ['coverage']
+		"public/app/all.js": ['coverage']
     },
 
 	coverageReporter: {

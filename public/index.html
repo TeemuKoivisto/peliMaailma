@@ -12,17 +12,18 @@
                 <ul class="nav navbar-nav">
                     <li><a ng-href="#/">Index</a></li>
                     <li><a ng-href="#/chess">Chess</a></li>
+					<li><a ng-href="#/tictactoe">Tictactoe</a></li>
                 </ul>
             </nav>
         </header>
-        <div ng-view="main-container">
-        </div>
+        <main ui-view id="main-container">
+        </main>
         
         <script src="bower_components/jquery/dist/jquery.min.js"></script>
         <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
         
         <script src="bower_components/angular/angular.min.js"></script>
-        <script src="bower_components/angular-route/angular-route.min.js"></script>
+		<script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
         
         <script src="app/app.routes.js"></script>
         <script src="app/components/chess_ts/chess_square.service.js"></script>
@@ -31,6 +32,6 @@
         <script src="app/components/chess/chess.controller.js"></script>
         <script src="app/components/chess/square.directive.js"></script>
 
-        <script src="app/components/ristinolla/ristinolla_controller.js"></script>
+        <script src="app/components/tictactoe/tictactoe.controller.js"></script>
     </body>
 </html>
