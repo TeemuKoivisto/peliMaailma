@@ -1,7 +1,7 @@
 var PeliApp;
 (function (PeliApp) {
-    var ShakkiSquare = (function () {
-        function ShakkiSquare(row, column) {
+    var ChessSquare = (function () {
+        function ChessSquare(row, column) {
             this.x = column;
             this.y = row;
             this.moves = {
@@ -22,7 +22,7 @@ var PeliApp;
                 }
             };
         }
-        ShakkiSquare.prototype.setMove = function (type, color, move) {
+        ChessSquare.prototype.setMove = function (type, color, move) {
             if (type === 'soldier') {
                 this.moves[type][color].push(move);
             }
@@ -30,7 +30,7 @@ var PeliApp;
                 this.moves[type].push(move);
             }
         };
-        ShakkiSquare.prototype.setManyMoves = function (type, color, newmoves) {
+        ChessSquare.prototype.setManyMoves = function (type, color, newmoves) {
             if (type === 'soldier') {
                 this.moves[type][color].push.apply(newmoves);
             }
@@ -40,13 +40,13 @@ var PeliApp;
                 Array.prototype.push.apply(this.moves[type], newmoves);
             }
         };
-        ShakkiSquare.prototype.setAttack = function (type, color, x, y) {
+        ChessSquare.prototype.setAttack = function (type, color, x, y) {
             if (type === 'soldier') {
                 this.edibles[type][color].push({ x: x, y: y });
             }
         };
-        return ShakkiSquare;
+        return ChessSquare;
     })();
-    PeliApp.ShakkiSquare = ShakkiSquare;
-    angular.module('PeliApp').service('ShakkiSquare', ShakkiSquare);
+    PeliApp.ChessSquare = ChessSquare;
+    angular.module('PeliApp').service('ChessSquare', ChessSquare);
 })(PeliApp || (PeliApp = {}));

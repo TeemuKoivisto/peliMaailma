@@ -1,12 +1,17 @@
-var PeliApp;
-(function (PeliApp) {
-    var Square = PeliApp.ShakkiSquare;
-    var ShakkiIgniter = (function () {
-        function ShakkiIgniter() {
-            this.types = ['soldier', 'rook', 'knight', 'bishop', 'queen', 'king'];
+﻿module PeliApp {
+
+    import Square = PeliApp.ChessSquare;
+
+    export class ChessIgniter {
+	
+        types:[string];
+
+        constructor() {
+            this.types= ['soldier', 'rook', 'knight', 'bishop', 'queen', 'king'];
         }
-        ShakkiIgniter.prototype.initAll = function (table, pieces, quantity, squares) {
-            for (var i = 0; i < 8; i++) {
+
+        public initAll(table: [], pieces:{}, quantity:{}, squares:[]) {
+            for(var i = 0; i<8; i++) {
                 table.push([{}]);
                 squares.push([]);
             }
@@ -36,67 +41,42 @@ var PeliApp;
                 queen: 0,
                 king: 0
             };
-            //quantity = {
-            //    white: {
-            //        soldier: 0,
-            //        rook: 0,
-            //        knight: 0,
-            //        bishop: 0,
-            //        queen: 0,
-            //        king: 0
-            //    },
-            //    black: {
-            //        soldier: 0,
-            //        rook: 0,
-            //        knight: 0,
-            //        bishop: 0,
-            //        queen: 0,
-            //        king: 0
-            //    }
-            //};
-            //squares = [
-            //    [],
-            //    [],
-            //    [],
-            //    [],
-            //    [],
-            //    [],
-            //    [],
-            //    []
-            //];
+
             this.initTable(table);
             this.initPieces(pieces, table, quantity);
             this.generateSquares(squares);
-        };
-        ShakkiIgniter.prototype.initTable = function (table) {
-            for (var row = 0; row < 8; row++) {
-                switch (row) {
-                    case (0):
+        }
+
+        public initTable(table: [[{}]]) {
+            for(var row = 0; row < 8; row++) {
+                switch(row) {
+                    case(0):
                         this.initSpecialRow(table[row], "black");
                         break;
-                    case (1):
+                    case(1):
                         this.initRow(table[row], "soldier", "black");
                         break;
-                    case (2):
-                    case (3):
-                    case (4):
-                    case (5):
+                    case(2):
+                    case(3):
+                    case(4):
+                    case(5):
                         this.initRow(table[row], "empty", "white");
                         break;
-                    case (6):
+                    case(6):
                         this.initRow(table[row], "soldier", "white");
                         break;
-                    case (7):
+                    case(7):
                         this.initSpecialRow(table[row], "white");
                         break;
                 }
             }
-        };
-        ShakkiIgniter.prototype.initSpecialRow = function (row, color) {
+        }
+
+        initSpecialRow(row: [{}], color:string): void {
             for (var column = 0; column < 8; column++) {
                 switch (column) {
-                    case (0):
-                    case (7):
+                    case(0):
+                    case(7):
                         row[column] = {
                             holder: "rook",
                             occupier: "none",
@@ -106,8 +86,8 @@ var PeliApp;
                             edible: false
                         };
                         break;
-                    case (1):
-                    case (6):
+                    case(1):
+                    case(6):
                         row[column] = {
                             holder: "knight",
                             occupier: "none",
@@ -117,8 +97,8 @@ var PeliApp;
                             edible: false
                         };
                         break;
-                    case (2):
-                    case (5):
+                    case(2):
+                    case(5):
                         row[column] = {
                             holder: "bishop",
                             occupier: "none",
@@ -128,7 +108,7 @@ var PeliApp;
                             edible: false
                         };
                         break;
-                    case (3):
+                    case(3):
                         row[column] = {
                             holder: "king",
                             occupier: "none",
@@ -138,7 +118,7 @@ var PeliApp;
                             edible: false
                         };
                         break;
-                    case (4):
+                    case(4):
                         row[column] = {
                             holder: "queen",
                             occupier: "none",
@@ -150,8 +130,9 @@ var PeliApp;
                         break;
                 }
             }
-        };
-        ShakkiIgniter.prototype.initRow = function (row, type, color) {
+        }
+
+        initRow(row:[{}], type:string, color:string) {
             for (var column = 0; column < 8; column++) {
                 row[column] = {
                     holder: type,
@@ -162,13 +143,13 @@ var PeliApp;
                     edible: false
                 };
             }
-        };
-        ShakkiIgniter.prototype.initPieces = function (pieces, table, quantity) {
-            for (var row = 0; row < 8; row++) {
-                for (var column = 0; column < 8; column++) {
+        }
+
+        public initPieces(pieces:{}, table:[[{}]], quantity:{}) {
+            for(var row = 0; row < 8; row++) {
+                for(var column = 0; column < 8; column++) {
                     var holder = table[row][column].holder;
-                    if (holder === 'empty')
-                        continue;
+                    if (holder==='empty') continue;
                     var color = table[row][column].color;
                     quantity[color][holder]++;
                     var number = quantity[color][holder];
@@ -185,9 +166,10 @@ var PeliApp;
                     table[row][column].occupier = name;
                 }
             }
-        };
-        ShakkiIgniter.prototype.generateSquares = function (table) {
-            for (var row = 0; row < 8; row++) {
+        }
+
+        public generateSquares(table:[[Square]]) {
+            for(var row= 0; row < 8; row++) {
                 for (var column = 0; column < 8; column++) {
                     var sq = new Square(row, column);
                     this.generateMovesForSquare(sq, row, column);
@@ -195,50 +177,48 @@ var PeliApp;
                     table[row].push(sq);
                 }
             }
-        };
-        ShakkiIgniter.prototype.generateMovesForSquare = function (sq, y, x) {
+        }
+
+        generateMovesForSquare(sq:Square, y:number, x:number){
             for (var index in this.types) {
                 var type = this.types[index];
-                switch (type) {
-                    case ('soldier'):
-                        if (y !== 0)
-                            sq.setMove(type, 'white', { x: x, y: (y - 1) });
-                        if (y !== 7)
-                            sq.setMove(type, 'black', { x: x, y: (y + 1) });
-                        if (y === 1)
-                            sq.setMove(type, 'black', { x: x, y: (y + 2) });
-                        if (y === 6)
-                            sq.setMove(type, 'white', { x: x, y: (y - 2) });
-                        if (x !== 0 && y !== 0 && y !== 7) {
-                            sq.setAttack(type, 'white', (x - 1), (y - 1));
-                            sq.setAttack(type, 'black', (x - 1), (y + 1));
+                switch(type) {
+                    case('soldier'):
+                        if (y!==0) sq.setMove(type, 'white', {x:x, y:(y-1)});
+                        if (y!==7) sq.setMove(type, 'black', {x:x, y:(y+1)});
+                        if (y===1) sq.setMove(type, 'black', {x:x, y:(y+2)});
+                        if (y===6) sq.setMove(type, 'white', {x:x, y:(y-2)});
+                        if (x!==0 && y!==0 && y!==7) {
+                            sq.setAttack(type, 'white', (x-1), (y-1));
+                            sq.setAttack(type, 'black', (x-1), (y+1));
                         }
-                        if (x !== 7 && y !== 0 && y !== 7) {
-                            sq.setAttack(type, 'white', (x + 1), (y - 1));
-                            sq.setAttack(type, 'black', (x + 1), (y + 1));
+                        if (x!==7 && y!==0 && y!==7) {
+                            sq.setAttack(type, 'white', (x+1), (y-1));
+                            sq.setAttack(type, 'black', (x+1), (y+1));
                         }
                         break;
-                    case ('rook'):
-                        sq.setMove(type, 'both', { horizontal: true });
-                        sq.setMove(type, 'both', { vertical: true });
+                    case('rook'):
+                        sq.setMove(type, 'both', {horizontal: true});
+                        sq.setMove(type, 'both', {vertical: true});
                         break;
-                    case ('knight'):
+                    case('knight'):
                         sq.setManyMoves(type, 'both', this.generateKnightMoves(x, y));
                         break;
-                    case ('bishop'):
-                        sq.setMove(type, 'both', { diagonal: true });
+                    case('bishop'):
+                        sq.setMove(type, 'both', {diagonal: true});
                         break;
-                    case ('queen'):
-                        sq.setMove(type, 'both', { horizontal: true });
-                        sq.setMove(type, 'both', { vertical: true });
-                        sq.setMove(type, 'both', { diagonal: true });
+                    case('queen'):
+                        sq.setMove(type, 'both', {horizontal: true});
+                        sq.setMove(type, 'both', {vertical: true});
+                        sq.setMove(type, 'both', {diagonal: true});
                         break;
-                    case ('king'):
+                    case('king'):
                         sq.setManyMoves(type, 'both', this.generateKingMoves(x, y));
                         break;
                 }
             }
-        };
+        }
+
         //// TODO
         //generateSoldierMoves(x:number, y:number) {
         //    var moves = [];
@@ -248,41 +228,42 @@ var PeliApp;
         //    this.checkAndPushCoords(x, y+1, moves);
         //    return moves;
         //}
-        ShakkiIgniter.prototype.generateKingMoves = function (x, y) {
+
+        generateKingMoves(x:number, y:number) : [{}] {
             var moves = [];
             // left side
-            this.checkAndPushCoords(x, y - 1, moves);
-            this.checkAndPushCoords(x - 1, y - 1, moves);
-            this.checkAndPushCoords(x - 1, y, moves);
-            this.checkAndPushCoords(x - 1, y + 1, moves);
+            this.checkAndPushCoords(x, y-1, moves);
+            this.checkAndPushCoords(x-1, y-1, moves);
+            this.checkAndPushCoords(x-1, y, moves);
+            this.checkAndPushCoords(x-1, y+1, moves);
             // right side
-            this.checkAndPushCoords(x, y + 1, moves);
-            this.checkAndPushCoords(x + 1, y + 1, moves);
-            this.checkAndPushCoords(x + 1, y, moves);
-            this.checkAndPushCoords(x + 1, y - 1, moves);
+            this.checkAndPushCoords(x, y+1, moves);
+            this.checkAndPushCoords(x+1, y+1, moves);
+            this.checkAndPushCoords(x+1, y, moves);
+            this.checkAndPushCoords(x+1, y-1, moves);
             return moves;
-        };
-        ShakkiIgniter.prototype.generateKnightMoves = function (x, y) {
+        }
+
+        generateKnightMoves(x:number, y:number) : [{}] {
             var moves = [];
             // left side
-            this.checkAndPushCoords(x - 1, y - 2, moves);
-            this.checkAndPushCoords(x - 2, y - 1, moves);
-            this.checkAndPushCoords(x - 2, y + 1, moves);
-            this.checkAndPushCoords(x - 1, y + 2, moves);
+            this.checkAndPushCoords(x-1, y-2, moves);
+            this.checkAndPushCoords(x-2, y-1, moves);
+            this.checkAndPushCoords(x-2, y+1, moves);
+            this.checkAndPushCoords(x-1, y+2, moves);
             // right side
-            this.checkAndPushCoords(x + 1, y + 2, moves);
-            this.checkAndPushCoords(x + 2, y + 1, moves);
-            this.checkAndPushCoords(x + 2, y - 1, moves);
-            this.checkAndPushCoords(x + 1, y - 2, moves);
+            this.checkAndPushCoords(x+1, y+2, moves);
+            this.checkAndPushCoords(x+2, y+1, moves);
+            this.checkAndPushCoords(x+2, y-1, moves);
+            this.checkAndPushCoords(x+1, y-2, moves);
             return moves;
-        };
-        ShakkiIgniter.prototype.checkAndPushCoords = function (x, y, list) {
-            if (x >= 0 && x < 8 && y >= 0 && y < 8) {
-                list.push({ x: x, y: y });
+        }
+
+        checkAndPushCoords(x, y, list) {
+            if (x>=0 && x<8 && y>=0 && y<8) {
+                list.push({x: x, y: y});
             }
-        };
-        return ShakkiIgniter;
-    })();
-    PeliApp.ShakkiIgniter = ShakkiIgniter;
-    angular.module('PeliApp').service('ShakkiIgniter', ShakkiIgniter);
-})(PeliApp || (PeliApp = {}));
+        }
+    }
+    angular.module('PeliApp').service('ChessIgniter', ChessIgniter);
+}

@@ -1,4 +1,4 @@
-<link rel="stylesheet" type="text/css" href="app/components/shakki/shakki_css.css">
+<link rel="stylesheet" type="text/css" href="app/components/chess/chess.css">
 
 <button ng-click="logAll()">log</button>
 
@@ -6,8 +6,8 @@
     <!--<img src="images/fairy_white/white_mine.png">-->
 <!--</div>-->
 
-<div class='shakki-container'>
-    <div class='shakki-table'>
+<div class='chess-container'>
+    <div class='chess-table'>
         <div ng-repeat="row in table">
             <div ng-repeat="column in row" ng-click="activateSquare($parent.$index, $index)">
                 <square data="table[$parent.$index][$index]" row="$parent.$index" column="$index"></square>

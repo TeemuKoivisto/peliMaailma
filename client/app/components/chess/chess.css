@@ -15,12 +15,12 @@
     color: black;
 }
 
-.shakki-container {
+.chess-container {
     display: flex;
     flex-direction: row;
 }
 
-.shakki-table {
+.chess-table {
     order: 1;
     padding-left: 50px; 
     flex: 0 0 560px; 

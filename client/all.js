@@ -2,9 +2,9 @@ var PeliApp = angular.module('PeliApp', ['ngRoute']);
 
 PeliApp.config(function($routeProvider) {
     $routeProvider
-            .when('/shakki', {
-                controller: 'ShakkiController',
-                templateUrl: 'app/components/shakki/shakki_index.html'
+            .when('/chess', {
+                controller: 'ChessController',
+                templateUrl: 'app/components/chess/chess.html'
             })
             .when('/ristinolla', {
                 controller: 'RistinollaController',
@@ -14,18 +14,10 @@ PeliApp.config(function($routeProvider) {
                 redirectTo: '/'
             });
     });
-PeliApp.controller('RistinollaController', function($scope) {
-    $scope.hei = "ristinolla yo";
-    $scope.peli = [
-        ['a', 's', 'd'],
-        ['f', 'g', 'h'],
-        ['c', 'b', 'n']
-    ];
-});
-PeliApp.controller('ShakkiController', function ($scope, ShakkiEngine) {
+PeliApp.controller('ChessController', function ($scope, ChessEngine) {
 
     $scope.message = "White starts";
-    $scope.table = ShakkiEngine.table;
+    $scope.table = ChessEngine.table;
     $scope.turncolor = "white";
 
     $scope.activatedpiece = {};
@@ -34,7 +26,7 @@ PeliApp.controller('ShakkiController', function ($scope, ShakkiEngine) {
         if($scope.checkIfAvailableSquareClicked(row, column)) {
             $scope.movePiece(row, column);
         } else if ($scope.table[row][column].color===$scope.turncolor && $scope.table[row][column].occupier !== 'none') {
-            if (ShakkiEngine.checks[$scope.turncolor+'-king1'].length!==0) {
+            if (ChessEngine.checks[$scope.turncolor+'-king1'].length!==0) {
                 if ($scope.table[row][column].holder==='king') {
 
                 } else {
@@ -45,7 +37,7 @@ PeliApp.controller('ShakkiController', function ($scope, ShakkiEngine) {
                 $scope.table[$scope.activatedpiece.y][$scope.activatedpiece.x].active = false;
                 $scope.showOrHideMovesAndEdibles(false);
             }
-            $scope.activatedpiece = ShakkiEngine.pieces[ShakkiEngine.table[row][column].occupier];
+            $scope.activatedpiece = ChessEngine.pieces[ChessEngine.table[row][column].occupier];
             $scope.table[row][column].active = true;
             $scope.showOrHideMovesAndEdibles(true);
 
@@ -54,7 +46,7 @@ PeliApp.controller('ShakkiController', function ($scope, ShakkiEngine) {
         //        $scope.table[$scope.activatedpiece.y][$scope.activatedpiece.x].active = false;
         //        $scope.showOrHideMovesAndEdibles(false);
         //    }
-        //    $scope.activatedpiece = ShakkiEngine.pieces[ShakkiEngine.table[row][column].occupier];
+        //    $scope.activatedpiece = ChessEngine.pieces[ChessEngine.table[row][column].occupier];
         //    $scope.table[row][column].active = true;
         //    $scope.showOrHideMovesAndEdibles(true);
         }
@@ -66,20 +58,20 @@ PeliApp.controller('ShakkiController', function ($scope, ShakkiEngine) {
             //console.log("what is this ", $scope.activatedpiece.moves[index]);
             var coords = $scope.activatedpiece.moves[index];
             //$scope.table[coords.y][coords.x].movable = type;
-            ShakkiEngine.table[coords.y][coords.x].movable = type;
+            ChessEngine.table[coords.y][coords.x].movable = type;
         }
         for(var index in $scope.activatedpiece.edibles) {
             var coords = $scope.activatedpiece.edibles[index];
             //$scope.table[coords.y][coords.x].edible = type;
-            ShakkiEngine.table[coords.y][coords.x].edible = type;
-            //console.log("mikä on edibl" + ShakkiEngine.table[coords.y][coords.x].edible);
+            ChessEngine.table[coords.y][coords.x].edible = type;
+            //console.log("mikä on edibl" + ChessEngine.table[coords.y][coords.x].edible);
         }
     };
 
     $scope.logAll = function() {
-        console.log("", ShakkiEngine.table);
-        console.log("", ShakkiEngine.pieces);
-        console.log("", ShakkiEngine.squares);
+        console.log("", ChessEngine.table);
+        console.log("", ChessEngine.pieces);
+        console.log("", ChessEngine.squares);
     };
 
     $scope.checkIfAvailableSquareClicked = function(row, column) {
@@ -107,9 +99,9 @@ PeliApp.controller('ShakkiController', function ($scope, ShakkiEngine) {
         $scope.table[$scope.activatedpiece.y][$scope.activatedpiece.x].active = false;
         $scope.showOrHideMovesAndEdibles(false);
 
-        ShakkiEngine.movePiece($scope.activatedpiece, row, column);
+        ChessEngine.movePiece($scope.activatedpiece, row, column);
         $scope.calcAllMoves();
-        //ShakkiEngine.checkForCheckMate();
+        //ChessEngine.checkForCheckMate();
 
         $scope.activatedpiece = {};
         var oldcolor = $scope.turncolor;
@@ -118,15 +110,141 @@ PeliApp.controller('ShakkiController', function ($scope, ShakkiEngine) {
     };
 
     $scope.calcAllMoves = function() {
-        ShakkiEngine.checks['white-king1']=[];
-        ShakkiEngine.checks['black-king1']=[];
-        for(var name in ShakkiEngine.pieces) {
-            ShakkiEngine.calculatePossibleMovesForPiece(name);
+        ChessEngine.checks['white-king1']=[];
+        ChessEngine.checks['black-king1']=[];
+        for(var name in ChessEngine.pieces) {
+            ChessEngine.calculatePossibleMovesForPiece(name);
         }
     };
 
     $scope.calcAllMoves();
 });
+/*
+PeliApp.directive('chessBoard', function() {
+    return {
+        restrict: 'E',
+        template: 
+				'<button ng-click="logAll()">log</button>',
+				'<div class="shakki-container">',
+					'<div class="shakki-table">',
+						'<div ng-repeat="row in table">',
+							'<div ng-repeat="column in row" ng-click="activateSquare($parent.$index, $index)">',
+								'<square data="table[$parent.$index][$index]" row="$parent.$index" column="$index"></square>',
+							'</div>',
+						'</div>',
+					'</div>',
+				'</div>',
+        scope: {
+            data: '=',
+            row: '=',
+            column: '='
+        },
+        link: function(scope, element, attrs) {
+			$scope.message = "White starts";
+			$scope.table = ShakkiEngine.table;
+			$scope.turncolor = "white";
+
+			$scope.activatedpiece = {};
+
+			$scope.activateSquare = function(row, column) {
+				if($scope.checkIfAvailableSquareClicked(row, column)) {
+					$scope.movePiece(row, column);
+				} else if ($scope.table[row][column].color===$scope.turncolor && $scope.table[row][column].occupier !== 'none') {
+					if (ShakkiEngine.checks[$scope.turncolor+'-king1'].length!==0) {
+						if ($scope.table[row][column].holder==='king') {
+
+						} else {
+							return;
+						}
+					}
+					if (typeof $scope.activatedpiece.y!== "undefined") {
+						$scope.table[$scope.activatedpiece.y][$scope.activatedpiece.x].active = false;
+						$scope.showOrHideMovesAndEdibles(false);
+					}
+					$scope.activatedpiece = ShakkiEngine.pieces[ShakkiEngine.table[row][column].occupier];
+					$scope.table[row][column].active = true;
+					$scope.showOrHideMovesAndEdibles(true);
+
+				//} else if ($scope.table[row][column].occupier !== 'none' && $scope.table[row][column].color===$scope.turncolor) {
+				//    if (typeof $scope.activatedpiece.y!== "undefined") {
+				//        $scope.table[$scope.activatedpiece.y][$scope.activatedpiece.x].active = false;
+				//        $scope.showOrHideMovesAndEdibles(false);
+				//    }
+				//    $scope.activatedpiece = ShakkiEngine.pieces[ShakkiEngine.table[row][column].occupier];
+				//    $scope.table[row][column].active = true;
+				//    $scope.showOrHideMovesAndEdibles(true);
+				}
+			};
+
+			$scope.showOrHideMovesAndEdibles = function(type) {
+				//console.log("what ", $scope.activatedpiece.moves);
+				for(var index in $scope.activatedpiece.moves) {
+					//console.log("what is this ", $scope.activatedpiece.moves[index]);
+					var coords = $scope.activatedpiece.moves[index];
+					//$scope.table[coords.y][coords.x].movable = type;
+					ShakkiEngine.table[coords.y][coords.x].movable = type;
+				}
+				for(var index in $scope.activatedpiece.edibles) {
+					var coords = $scope.activatedpiece.edibles[index];
+					//$scope.table[coords.y][coords.x].edible = type;
+					ShakkiEngine.table[coords.y][coords.x].edible = type;
+					//console.log("mikÃ¤ on edibl" + ShakkiEngine.table[coords.y][coords.x].edible);
+				}
+			};
+
+			$scope.logAll = function() {
+				console.log("", ShakkiEngine.table);
+				console.log("", ShakkiEngine.pieces);
+				console.log("", ShakkiEngine.squares);
+			};
+
+			$scope.checkIfAvailableSquareClicked = function(row, column) {
+				if (typeof $scope.activatedpiece.y !== 'undefined') {
+					for(var index in $scope.activatedpiece.moves) {
+						var coords = $scope.activatedpiece.moves[index];
+						if (row === coords.y && column === coords.x) {
+							return true;
+						}
+					}
+					for(var index in $scope.activatedpiece.edibles) {
+						var coords = $scope.activatedpiece.edibles[index];
+						if (row === coords.y && column === coords.x) {
+							return true;
+						}
+					}
+				}
+				return false;
+			};
+
+			// TODO
+			// see if soldier can be promoted
+
+			$scope.movePiece = function(row, column) {
+				$scope.table[$scope.activatedpiece.y][$scope.activatedpiece.x].active = false;
+				$scope.showOrHideMovesAndEdibles(false);
+
+				ShakkiEngine.movePiece($scope.activatedpiece, row, column);
+				$scope.calcAllMoves();
+				//ShakkiEngine.checkForCheckMate();
+
+				$scope.activatedpiece = {};
+				var oldcolor = $scope.turncolor;
+				$scope.turncolor = $scope.turncolor==='white' ? 'black' : 'white';
+				$("."+oldcolor).removeClass(oldcolor).addClass($scope.turncolor);
+			};
+
+			$scope.calcAllMoves = function() {
+				ShakkiEngine.checks['white-king1']=[];
+				ShakkiEngine.checks['black-king1']=[];
+				for(var name in ShakkiEngine.pieces) {
+					ShakkiEngine.calculatePossibleMovesForPiece(name);
+				}
+			};
+
+			$scope.calcAllMoves();
+		}
+	};
+});*/
 PeliApp.directive('square', function() {
     return {
         restrict: 'E',
@@ -165,9 +283,9 @@ PeliApp.directive('square', function() {
 });
 var PeliApp;
 (function (PeliApp) {
-    var Igniter = PeliApp.ShakkiIgniter;
-    var ShakkiEngine = (function () {
-        function ShakkiEngine() {
+    var Igniter = PeliApp.ChessIgniter;
+    var ChessEngine = (function () {
+        function ChessEngine() {
             this.table = [];
             this.pieces = {};
             this.quantity = {};
@@ -180,7 +298,7 @@ var PeliApp;
             var igniter = new Igniter();
             igniter.initAll(this.table, this.pieces, this.quantity, this.squares);
         }
-        ShakkiEngine.prototype.movePiece = function (piece, row, column) {
+        ChessEngine.prototype.movePiece = function (piece, row, column) {
             var target = this.table[row][column];
             if (target.occupier !== "none") {
                 // eat
@@ -199,9 +317,9 @@ var PeliApp;
         //checkForCheckMate() {
         //
         //}
-        ShakkiEngine.prototype.checkIfEdible = function () {
+        ChessEngine.prototype.checkIfEdible = function () {
         };
-        ShakkiEngine.prototype.calculatePossibleMovesForPiece = function (name) {
+        ChessEngine.prototype.calculatePossibleMovesForPiece = function (name) {
             var piece = this.pieces[name];
             if (typeof piece === "undefined")
                 return { moves: [], edibles: [] };
@@ -251,7 +369,7 @@ var PeliApp;
             this.pieces[name].edibles = available.edibles;
             return available;
         };
-        ShakkiEngine.prototype.loopUntilBorderOrPiece = function (piece, x, y, xdir, ydir, available) {
+        ChessEngine.prototype.loopUntilBorderOrPiece = function (piece, x, y, xdir, ydir, available) {
             //console.log("tullaan " + x + ":" + y);
             while (x >= 0 && x < 8 && y >= 0 && y < 8) {
                 //console.log("nyt x " + x + " ja y " + y);
@@ -273,7 +391,7 @@ var PeliApp;
         //        available.edibles.push({x: x, y: y});
         //    }
         //}
-        ShakkiEngine.prototype.checkAndAddIfValidMove = function (piece, x, y, available) {
+        ChessEngine.prototype.checkAndAddIfValidMove = function (piece, x, y, available) {
             if (this.table[y][x].holder === 'empty') {
                 available.moves.push({ x: x, y: y });
                 return true;
@@ -291,20 +409,20 @@ var PeliApp;
                 return false;
             }
         };
-        return ShakkiEngine;
+        return ChessEngine;
     })();
-    PeliApp.ShakkiEngine = ShakkiEngine;
-    angular.module('PeliApp').service('ShakkiEngine', ShakkiEngine);
+    PeliApp.ChessEngine = ChessEngine;
+    angular.module('PeliApp').service('ChessEngine', ChessEngine);
 })(PeliApp || (PeliApp = {}));
 
 var PeliApp;
 (function (PeliApp) {
-    var Square = PeliApp.ShakkiSquare;
-    var ShakkiIgniter = (function () {
-        function ShakkiIgniter() {
+    var Square = PeliApp.ChessSquare;
+    var ChessIgniter = (function () {
+        function ChessIgniter() {
             this.types = ['soldier', 'rook', 'knight', 'bishop', 'queen', 'king'];
         }
-        ShakkiIgniter.prototype.initAll = function (table, pieces, quantity, squares) {
+        ChessIgniter.prototype.initAll = function (table, pieces, quantity, squares) {
             for (var i = 0; i < 8; i++) {
                 table.push([{}]);
                 squares.push([]);
@@ -335,39 +453,11 @@ var PeliApp;
                 queen: 0,
                 king: 0
             };
-            //quantity = {
-            //    white: {
-            //        soldier: 0,
-            //        rook: 0,
-            //        knight: 0,
-            //        bishop: 0,
-            //        queen: 0,
-            //        king: 0
-            //    },
-            //    black: {
-            //        soldier: 0,
-            //        rook: 0,
-            //        knight: 0,
-            //        bishop: 0,
-            //        queen: 0,
-            //        king: 0
-            //    }
-            //};
-            //squares = [
-            //    [],
-            //    [],
-            //    [],
-            //    [],
-            //    [],
-            //    [],
-            //    [],
-            //    []
-            //];
             this.initTable(table);
             this.initPieces(pieces, table, quantity);
             this.generateSquares(squares);
         };
-        ShakkiIgniter.prototype.initTable = function (table) {
+        ChessIgniter.prototype.initTable = function (table) {
             for (var row = 0; row < 8; row++) {
                 switch (row) {
                     case (0):
@@ -391,7 +481,7 @@ var PeliApp;
                 }
             }
         };
-        ShakkiIgniter.prototype.initSpecialRow = function (row, color) {
+        ChessIgniter.prototype.initSpecialRow = function (row, color) {
             for (var column = 0; column < 8; column++) {
                 switch (column) {
                     case (0):
@@ -450,7 +540,7 @@ var PeliApp;
                 }
             }
         };
-        ShakkiIgniter.prototype.initRow = function (row, type, color) {
+        ChessIgniter.prototype.initRow = function (row, type, color) {
             for (var column = 0; column < 8; column++) {
                 row[column] = {
                     holder: type,
@@ -462,7 +552,7 @@ var PeliApp;
                 };
             }
         };
-        ShakkiIgniter.prototype.initPieces = function (pieces, table, quantity) {
+        ChessIgniter.prototype.initPieces = function (pieces, table, quantity) {
             for (var row = 0; row < 8; row++) {
                 for (var column = 0; column < 8; column++) {
                     var holder = table[row][column].holder;
@@ -485,7 +575,7 @@ var PeliApp;
                 }
             }
         };
-        ShakkiIgniter.prototype.generateSquares = function (table) {
+        ChessIgniter.prototype.generateSquares = function (table) {
             for (var row = 0; row < 8; row++) {
                 for (var column = 0; column < 8; column++) {
                     var sq = new Square(row, column);
@@ -495,7 +585,7 @@ var PeliApp;
                 }
             }
         };
-        ShakkiIgniter.prototype.generateMovesForSquare = function (sq, y, x) {
+        ChessIgniter.prototype.generateMovesForSquare = function (sq, y, x) {
             for (var index in this.types) {
                 var type = this.types[index];
                 switch (type) {
@@ -547,7 +637,7 @@ var PeliApp;
         //    this.checkAndPushCoords(x, y+1, moves);
         //    return moves;
         //}
-        ShakkiIgniter.prototype.generateKingMoves = function (x, y) {
+        ChessIgniter.prototype.generateKingMoves = function (x, y) {
             var moves = [];
             // left side
             this.checkAndPushCoords(x, y - 1, moves);
@@ -561,7 +651,7 @@ var PeliApp;
             this.checkAndPushCoords(x + 1, y - 1, moves);
             return moves;
         };
-        ShakkiIgniter.prototype.generateKnightMoves = function (x, y) {
+        ChessIgniter.prototype.generateKnightMoves = function (x, y) {
             var moves = [];
             // left side
             this.checkAndPushCoords(x - 1, y - 2, moves);
@@ -575,21 +665,21 @@ var PeliApp;
             this.checkAndPushCoords(x + 1, y - 2, moves);
             return moves;
         };
-        ShakkiIgniter.prototype.checkAndPushCoords = function (x, y, list) {
+        ChessIgniter.prototype.checkAndPushCoords = function (x, y, list) {
             if (x >= 0 && x < 8 && y >= 0 && y < 8) {
                 list.push({ x: x, y: y });
             }
         };
-        return ShakkiIgniter;
+        return ChessIgniter;
     })();
-    PeliApp.ShakkiIgniter = ShakkiIgniter;
-    angular.module('PeliApp').service('ShakkiIgniter', ShakkiIgniter);
+    PeliApp.ChessIgniter = ChessIgniter;
+    angular.module('PeliApp').service('ChessIgniter', ChessIgniter);
 })(PeliApp || (PeliApp = {}));
 
 var PeliApp;
 (function (PeliApp) {
-    var ShakkiSquare = (function () {
-        function ShakkiSquare(row, column) {
+    var ChessSquare = (function () {
+        function ChessSquare(row, column) {
             this.x = column;
             this.y = row;
             this.moves = {
@@ -610,7 +700,7 @@ var PeliApp;
                 }
             };
         }
-        ShakkiSquare.prototype.setMove = function (type, color, move) {
+        ChessSquare.prototype.setMove = function (type, color, move) {
             if (type === 'soldier') {
                 this.moves[type][color].push(move);
             }
@@ -618,7 +708,7 @@ var PeliApp;
                 this.moves[type].push(move);
             }
         };
-        ShakkiSquare.prototype.setManyMoves = function (type, color, newmoves) {
+        ChessSquare.prototype.setManyMoves = function (type, color, newmoves) {
             if (type === 'soldier') {
                 this.moves[type][color].push.apply(newmoves);
             }
@@ -628,13 +718,22 @@ var PeliApp;
                 Array.prototype.push.apply(this.moves[type], newmoves);
             }
         };
-        ShakkiSquare.prototype.setAttack = function (type, color, x, y) {
+        ChessSquare.prototype.setAttack = function (type, color, x, y) {
             if (type === 'soldier') {
                 this.edibles[type][color].push({ x: x, y: y });
             }
         };
-        return ShakkiSquare;
+        return ChessSquare;
     })();
-    PeliApp.ShakkiSquare = ShakkiSquare;
-    angular.module('PeliApp').service('ShakkiSquare', ShakkiSquare);
+    PeliApp.ChessSquare = ChessSquare;
+    angular.module('PeliApp').service('ChessSquare', ChessSquare);
 })(PeliApp || (PeliApp = {}));
+
+PeliApp.controller('RistinollaController', function($scope) {
+    $scope.hei = "ristinolla yo";
+    $scope.peli = [
+        ['a', 's', 'd'],
+        ['f', 'g', 'h'],
+        ['c', 'b', 'n']
+    ];
+});

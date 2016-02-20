@@ -1,7 +1,7 @@
-PeliApp.controller('ShakkiController', function ($scope, ShakkiEngine) {
+PeliApp.controller('ChessController', function ($scope, ChessEngine) {
 
     $scope.message = "White starts";
-    $scope.table = ShakkiEngine.table;
+    $scope.table = ChessEngine.table;
     $scope.turncolor = "white";
 
     $scope.activatedpiece = {};
@@ -10,7 +10,7 @@ PeliApp.controller('ShakkiController', function ($scope, ShakkiEngine) {
         if($scope.checkIfAvailableSquareClicked(row, column)) {
             $scope.movePiece(row, column);
         } else if ($scope.table[row][column].color===$scope.turncolor && $scope.table[row][column].occupier !== 'none') {
-            if (ShakkiEngine.checks[$scope.turncolor+'-king1'].length!==0) {
+            if (ChessEngine.checks[$scope.turncolor+'-king1'].length!==0) {
                 if ($scope.table[row][column].holder==='king') {
 
                 } else {
@@ -21,7 +21,7 @@ PeliApp.controller('ShakkiController', function ($scope, ShakkiEngine) {
                 $scope.table[$scope.activatedpiece.y][$scope.activatedpiece.x].active = false;
                 $scope.showOrHideMovesAndEdibles(false);
             }
-            $scope.activatedpiece = ShakkiEngine.pieces[ShakkiEngine.table[row][column].occupier];
+            $scope.activatedpiece = ChessEngine.pieces[ChessEngine.table[row][column].occupier];
             $scope.table[row][column].active = true;
             $scope.showOrHideMovesAndEdibles(true);
 
@@ -30,7 +30,7 @@ PeliApp.controller('ShakkiController', function ($scope, ShakkiEngine) {
         //        $scope.table[$scope.activatedpiece.y][$scope.activatedpiece.x].active = false;
         //        $scope.showOrHideMovesAndEdibles(false);
         //    }
-        //    $scope.activatedpiece = ShakkiEngine.pieces[ShakkiEngine.table[row][column].occupier];
+        //    $scope.activatedpiece = ChessEngine.pieces[ChessEngine.table[row][column].occupier];
         //    $scope.table[row][column].active = true;
         //    $scope.showOrHideMovesAndEdibles(true);
         }
@@ -42,20 +42,20 @@ PeliApp.controller('ShakkiController', function ($scope, ShakkiEngine) {
             //console.log("what is this ", $scope.activatedpiece.moves[index]);
             var coords = $scope.activatedpiece.moves[index];
             //$scope.table[coords.y][coords.x].movable = type;
-            ShakkiEngine.table[coords.y][coords.x].movable = type;
+            ChessEngine.table[coords.y][coords.x].movable = type;
         }
         for(var index in $scope.activatedpiece.edibles) {
             var coords = $scope.activatedpiece.edibles[index];
             //$scope.table[coords.y][coords.x].edible = type;
-            ShakkiEngine.table[coords.y][coords.x].edible = type;
-            //console.log("mikä on edibl" + ShakkiEngine.table[coords.y][coords.x].edible);
+            ChessEngine.table[coords.y][coords.x].edible = type;
+            //console.log("mikä on edibl" + ChessEngine.table[coords.y][coords.x].edible);
         }
     };
 
     $scope.logAll = function() {
-        console.log("", ShakkiEngine.table);
-        console.log("", ShakkiEngine.pieces);
-        console.log("", ShakkiEngine.squares);
+        console.log("", ChessEngine.table);
+        console.log("", ChessEngine.pieces);
+        console.log("", ChessEngine.squares);
     };
 
     $scope.checkIfAvailableSquareClicked = function(row, column) {
@@ -83,9 +83,9 @@ PeliApp.controller('ShakkiController', function ($scope, ShakkiEngine) {
         $scope.table[$scope.activatedpiece.y][$scope.activatedpiece.x].active = false;
         $scope.showOrHideMovesAndEdibles(false);
 
-        ShakkiEngine.movePiece($scope.activatedpiece, row, column);
+        ChessEngine.movePiece($scope.activatedpiece, row, column);
         $scope.calcAllMoves();
-        //ShakkiEngine.checkForCheckMate();
+        //ChessEngine.checkForCheckMate();
 
         $scope.activatedpiece = {};
         var oldcolor = $scope.turncolor;
@@ -94,10 +94,10 @@ PeliApp.controller('ShakkiController', function ($scope, ShakkiEngine) {
     };
 
     $scope.calcAllMoves = function() {
-        ShakkiEngine.checks['white-king1']=[];
-        ShakkiEngine.checks['black-king1']=[];
-        for(var name in ShakkiEngine.pieces) {
-            ShakkiEngine.calculatePossibleMovesForPiece(name);
+        ChessEngine.checks['white-king1']=[];
+        ChessEngine.checks['black-king1']=[];
+        for(var name in ChessEngine.pieces) {
+            ChessEngine.calculatePossibleMovesForPiece(name);
         }
     };
 

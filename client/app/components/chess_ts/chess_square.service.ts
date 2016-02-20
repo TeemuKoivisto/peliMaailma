@@ -1,10 +1,12 @@
-module PeliApp {
+﻿module PeliApp {
 	
-	export class ShakkiSquare {
-		public x:number;
+	export class ChessSquare {
+	
+		public x: number;
 		public y: number;
 		public moves: {};
 		public edibles: {};
+		
 		constructor(row:number, column:number) {
 			this.x=column;
 			this.y=row;
@@ -50,10 +52,8 @@ module PeliApp {
 		public setAttack(type:string, color:string, x:number, y:number) {
 			if (type === 'soldier') {
 				this.edibles[type][color].push({x: x, y: y});
-			//} else {
-			//	this.edibles[type].push({x: x, y: y});
 			}
 		}
 	}
-	angular.module('PeliApp').service('ShakkiSquare', ShakkiSquare);
+	angular.module('PeliApp').service('ChessSquare', ChessSquare);
 }
