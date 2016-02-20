@@ -1,10 +1,20 @@
-<div>
-    <div ng-repeat="rivi in peli">
-        <div ng-repeat="sarake in rivi" style="float: left;
-    width: 60px;
-    height: 60px;
-    border: 1px solid black;">
-            {{sarake}}
-        </div>
-    </div>
+<div class="tictactoe-container flex-row">
+	<div class="tictactoe-board">
+		<div class="flex-row tictactoe-row" ng-repeat="row in board">
+			<div class="tictactoe-col" ng-repeat="column in row" ng-click="activateSquare($parent.$index, $index)">
+				<tictactoe-square type="column.type"></tictactoe-square>
+			</div>
+		</div>
+	</div>
+	<div class='flexed-container'>
+		<button ng-click="reset()">Reset</button>
+		<div class="white turnbox-outer">
+			<div class="white turnbox-inner">
+				{{ nextInTurn }}
+			</div>
+		</div>
+		<div class="messagebox">
+			{{message}}
+		</div>
+	</div>
 </div>

@@ -1,12 +1,10 @@
-<link rel="stylesheet" type="text/css" href="app/components/chess/chess.css">
-
 <button ng-click="logAll()">log</button>
 
 <!--<div>-->
     <!--<img src="images/fairy_white/white_mine.png">-->
 <!--</div>-->
 
-<div class='chess-container'>
+<div class='chess-container flex-row'>
     <div class='chess-table'>
         <div ng-repeat="row in table">
             <div ng-repeat="column in row" ng-click="activateSquare($parent.$index, $index)">
