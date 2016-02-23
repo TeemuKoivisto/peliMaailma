@@ -16,4 +16,10 @@ PeliApp.config(function($stateProvider, $urlRouterProvider) {
 			// controllerAs: 'game',
 			templateUrl: 'app/components/tictactoe/tictactoe.html'
 		})
+		.state('mod', {
+			url: '/mod',
+			controller: 'ModController',
+			// controllerAs: 'game',
+			templateUrl: 'app/components/mod/mod.html'
+		})
     });

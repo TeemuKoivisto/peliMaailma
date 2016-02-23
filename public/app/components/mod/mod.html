@@ -1,0 +1,14 @@
+<div class="mod-container flex-row">
+	<mod-grid grid="grid"></mod-grid>
+	<mod-command class="mleft" message="message" state="state" ></mod-command>
+	<div ng-show="state === 'pickDM'" class="mleft">
+		<mod-select-dm></mod-select-dm>
+	</div>
+	<div ng-show="state === 'pickDungeon'" class="mleft">
+		<mod-select-dungeon></mod-select-dungeon>
+	</div>
+	<div ng-show="state === 'buildDungeon'" class="mleft>
+		<mod-build-dungeon></mod-build-dungeon>
+	</div>
+	<!-- <mod-select ng-show="state === 'pickDM'" class="mleft"></mod-select> -->
+</div>

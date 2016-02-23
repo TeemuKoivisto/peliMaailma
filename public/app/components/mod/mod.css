@@ -1,0 +1,73 @@
+.mod-container {
+	margin-left: 15px;
+}
+
+.mod-board {
+	/* border: 1px solid black; */
+	margin-right: 15px;
+}
+
+.mod-row {
+}
+
+.mod-col {
+	/* width: 50px;
+	height: 50px;
+	border: 1px solid black; */
+}
+
+.mod-square {
+	width: 50px;
+	height: 50px;
+	border: 1px solid black;
+}
+
+.mod-select {
+}
+
+/* mod-select-dm */
+.mod-select-dm {
+	/* width: 150px;
+	height: 400px;
+	margin-bottom: 10px;
+	border: 1px solid black; */
+}
+
+/* mod-select-dm-item */
+.mod-select-dm-item {
+	width: 150px;
+	height: 400px;
+	margin-bottom: 10px;
+	border: 1px solid black;
+}
+
+.mod-select-dm-item-portrait {
+	width: 100%;
+	height: 25%;
+}
+
+.dm-selected {
+	background-color: blue;
+}
+
+.mod-select-dm-item-stats {
+	width: 100%;
+	height: 75%;
+}
+
+/* mod-select-dungeon */
+/* .mod-select-dungeon {
+	
+} */
+
+/* mod-select-dungeon-item */
+.mod-select-dungeon-item {
+	width: 150px;
+	height: 400px;
+	margin-bottom: 10px;
+	border: 1px solid black;
+}
+
+.mod-select-dungeon-item-grid {
+	
+}

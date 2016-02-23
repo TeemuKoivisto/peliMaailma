@@ -14,7 +14,12 @@ gulp.task("concat-js", function() {
 		"public/app/components/chess_ts/chess_igniter.service.js",
 		"public/app/components/chess_ts/chess_engine.service.js",
 		"public/app/components/chess/*.js",
+		"public/app/components/tictactoe_ts/tictactoe_engine.service.js",
+		"public/app/components/tictactoe_ts/tictactoe_ai.service.js",
 		"public/app/components/tictactoe/*.js",
+		"public/app/components/mod_ts/mod_creator.service.js",
+		"public/app/components/mod_ts/mod_engine.service.js",
+		"public/app/components/mod/*.js",
 	])
 	.pipe(concat("all.js"))
 	.pipe(gulp.dest("public/"))
