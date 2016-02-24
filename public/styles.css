@@ -126,20 +126,16 @@
 }
 
 /* mod-select-dungeon */
-/* .mod-select-dungeon {
+.mod-select-dungeon {
 	
-} */
+}
 
 /* mod-select-dungeon-item */
 .mod-select-dungeon-item {
-	width: 150px;
-	height: 400px;
+	width: 100px;
+	height: 100px;
 	margin-bottom: 10px;
 	border: 1px solid black;
-}
-
-.mod-select-dungeon-item-grid {
-	
 }
 .flex-row {
 	display: flex;

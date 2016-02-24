@@ -3,7 +3,7 @@ PeliApp.directive("modCommand", function(ModEngine) {
         restrict: "E",
         template: 	"<div class='flex-col'>"+
 						"<button ng-click='restart()'>Restart</button>"+
-						"<button ng-click='save()'>Save</button>"+
+						// "<button ng-click='save()'>Save</button>"+
 						"<div class='white turnbox-outer'>"+
 							"<div class='white turnbox-inner'>"+
 								"{{ state }}"+

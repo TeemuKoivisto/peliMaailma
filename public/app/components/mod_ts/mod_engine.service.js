@@ -5,13 +5,18 @@ var PeliApp;
         function ModEngine() {
             this.state = "pickDM";
             this.subscribers = [];
-            this.dungeonGrid = [
+            this.init();
+        }
+        ModEngine.prototype.init = function () {
+            this.playerDM = {};
+            this.playerDungeon = [
                 [{ type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }],
                 [{ type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }],
                 [{ type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }],
                 [{ type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }],
                 [{ type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }]
             ];
+            var creator = new Creator();
             this.dungeonMasters = [
                 {
                     name: "Sorcerer's apprentice",
@@ -35,20 +40,8 @@ var PeliApp;
                     info: "Cutish little hydra pup, size of a dog. Grows into an enormous beast that is almost impossible to kill due to regeneration. Unable to equip items except trinkets."
                 },
             ];
-            this.dungeons = [
-                {
-                    name: "hei"
-                },
-                {
-                    name: "hoi"
-                },
-            ];
-            this.init();
-            this.playerDM = {};
-        }
-        ModEngine.prototype.init = function () {
-            var creator = new Creator();
-            this.generatedDungeons = creator.createDungeonCombinations(5, 7);
+            this.dungeons = creator.createDungeonCombinations(5, 7);
+            this.selectedDungeon = this.playerDungeon;
         };
         ModEngine.prototype.subscribeToStateChange = function (subscriber) {
             this.subscribers.push(subscriber);
@@ -63,8 +56,14 @@ var PeliApp;
         ModEngine.prototype.getState = function () {
             return this.state;
         };
-        ModEngine.prototype.getGrid = function () {
-            return this.dungeonGrid;
+        ModEngine.prototype.getPlayerDM = function () {
+            return this.playerDM;
+        };
+        ModEngine.prototype.getPlayerDungeon = function () {
+            return this.playerDungeon;
+        };
+        ModEngine.prototype.getSelectedDungeon = function () {
+            return this.selectedDungeon;
         };
         ModEngine.prototype.getDMs = function () {
             return this.dungeonMasters;
@@ -76,11 +75,19 @@ var PeliApp;
         ModEngine.prototype.getDungeons = function () {
             return this.dungeons;
         };
-        ModEngine.prototype.pickDungeon = function (index) {
-            // change dungeonGrid
+        ModEngine.prototype.selectDungeon = function (index) {
+            this.selectedDungeon = this.dungeons[index].grid;
+            this.changeState("changeDungeon");
+        };
+        ModEngine.prototype.pickDungeon = function () {
+            // change playerDungeon
             // to the one found from purchasable dungeons
             // if enough money? no checks needed atm
+            this.playerDungeon = this.selectedDungeon;
             this.changeState("buildDungeon");
+        };
+        ModEngine.prototype.getBuildings = function () {
+            return ["1", "2", "3"];
         };
         ModEngine.prototype.restart = function () {
             this.init();

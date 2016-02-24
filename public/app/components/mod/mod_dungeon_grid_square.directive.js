@@ -1,4 +1,4 @@
-PeliApp.directive("modSquare", function() {
+PeliApp.directive("modDungeonSquare", function() {
     return {
         restrict: "E",
         template: "<div class=\"mod-square\">" +

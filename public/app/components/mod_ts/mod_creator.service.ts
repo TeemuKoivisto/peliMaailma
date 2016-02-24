@@ -14,7 +14,7 @@
 		
 		}
 		
-		createEmptyGrid(size: number) {
+		createEmptyDungeon(size: number) {
 			var grid = [];
 			for(var y = 0; y < size; y++) {
 				grid.push([]);
@@ -30,13 +30,13 @@
 		}
 		
 		createDungeonCombinations(gridsize: number, tunnelsize: number) {
-			LogmodEng.start("createDungeonCombinations: gridsize " + gridsize + " tunnelsize " + tunnelsize);
+			// LogmodEng.start("createDungeonCombinations: gridsize " + gridsize + " tunnelsize " + tunnelsize);
 			var direction = Math.floor(Math.random()*4); // 0 = north, 1 = south, 2 = west, 3 = east
 			var entrance = Math.floor(Math.random()*(gridsize - 2) + 1); // anything but the corner square
 			// console.log("dir is " + direction + " and entrance " + entrance);
-			LogmodEng.append("dir is " + direction + " and entrance " + entrance);
-			var grid = this.createEmptyGrid(gridsize);
-			
+			// LogmodEng.append("dir is " + direction + " and entrance " + entrance);
+			var grid = this.createEmptyDungeon(gridsize);
+			// debugger;
 			// should be in own method
 			var start = {};
 			var next = {};
@@ -71,12 +71,12 @@
 			var dungeons = [];
 			this.createDungeonsOfSize(next.x, next.y, 1, tunnelsize, grid, dungeons);
 			console.log("dungeons are ", dungeons);
-			LogmodEng.end("FROM createDungeonCombinations: gridsize " + gridsize + " tunnelsize " + tunnelsize + " RETURN dungeons " + dungeons);
+			// LogmodEng.end("FROM createDungeonCombinations: gridsize " + gridsize + " tunnelsize " + tunnelsize + " RETURN dungeons " + dungeons);
 			return dungeons;
 		}
 		
 		createDungeonsOfSize(x: number, y: number, currentsize: number, wantedsize: number, grid: [[{}]], combinations: [[[{}]]]) {
-			LogmodEng.start("createDungeonsOfSize: x " + x + " y " + y + " currentsize " + currentsize + " wantedsize " + wantedsize + " grid " + grid + " combinations " + combinations);
+			// LogmodEng.start("createDungeonsOfSize: x " + x + " y " + y + " currentsize " + currentsize + " wantedsize " + wantedsize + " grid " + grid + " combinations " + combinations);
 			// console.log("creating dungeons x: " + x + " y: " + y + " csize: " + currentsize + " wsize: " + wantedsize);
 			if (currentsize === wantedsize) {
 				combinations.push({ grid: grid, size: currentsize});
@@ -85,15 +85,15 @@
 			var available = this.getAvailable(x, y, grid);
 			for(var c = 0; c < available.length; c++) {
 				var now = available[c];
-				newgrid = jQuery.extend(true, {}, grid); // deep copy
+				var newgrid = jQuery.extend(true, {}, grid); // deep copy
 				newgrid[now.y][now.x].type = "tunnel";
-				this.createDungeonsOfSize(now.x, now.y, currentsize++, wantedsize, newgrid, combinations);
+				this.createDungeonsOfSize(now.x, now.y, currentsize+1, wantedsize, newgrid, combinations);
 			}
-			LogmodEng.end("FROM createDungeonsOfSize: x " + x + " y " + y + " currentsize " + currentsize + " wantedsize " + wantedsize + " grid " + grid + " combinations " + combinations);
+			// LogmodEng.end("FROM createDungeonsOfSize: x " + x + " y " + y + " currentsize " + currentsize + " wantedsize " + wantedsize + " grid " + grid + " combinations " + combinations);
 		}
 		
 		getAvailable(x:number, y:number, grid:[[{}]]) {
-			LogmodEng.start("getAvailable: x " + x + " y " + y + " grid ", grid);
+			// LogmodEng.start("getAvailable: x " + x + " y " + y + " grid ", grid);
 			var available = [];
 			for(var iy = y-1; iy <= y+1; iy++) {
 				for(var ix = x-1; ix <= x+1; ix++) {
@@ -106,7 +106,8 @@
 					// |x|0|0|0|x|
 					// |x|0|0|0|0|
 					// |x|x|x|x|x|
-					if (iy > 0 && iy < grid.length-1 && ix > 0 && ix < grid[iy].length-1) {
+					if (iy > 0 && iy < 4 && ix > 0 && ix < 4) {
+					// if (iy > 0 && iy < grid.length-1 && ix > 0 && ix < grid[iy].length-1) {
 						// console.log("inside grid ");
 						// available squares:
 						// x|0|x
@@ -123,33 +124,33 @@
 					}
 				}
 			}
-			console.log("available is ", available);
-			LogmodEng.end("FROM getAvailable: x " + x + " y " + y + " grid " + grid + " RETURN available " + available);
+			// console.log("available is ", available);
+			// LogmodEng.end("FROM getAvailable: x " + x + " y " + y + " grid " + grid + " RETURN available " + available);
 			return available;
 		}
 		
 		addIfAvailable(x:number, y:number, grid:[[{}]], list:[{}]) {
-			LogmodEng.start("addIfAvailable: x " + x + " y " + y + " grid [big] list " + list);
+			// LogmodEng.start("addIfAvailable: x " + x + " y " + y + " grid [big] list " + list);
 			// console.log("grid is ", grid);
 			if (grid[y][x].type === "") {
-				console.log("square is empty");
+				// console.log("square is empty");
 				// adds to list if only one adjancent square
 				if (grid[y+1][x].type !== "" && grid[y-1][x].type === "" && grid[y][x-1].type === "" && grid[y][x+1].type === "") {
-					console.log("adjancent is top square");
+					// console.log("adjancent is top square");
 					list.push({x: x, y: y});
 				} else if (grid[y-1][x].type !== "" && grid[y+1][x].type === "" && grid[y][x-1].type === "" && grid[y][x+1].type === "") {
-					console.log("adjancent is bottom square");
+					// console.log("adjancent is bottom square");
 					list.push({x: x, y: y});
 				} else if (grid[y][x-1].type !== "" && grid[y+1][x].type === "" && grid[y-1][x].type === "" && grid[y][x+1].type === "") {
-					console.log("adjancent is left square");
+					// console.log("adjancent is left square");
 					list.push({x: x, y: y});
 				} else if (grid[y][x+1].type !== "" && grid[y+1][x].type === "" && grid[y-1][x].type === "" && grid[y][x-1].type === "") {
-					console.log("adjancent is right square");
+					// console.log("adjancent is right square");
 					list.push({x: x, y: y});
 				}
 			}
-			console.log("list is ", list);
-			LogmodEng.end("FROM addIfAvailable: x " + x + " y " + y + " grid [big] list " + list);
+			// console.log("list is ", list);
+			// LogmodEng.end("FROM addIfAvailable: x " + x + " y " + y + " grid [big] list " + list);
 		}
     }
 	

@@ -41,7 +41,7 @@ var logmon = (function() {
         this.size = 5000;
         
         this.log = [];
-        this.logIndent = '';
+        this.currentIndent = '';
 		this.indent = '\t'
 
         this.timer = {};
@@ -49,10 +49,7 @@ var logmon = (function() {
         this.testRunning = '';
         this.testLevel = 0;
         this.testing = true;
-        // this.testing = false;
-        
         this.consoling = true;
-        // this.consoling = false;
     }
     
     // Logger.prototype.testing = function(which) {
@@ -73,7 +70,7 @@ var logmon = (function() {
     
     Logger.prototype.resetLogs = function() {
         this.log = [];
-        this.logIndent = '';
+        this.currentIndent = '';
     }
     
     Logger.prototype.timerStart = function(where) {
@@ -86,14 +83,14 @@ var logmon = (function() {
         if (this.testing) {
             var timed = performance.now() - this.timer[where];
             if (this.consoling) {
-                console.log(this.logIndent + where + ' done in time ' + timed + 'ms');
+                console.log(this.currentIndent + where + ' done in time ' + timed + 'ms');
             }
         }
     }
     
     Logger.prototype.append = function (string) {
         if (this.testing) {
-            var logged = this.logIndent + string;
+            var logged = this.currentIndent + string;
             if (this.consoling) {
                 console.log(logged);
             }
@@ -117,7 +114,7 @@ var logmon = (function() {
                     return;
                 }
             }
-            var logged = this.logIndent + string;
+            var logged = this.currentIndent + string;
             if (this.consoling) {
                 console.log(logged);
 				console.log("arguments size " + arguments.length);
@@ -127,7 +124,7 @@ var logmon = (function() {
                 this.log.splice(0, 1);
             }
             this.log.push(logged);
-            this.logIndent += this.indent;
+            this.currentIndent += this.indent;
         }
     }
 
@@ -139,8 +136,8 @@ var logmon = (function() {
                     this.testRunning = '';
                 }
             }
-            this.logIndent = this.logIndent.substring(0, this.logIndent.length - this.indent.length);
-            var logged = this.logIndent + string;
+            this.currentIndent = this.currentIndent.substring(0, this.currentIndent.length - this.indent.length);
+            var logged = this.currentIndent + string;
             if (this.consoling) {
                 console.log(logged);
             }
@@ -180,6 +177,9 @@ ja sit ku ei jaksa siirtää muita ylöspäin ni voi mennä vielä alemmaksi eli
 ja ehkä ottaa myös stringejä, niin voi kirjoittaa warn, error, jne.
 tai omat metodit? Logdef.warn('inside this shit is something about the get rekt')
 
+Toi console:n käyttö että voi käyttää overloadingia ja objekti-viittauksia on aika MUST
+
+
 Gotta log them all!
 
 Tiny logging library to help front-end js-development. Easy to use, easy to modify.
@@ -193,19 +193,19 @@ Or do whatever, if Logmon is disabled it shouldn't really affect your execution 
 too much.
 
 The way I use Logmon is to describe in main method the class/service/whatever i.e.
-Logser.start('MyService getSomeStuff: parameter ' + parameter);
+Logmyser.start('MyService getSomeStuff: parameter ' + parameter);
 
 And in between the main method I don't have to write which class I'm in so I'll just
-write depending how long the method and how much shit is done i.e.
-Logser.start('weeLoop: loop ' + loop + ' index ' + index);
+write depending how long the method is and how much shit is done i.e.
+Logmyser.start('weeLoop: loop ' + loop + ' index ' + index);
 or
-Logser.append('importantMethod: CONDITION sinep === 'palindrome'); <- for important if-statements
+Logmyser.append('importantMethod: CONDITION sinep === palindrome'); <- for important if-statements
 
 There ain't rules that you must follow. Just to try to be logical and structured, please.
 Logging is supposed to help developers to understand the code, not confuse them even more.
 
 And when you are done with any of the start -statements you HAVE to end them i.e.
 
-Logser.end('FROM MyService getSomeStuff: parameter ' + parameter);
+Logser.end('FROM MyService getSomeStuff: parameter ' + parameter + " RETURN thingy " + thingy);
 
 */

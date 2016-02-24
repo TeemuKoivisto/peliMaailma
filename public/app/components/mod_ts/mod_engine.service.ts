@@ -7,21 +7,31 @@
 		state: string;
 		subscribers: [{}];
 	
-        dungeonGrid: [[{}]];
-		dungeonMasters: [];
-		dungeons: [];
+		dungeonMasters: [{}];
+		dungeons: [[[{}]]];
+		
 		playerDM: {};
+		playerDungeon: [[{}]];
+		
+		selectedDungeon: [[{}]];
 		
 		constructor() {
 			this.state = "pickDM";
 			this.subscribers = [];
-            this.dungeonGrid = [
+			this.init();
+		}
+		
+		init() {
+			this.playerDM = {};
+			this.playerDungeon = [
 				[{type: ""}, {type: ""}, {type: ""}, {type: ""}, {type: ""}],
 				[{type: ""}, {type: ""}, {type: ""}, {type: ""}, {type: ""}],
 				[{type: ""}, {type: ""}, {type: ""}, {type: ""}, {type: ""}],
 				[{type: ""}, {type: ""}, {type: ""}, {type: ""}, {type: ""}],
 				[{type: ""}, {type: ""}, {type: ""}, {type: ""}, {type: ""}]
 			];
+			
+			var creator = new Creator();
 			this.dungeonMasters = [
 				{
 					name: "Sorcerer's apprentice",
@@ -45,21 +55,9 @@
 					info: "Cutish little hydra pup, size of a dog. Grows into an enormous beast that is almost impossible to kill due to regeneration. Unable to equip items except trinkets."
 				},
 			];
-			this.dungeons = [
-				{
-					name: "hei"
-				},
-				{
-					name: "hoi"
-				},
-			];
-			this.init();
-			this.playerDM = {};
-		}
-		
-		init() {
-			var creator = new Creator();
-			this.generatedDungeons = creator.createDungeonCombinations(5, 7);
+			this.dungeons = creator.createDungeonCombinations(5, 7);
+			
+			this.selectedDungeon = this.playerDungeon;
 		}
 		
 		subscribeToStateChange(subscriber: {}) {
@@ -78,8 +76,16 @@
 			return this.state;
 		}
 		
-		getGrid() {
-			return this.dungeonGrid;
+		getPlayerDM() {
+			return this.playerDM;
+		}
+		
+		getPlayerDungeon() {
+			return this.playerDungeon;
+		}
+		
+		getSelectedDungeon() {
+			return this.selectedDungeon;
 		}
 		
 		getDMs() {
@@ -95,11 +101,21 @@
 			return this.dungeons;
 		}
 		
-		pickDungeon(index: number) {
-			// change dungeonGrid
+		selectDungeon(index: number) {
+			this.selectedDungeon = this.dungeons[index].grid;
+			this.changeState("changeDungeon");
+		}
+		
+		pickDungeon() {
+			// change playerDungeon
 			// to the one found from purchasable dungeons
 			// if enough money? no checks needed atm
+			this.playerDungeon = this.selectedDungeon;
 			this.changeState("buildDungeon");
+		}
+		
+		getBuildings() {
+			return ["1", "2", "3"];
 		}
 		
 		restart() {

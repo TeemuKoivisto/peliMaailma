@@ -6,7 +6,6 @@ PeliApp.directive("modBuildDungeon", function(ModEngine) {
 						"buildable"+
 						// "<mod-build-dungeon-item ng-click='select($index)' building='item'></mod-build-dungeon-item>"+
 					"</div>"+
-					"<button ng-click='pick()'>Pick</button>"+
 				  "</div>",
         scope: {
             type: "="
