@@ -1,22 +1,23 @@
-PeliApp.directive("modDungeonSquare", function() {
+PeliApp.directive("modDungeonTile", function() {
     return {
         restrict: "E",
-        template: "<div class=\"mod-square\">" +
-					"{{ type }}" +
+        template: "<div class='mod-dungeon-tile'>" +
+					"{{ tile.type }}" +
+					"{{ tile.name }}" +
 				  "</span>",
         scope: {
-            type: "="
+            tile: "="
         },
         link: function(scope, element, attrs) {
             var span = $(element).find("div")[0];
-            var color = "";
+            var color = "brown";
             
-            scope.$watch("type", function(newVal, oldVal) {
-                if (newVal === "") {
+            scope.$watch("tile", function(newVal, oldVal) {
+                if (newVal.type === "") {
                     $(span).css({"background-color": "orange"});
-                } else if (newVal === "tunnel") {
+                } else if (newVal.type === "tunnel") {
                     $(span).css({"background-color": "gray"});
-                } else if (newVal === "lair") {
+                } else if (newVal.type === "lair") {
                     $(span).css({"background-color": "green"});
                 } else {
                     $(span).css({"background-color": color});

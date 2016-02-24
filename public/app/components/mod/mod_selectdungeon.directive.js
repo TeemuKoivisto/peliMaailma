@@ -32,6 +32,8 @@ PeliApp.directive("modSelectDungeon", function(ModEngine) {
 			
 			scope.pick = function() {
 				ModEngine.pickDungeon();
+				var old = element.find(".mod-select-dungeon-item")[selected];
+				old.className = old.className.replace( /(?:^|\s)dm-selected(?!\S)/g , '' );
 			}
         }
     };

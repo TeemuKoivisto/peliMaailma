@@ -1073,10 +1073,33 @@ var PeliApp;
 (function (PeliApp) {
     var ModCreator = (function () {
         function ModCreator() {
+            seed: Math.random();
         }
-        ModCreator.prototype.createRandomDMs = function () {
-        };
-        ModCreator.prototype.createRandomDungeons = function () {
+        ModCreator.prototype.generateDungeonMasters = function () {
+            var dungeonMasters = [
+                {
+                    name: "Sorcerer's apprentice",
+                    prestige: 100,
+                    health: 6,
+                    magic: 10,
+                    info: "Twisted minded pupil of a master wizard, cast away from his peers. Given the proper education and equipment might become a world-renowed sorcerer. No special abilities."
+                },
+                {
+                    name: "Baby beholder",
+                    prestige: 180,
+                    health: 4,
+                    magic: 8,
+                    info: "Small beholder, a size of a human head. Grows into a massive monster that can disintegrate people at will. Unable to equip items."
+                },
+                {
+                    name: "Hydra pup",
+                    prestige: 150,
+                    health: 8,
+                    magic: 4,
+                    info: "Cutish little hydra pup, size of a dog. Grows into an enormous beast that is almost impossible to kill due to regeneration. Unable to equip items except trinkets."
+                },
+            ];
+            return dungeonMasters;
         };
         ModCreator.prototype.createEmptyDungeon = function (size) {
             var grid = [];
@@ -1092,7 +1115,7 @@ var PeliApp;
             // console.log("created grid ", grid);
             return grid;
         };
-        ModCreator.prototype.createDungeonCombinations = function (gridsize, tunnelsize) {
+        ModCreator.prototype.generateDungeons = function (gridsize, tunnelsize) {
             // LogmodEng.start("createDungeonCombinations: gridsize " + gridsize + " tunnelsize " + tunnelsize);
             var direction = Math.floor(Math.random() * 4); // 0 = north, 1 = south, 2 = west, 3 = east
             var entrance = Math.floor(Math.random() * (gridsize - 2) + 1); // anything but the corner square
@@ -1143,7 +1166,11 @@ var PeliApp;
             // LogmodEng.start("createDungeonsOfSize: x " + x + " y " + y + " currentsize " + currentsize + " wantedsize " + wantedsize + " grid " + grid + " combinations " + combinations);
             // console.log("creating dungeons x: " + x + " y: " + y + " csize: " + currentsize + " wsize: " + wantedsize);
             if (currentsize === wantedsize) {
-                combinations.push({ grid: grid, size: currentsize });
+                combinations.push({
+                    grid: grid,
+                    size: currentsize,
+                    type: "rocky" // volcanic, desert etc.
+                });
                 return;
             }
             var available = this.getAvailable(x, y, grid);
@@ -1217,6 +1244,21 @@ var PeliApp;
             // console.log("list is ", list);
             // LogmodEng.end("FROM addIfAvailable: x " + x + " y " + y + " grid [big] list " + list);
         };
+        ModCreator.prototype.generateBuildings = function (dungeon) {
+            var buildings = [
+                {
+                    type: "lair",
+                    name: "Goblin lair",
+                    price: 10
+                },
+                {
+                    type: "lair",
+                    name: "Wolves den",
+                    price: 25
+                }
+            ];
+            return buildings;
+        };
         return ModCreator;
     })();
     PeliApp.ModCreator = ModCreator;
@@ -1228,6 +1270,7 @@ var PeliApp;
     var Creator = PeliApp.ModCreator;
     var ModEngine = (function () {
         function ModEngine() {
+            this.creator = new Creator();
             this.state = "pickDM";
             this.subscribers = [];
             this.init();
@@ -1241,32 +1284,12 @@ var PeliApp;
                 [{ type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }],
                 [{ type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }]
             ];
-            var creator = new Creator();
-            this.dungeonMasters = [
-                {
-                    name: "Sorcerer's apprentice",
-                    prestige: 100,
-                    health: 6,
-                    magic: 10,
-                    info: "Twisted minded pupil of a master wizard, cast away from his peers. Given the proper education and equipment might become a world-renowed sorcerer. No special abilities."
-                },
-                {
-                    name: "Baby beholder",
-                    prestige: 180,
-                    health: 4,
-                    magic: 8,
-                    info: "Small beholder, a size of a human head. Grows into a massive monster that can disintegrate people at will. Unable to equip items."
-                },
-                {
-                    name: "Hydra pup",
-                    prestige: 150,
-                    health: 8,
-                    magic: 4,
-                    info: "Cutish little hydra pup, size of a dog. Grows into an enormous beast that is almost impossible to kill due to regeneration. Unable to equip items except trinkets."
-                },
-            ];
-            this.dungeons = creator.createDungeonCombinations(5, 7);
-            this.selectedDungeon = this.playerDungeon;
+            this.playerBuildings = [];
+            this.dungeonMasters = this.creator.generateDungeonMasters(); // use parameters?
+            this.dungeons = this.creator.generateDungeons(5, 7);
+            this.dungeonBuildings = [];
+            this.selectedDungeon = "";
+            this.selectedBuilding = "";
         };
         ModEngine.prototype.subscribeToStateChange = function (subscriber) {
             this.subscribers.push(subscriber);
@@ -1286,6 +1309,9 @@ var PeliApp;
         };
         ModEngine.prototype.getPlayerDungeon = function () {
             return this.playerDungeon;
+        };
+        ModEngine.prototype.getPlayerBuildings = function () {
+            return this.playerBuildings;
         };
         ModEngine.prototype.getSelectedDungeon = function () {
             return this.selectedDungeon;
@@ -1309,10 +1335,36 @@ var PeliApp;
             // to the one found from purchasable dungeons
             // if enough money? no checks needed atm
             this.playerDungeon = this.selectedDungeon;
+            this.dungeonBuildings = this.creator.generateBuildings(this.playerDungeon);
             this.changeState("buildDungeon");
         };
         ModEngine.prototype.getBuildings = function () {
-            return ["1", "2", "3"];
+            return this.dungeonBuildings;
+        };
+        ModEngine.prototype.selectBuilding = function (index) {
+            if (index === -1) {
+                // for unselecting current building and resetting the cursor
+                this.selectedBuilding = "";
+                return true;
+            }
+            else {
+                // TODO check if sufficient funds and then change cursor to the building
+                this.selectedBuilding = this.dungeonBuildings[index];
+                return true;
+            }
+        };
+        ModEngine.prototype.buildBuilding = function (y, x) {
+            if (this.selectedBuilding !== "" && this.playerDungeon[y][x].type !== "") {
+                // TODO decrease funds
+                // debugger;
+                // var built = jQuery.extend(true, {}, this.selectedBuilding);
+                this.playerDungeon[y][x] = this.selectedBuilding;
+                this.playerBuildings.push({
+                    y: y,
+                    x: x,
+                    building: this.selectedBuilding
+                });
+            }
         };
         ModEngine.prototype.restart = function () {
             this.init();
@@ -1363,8 +1415,15 @@ PeliApp.directive("modBuildDungeon", function(ModEngine) {
     return {
         restrict: "E",
         template: "<div class='mod-build-dungeon flex-col'>" +
-					"<div ng-repeat='item in buildable'>"+
-						"buildable"+
+					"<div ng-repeat='building in buildings'>"+
+						"<div ng-click='select($index)' class='mod-build-dungeon-item flex-row'>"+
+							"<div class='mod-build-dungeon-item-portrait'>picture</div>"+
+							"<div class='mod-build-dungeon-item-info flex-col'>"+
+								"<p>name: {{ building.name }}</p>"+
+								"<p>type: {{ building.type }}</p>"+
+								"<p>price: {{ building.price }}</p>"+
+							"</div>"+
+						"</div>"+
 						// "<mod-build-dungeon-item ng-click='select($index)' building='item'></mod-build-dungeon-item>"+
 					"</div>"+
 				  "</div>",
@@ -1373,22 +1432,29 @@ PeliApp.directive("modBuildDungeon", function(ModEngine) {
         },
         link: function(scope, element, attrs) {
 			var selected;
-			scope.buildable = ModEngine.getBuildings();
+			scope.buildings = [];
+			
+			scope.refreshBuildings = function(state) {
+				if (state === "buildDungeon") {
+					scope.buildings = ModEngine.getBuildings();
+				}
+			}
 			
 			scope.select = function(index) {
 				// console.log("selected on " + selected);
-				if (typeof selected === "number") {
-					var old = element.find(".mod-build-dungeon")[selected];
-					old.className = old.className.replace( /(?:^|\s)dm-selected(?!\S)/g , '' );
+				// check if possible the build
+				if (ModEngine.selectBuilding(index)) {
+					if (typeof selected === "number") {
+						var old = element.find(".mod-build-dungeon-item")[selected];
+						old.className = old.className.replace( /(?:^|\s)dm-selected(?!\S)/g , '' );
+					}
+					var div = element.find(".mod-build-dungeon-item")[index];
+					div.className += " dm-selected";
+					selected = index;
 				}
-				var div = element.find(".mod-build-dungeon")[index];
-				div.className += " dm-selected";
-				selected = index;
 			}
 			
-			scope.pick = function() {
-				// ModEngine.pickDungeon(selected);
-			}
+			ModEngine.subscribeToStateChange(scope.refreshBuildings);
         }
     };
 });
@@ -1435,12 +1501,6 @@ PeliApp.directive("modCommand", function(ModEngine) {
 			
 			scope.restart = function() {
 				ModEngine.restart();
-				// for(var row = 0; row < scope.grid.length; row++) {
-					// for(var col = 0; col < scope.grid.length; col++) {
-						// scope.grid[row][col].type = "";
-					// }
-				// }
-				// scope.message = "Start the game";
 			}
 			
 			scope.save = function() {
@@ -1452,7 +1512,8 @@ PeliApp.directive("modCommand", function(ModEngine) {
 PeliApp.directive("modDmPanel", function(ModEngine) {
     return {
         restrict: "E",
-        template: "<div class='flex-col'>" +
+        template: "<div class='mod-dm-panel flex-col'>" +
+					"<div>portrait</div>"+
 					"I am {{ dm.name }}"+
 				  "</div>",
         scope: {
@@ -1482,10 +1543,10 @@ PeliApp.directive("modDmPanel", function(ModEngine) {
 PeliApp.directive("modDungeonGrid", function(ModEngine) {
     return {
         restrict: "E",
-        template: 	"<div class='mod-grid'>" +
+        template: 	"<div class='mod-dungeon-grid'>" +
 						"<div class='mod-grid-row flex-row' ng-repeat='row in grid'>"+
-							"<div class='mod-grid-col' ng-repeat='column in row' ng-click='activateSquare($parent.$index, $index)'>"+
-								"<mod-dungeon-square type='column.type'></mod-dungeon-square>"+
+							"<div class='mod-grid-col' ng-repeat='column in row track by $index' ng-click='activateSquare($parent.$index, $index)'>"+
+								"<mod-dungeon-tile tile='column'></mod-dungeon-tile>"+
 							"</div>"+
 						"</div>"+
 					"</div>",
@@ -1496,32 +1557,35 @@ PeliApp.directive("modDungeonGrid", function(ModEngine) {
 			var selected;
 			
 			scope.activateSquare = function(row, col) {
-				if (scope.grid[row][col].type === "") {
-					scope.grid[row][col].type = "tunnel";
+				var state = ModEngine.getState();
+				if (state === "buildDungeon") {
+					// should trigger update inside modController which updates this view
+					ModEngine.buildBuilding(row, col);
 				}
 			}
         }
     };
 });
-PeliApp.directive("modDungeonSquare", function() {
+PeliApp.directive("modDungeonTile", function() {
     return {
         restrict: "E",
-        template: "<div class=\"mod-square\">" +
-					"{{ type }}" +
+        template: "<div class='mod-dungeon-tile'>" +
+					"{{ tile.type }}" +
+					"{{ tile.name }}" +
 				  "</span>",
         scope: {
-            type: "="
+            tile: "="
         },
         link: function(scope, element, attrs) {
             var span = $(element).find("div")[0];
-            var color = "";
+            var color = "brown";
             
-            scope.$watch("type", function(newVal, oldVal) {
-                if (newVal === "") {
+            scope.$watch("tile", function(newVal, oldVal) {
+                if (newVal.type === "") {
                     $(span).css({"background-color": "orange"});
-                } else if (newVal === "tunnel") {
+                } else if (newVal.type === "tunnel") {
                     $(span).css({"background-color": "gray"});
-                } else if (newVal === "lair") {
+                } else if (newVal.type === "lair") {
                     $(span).css({"background-color": "green"});
                 } else {
                     $(span).css({"background-color": color});
@@ -1559,6 +1623,8 @@ PeliApp.directive("modSelectDm", function(ModEngine) {
 			
 			scope.pick = function() {
 				ModEngine.pickDM(selected);
+				var old = element.find(".mod-select-dm-item-portrait")[selected];
+				old.className = old.className.replace( /(?:^|\s)dm-selected(?!\S)/g , '' );
 			}
         }
     };
@@ -1617,6 +1683,8 @@ PeliApp.directive("modSelectDungeon", function(ModEngine) {
 			
 			scope.pick = function() {
 				ModEngine.pickDungeon();
+				var old = element.find(".mod-select-dungeon-item")[selected];
+				old.className = old.className.replace( /(?:^|\s)dm-selected(?!\S)/g , '' );
 			}
         }
     };

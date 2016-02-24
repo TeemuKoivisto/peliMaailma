@@ -4,18 +4,23 @@
 
 	export class ModEngine {
 	
+		creator: {};
 		state: string;
 		subscribers: [{}];
 	
 		dungeonMasters: [{}];
 		dungeons: [[[{}]]];
+		dungeonBuildings: [{}];
 		
 		playerDM: {};
 		playerDungeon: [[{}]];
+		playerBuildings: [{}];
 		
 		selectedDungeon: [[{}]];
+		selectedBuilding: {};
 		
 		constructor() {
+			this.creator = new Creator();
 			this.state = "pickDM";
 			this.subscribers = [];
 			this.init();
@@ -30,34 +35,14 @@
 				[{type: ""}, {type: ""}, {type: ""}, {type: ""}, {type: ""}],
 				[{type: ""}, {type: ""}, {type: ""}, {type: ""}, {type: ""}]
 			];
+			this.playerBuildings = [];
 			
-			var creator = new Creator();
-			this.dungeonMasters = [
-				{
-					name: "Sorcerer's apprentice",
-					prestige: 100,
-					health: 6,
-					magic: 10,
-					info: "Twisted minded pupil of a master wizard, cast away from his peers. Given the proper education and equipment might become a world-renowed sorcerer. No special abilities.",
-				},
-				{
-					name: "Baby beholder",
-					prestige: 180,
-					health: 4,
-					magic: 8,
-					info: "Small beholder, a size of a human head. Grows into a massive monster that can disintegrate people at will. Unable to equip items."
-				},
-				{
-					name: "Hydra pup",
-					prestige: 150,
-					health: 8,
-					magic: 4,
-					info: "Cutish little hydra pup, size of a dog. Grows into an enormous beast that is almost impossible to kill due to regeneration. Unable to equip items except trinkets."
-				},
-			];
-			this.dungeons = creator.createDungeonCombinations(5, 7);
+			this.dungeonMasters = this.creator.generateDungeonMasters(); // use parameters?
+			this.dungeons = this.creator.generateDungeons(5, 7);
+			this.dungeonBuildings = [];
 			
-			this.selectedDungeon = this.playerDungeon;
+			this.selectedDungeon = "";
+			this.selectedBuilding = "";
 		}
 		
 		subscribeToStateChange(subscriber: {}) {
@@ -82,6 +67,10 @@
 		
 		getPlayerDungeon() {
 			return this.playerDungeon;
+		}
+		
+		getPlayerBuildings() {
+			return this.playerBuildings;
 		}
 		
 		getSelectedDungeon() {
@@ -111,11 +100,38 @@
 			// to the one found from purchasable dungeons
 			// if enough money? no checks needed atm
 			this.playerDungeon = this.selectedDungeon;
+			this.dungeonBuildings = this.creator.generateBuildings(this.playerDungeon);
 			this.changeState("buildDungeon");
 		}
 		
 		getBuildings() {
-			return ["1", "2", "3"];
+			return this.dungeonBuildings;
+		}
+		
+		selectBuilding(index: number) {
+			if (index === -1) {
+				// for unselecting current building and resetting the cursor
+				this.selectedBuilding = "";
+				return true;
+			} else {
+				// TODO check if sufficient funds and then change cursor to the building
+				this.selectedBuilding = this.dungeonBuildings[index];
+				return true;
+			}
+		}
+		
+		buildBuilding(y: number, x: number) {
+			if (this.selectedBuilding !== "" && this.playerDungeon[y][x].type !== "") {
+				// TODO decrease funds
+				// debugger;
+				// var built = jQuery.extend(true, {}, this.selectedBuilding);
+				this.playerDungeon[y][x] = this.selectedBuilding;
+				this.playerBuildings.push({
+					y: y,
+					x: x,
+					building: this.selectedBuilding
+				});
+			}
 		}
 		
 		restart() {

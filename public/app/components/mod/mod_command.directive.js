@@ -21,12 +21,6 @@ PeliApp.directive("modCommand", function(ModEngine) {
 			
 			scope.restart = function() {
 				ModEngine.restart();
-				// for(var row = 0; row < scope.grid.length; row++) {
-					// for(var col = 0; col < scope.grid.length; col++) {
-						// scope.grid[row][col].type = "";
-					// }
-				// }
-				// scope.message = "Start the game";
 			}
 			
 			scope.save = function() {

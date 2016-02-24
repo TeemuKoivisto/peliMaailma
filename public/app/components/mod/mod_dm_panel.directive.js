@@ -1,7 +1,8 @@
 PeliApp.directive("modDmPanel", function(ModEngine) {
     return {
         restrict: "E",
-        template: "<div class='flex-col'>" +
+        template: "<div class='mod-dm-panel flex-col'>" +
+					"<div>portrait</div>"+
 					"I am {{ dm.name }}"+
 				  "</div>",
         scope: {

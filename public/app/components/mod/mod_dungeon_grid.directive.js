@@ -1,10 +1,10 @@
 PeliApp.directive("modDungeonGrid", function(ModEngine) {
     return {
         restrict: "E",
-        template: 	"<div class='mod-grid'>" +
+        template: 	"<div class='mod-dungeon-grid'>" +
 						"<div class='mod-grid-row flex-row' ng-repeat='row in grid'>"+
-							"<div class='mod-grid-col' ng-repeat='column in row' ng-click='activateSquare($parent.$index, $index)'>"+
-								"<mod-dungeon-square type='column.type'></mod-dungeon-square>"+
+							"<div class='mod-grid-col' ng-repeat='column in row track by $index' ng-click='activateSquare($parent.$index, $index)'>"+
+								"<mod-dungeon-tile tile='column'></mod-dungeon-tile>"+
 							"</div>"+
 						"</div>"+
 					"</div>",
@@ -15,8 +15,10 @@ PeliApp.directive("modDungeonGrid", function(ModEngine) {
 			var selected;
 			
 			scope.activateSquare = function(row, col) {
-				if (scope.grid[row][col].type === "") {
-					scope.grid[row][col].type = "tunnel";
+				var state = ModEngine.getState();
+				if (state === "buildDungeon") {
+					// should trigger update inside modController which updates this view
+					ModEngine.buildBuilding(row, col);
 				}
 			}
         }

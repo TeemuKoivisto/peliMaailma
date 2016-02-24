@@ -10,5 +10,7 @@
 	<div ng-show="state === 'buildDungeon'" class="mleft">
 		<mod-build-dungeon></mod-build-dungeon>
 	</div>
-	<mod-dm-panel class="mleft" dm="dm"></mod-dm-panel>
+	<div ng-show="state !== 'pickDM'" class="mleft">
+		<mod-dm-panel dm="dm"></mod-dm-panel>
+	</div>
 </div>

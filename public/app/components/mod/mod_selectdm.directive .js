@@ -27,6 +27,8 @@ PeliApp.directive("modSelectDm", function(ModEngine) {
 			
 			scope.pick = function() {
 				ModEngine.pickDM(selected);
+				var old = element.find(".mod-select-dm-item-portrait")[selected];
+				old.className = old.className.replace( /(?:^|\s)dm-selected(?!\S)/g , '' );
 			}
         }
     };

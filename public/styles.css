@@ -86,7 +86,13 @@
 	border: 1px solid black; */
 }
 
-.mod-square {
+/* modDungeonGrid */
+.mod-dungeon-grid {
+	
+}
+
+/* modDungeonTile */
+.mod-dungeon-tile {
 	width: 50px;
 	height: 50px;
 	border: 1px solid black;
@@ -95,7 +101,7 @@
 .mod-select {
 }
 
-/* mod-select-dm */
+/* modSelectDm */
 .mod-select-dm {
 	/* width: 150px;
 	height: 400px;
@@ -103,7 +109,7 @@
 	border: 1px solid black; */
 }
 
-/* mod-select-dm-item */
+/* modSelectDmItem */
 .mod-select-dm-item {
 	width: 150px;
 	height: 400px;
@@ -125,16 +131,46 @@
 	height: 75%;
 }
 
-/* mod-select-dungeon */
+/* modSelectDungeon */
 .mod-select-dungeon {
 	
 }
 
-/* mod-select-dungeon-item */
+/* modSelectDungeonItem */
 .mod-select-dungeon-item {
 	width: 100px;
 	height: 100px;
 	margin-bottom: 10px;
+	border: 1px solid black;
+}
+
+/* modBuildDungeon */
+.mod-build-dungeon {
+	
+}
+
+/* modBuildDungeonItem */
+.mod-build-dungeon-item {
+	width: 200px;
+	height: 150px;
+}
+
+.mod-build-dungeon-item-portrait {
+	width: 50px;
+	height: 50px;
+	margin-bottom: 10px;
+	border: 1px solid black;
+}
+
+.mod-build-dungeon-item-info {
+	width: 150px;
+	height: 150px;
+	margin-bottom: 10px;
+	border: 1px solid black;
+}
+
+/* modDmPanel */
+.mod-dm-panel {
 	border: 1px solid black;
 }
 .flex-row {
