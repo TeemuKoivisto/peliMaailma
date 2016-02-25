@@ -23,8 +23,9 @@ PeliApp.controller("ModController", function($scope, ModEngine) {
 			$scope.message = "Build dungeon";
 		} else if (newState === "waitHeroes") {
 			
-		} else if (newState === "killHeroes") {
-			
+		} else if (newState === "enterHeroes") {
+			$scope.state = newState;
+			$scope.message = "Kill heroes!";
 		}
 	}
 	

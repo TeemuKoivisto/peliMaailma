@@ -19,6 +19,8 @@
 		selectedDungeon: [[{}]];
 		selectedBuilding: {};
 		
+		enteredHeroParty: [];
+		
 		constructor() {
 			this.creator = new Creator();
 			this.state = "pickDM";
@@ -43,6 +45,8 @@
 			
 			this.selectedDungeon = "";
 			this.selectedBuilding = "";
+			
+			this.enteredHeroParty = "";
 		}
 		
 		subscribeToStateChange(subscriber: {}) {
@@ -91,6 +95,7 @@
 		}
 		
 		selectDungeon(index: number) {
+			debugger;
 			this.selectedDungeon = this.dungeons[index].grid;
 			this.changeState("changeDungeon");
 		}
@@ -99,6 +104,7 @@
 			// change playerDungeon
 			// to the one found from purchasable dungeons
 			// if enough money? no checks needed atm
+			debugger;
 			this.playerDungeon = this.selectedDungeon;
 			this.dungeonBuildings = this.creator.generateBuildings(this.playerDungeon);
 			this.changeState("buildDungeon");
@@ -121,16 +127,46 @@
 		}
 		
 		buildBuilding(y: number, x: number) {
-			if (this.selectedBuilding !== "" && this.playerDungeon[y][x].type !== "") {
-				// TODO decrease funds
-				// debugger;
-				// var built = jQuery.extend(true, {}, this.selectedBuilding);
+			if (this.selectedBuilding !== "" && this.playerDungeon[y][x].type !== "" && this.playerDM.gold >= this.selectedBuilding.price) {
+				if (this.playerDungeon[y][x].type !== "tunnel") {
+					// TODO ask for confirmation to overwrite existing lair
+				}
+				this.playerDM.gold -= this.selectedBuilding.price;
 				this.playerDungeon[y][x] = this.selectedBuilding;
 				this.playerBuildings.push({
 					y: y,
 					x: x,
 					building: this.selectedBuilding
 				});
+			}
+		}
+		
+		waitForHeroes() {
+			this.enteredHeroParty = this.creator.generateHeroParty(this.playerDM, this.playerDungeon);
+			this.changeState("enterHeroes");
+		}
+		
+		moveHeroes() {
+			console.log("moved!");
+			var nextTile = ""; // get it
+			if (nexTile.type === "tunnel") {
+				// decrease food?
+			} else if (nexTile.type === "lair") {
+				// generate a battle?
+			} else if (nexTile.type === "dm") {
+				// fight against playerDM?
+			}
+			
+			return;
+			while(true) {
+				var nextTile = ""; // get it
+				if (nexTile.type === "tunnel") {
+					// decrease food?
+				} else if (nexTile.type === "lair") {
+					// generate a battle?
+				} else if (nexTile.type === "dm") {
+					// fight against playerDM?
+				}
 			}
 		}
 		

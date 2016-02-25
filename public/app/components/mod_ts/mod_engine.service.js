@@ -23,6 +23,7 @@ var PeliApp;
             this.dungeonBuildings = [];
             this.selectedDungeon = "";
             this.selectedBuilding = "";
+            this.enteredHeroParty = "";
         };
         ModEngine.prototype.subscribeToStateChange = function (subscriber) {
             this.subscribers.push(subscriber);
@@ -60,6 +61,7 @@ var PeliApp;
             return this.dungeons;
         };
         ModEngine.prototype.selectDungeon = function (index) {
+            debugger;
             this.selectedDungeon = this.dungeons[index].grid;
             this.changeState("changeDungeon");
         };
@@ -67,6 +69,7 @@ var PeliApp;
             // change playerDungeon
             // to the one found from purchasable dungeons
             // if enough money? no checks needed atm
+            debugger;
             this.playerDungeon = this.selectedDungeon;
             this.dungeonBuildings = this.creator.generateBuildings(this.playerDungeon);
             this.changeState("buildDungeon");
@@ -87,16 +90,40 @@ var PeliApp;
             }
         };
         ModEngine.prototype.buildBuilding = function (y, x) {
-            if (this.selectedBuilding !== "" && this.playerDungeon[y][x].type !== "") {
-                // TODO decrease funds
-                // debugger;
-                // var built = jQuery.extend(true, {}, this.selectedBuilding);
+            if (this.selectedBuilding !== "" && this.playerDungeon[y][x].type !== "" && this.playerDM.gold >= this.selectedBuilding.price) {
+                if (this.playerDungeon[y][x].type !== "tunnel") {
+                }
+                this.playerDM.gold -= this.selectedBuilding.price;
                 this.playerDungeon[y][x] = this.selectedBuilding;
                 this.playerBuildings.push({
                     y: y,
                     x: x,
                     building: this.selectedBuilding
                 });
+            }
+        };
+        ModEngine.prototype.waitForHeroes = function () {
+            this.enteredHeroParty = this.creator.generateHeroParty(this.playerDM, this.playerDungeon);
+            this.changeState("enterHeroes");
+        };
+        ModEngine.prototype.moveHeroes = function () {
+            console.log("moved!");
+            var nextTile = ""; // get it
+            if (nexTile.type === "tunnel") {
+            }
+            else if (nexTile.type === "lair") {
+            }
+            else if (nexTile.type === "dm") {
+            }
+            return;
+            while (true) {
+                var nextTile = ""; // get it
+                if (nexTile.type === "tunnel") {
+                }
+                else if (nexTile.type === "lair") {
+                }
+                else if (nexTile.type === "dm") {
+                }
             }
         };
         ModEngine.prototype.restart = function () {

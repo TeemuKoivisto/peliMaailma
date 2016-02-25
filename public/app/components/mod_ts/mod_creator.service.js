@@ -8,22 +8,28 @@ var PeliApp;
             var dungeonMasters = [
                 {
                     name: "Sorcerer's apprentice",
+                    gold: 50,
                     prestige: 100,
                     health: 6,
+                    attack: 5,
                     magic: 10,
                     info: "Twisted minded pupil of a master wizard, cast away from his peers. Given the proper education and equipment might become a world-renowed sorcerer. No special abilities."
                 },
                 {
                     name: "Baby beholder",
+                    gold: 80,
                     prestige: 180,
                     health: 4,
+                    attack: 4,
                     magic: 8,
                     info: "Small beholder, a size of a human head. Grows into a massive monster that can disintegrate people at will. Unable to equip items."
                 },
                 {
                     name: "Hydra pup",
+                    gold: 40,
                     prestige: 150,
                     health: 8,
+                    attack: 6,
                     magic: 4,
                     info: "Cutish little hydra pup, size of a dog. Grows into an enormous beast that is almost impossible to kill due to regeneration. Unable to equip items except trinkets."
                 },
@@ -105,7 +111,7 @@ var PeliApp;
             var available = this.getAvailable(x, y, grid);
             for (var c = 0; c < available.length; c++) {
                 var now = available[c];
-                var newgrid = jQuery.extend(true, {}, grid); // deep copy
+                var newgrid = jQuery.extend(true, [], grid); // deep copy
                 newgrid[now.y][now.x].type = "tunnel";
                 this.createDungeonsOfSize(now.x, now.y, currentsize + 1, wantedsize, newgrid, combinations);
             }
@@ -116,7 +122,6 @@ var PeliApp;
             var available = [];
             for (var iy = y - 1; iy <= y + 1; iy++) {
                 for (var ix = x - 1; ix <= x + 1; ix++) {
-                    // console.log("looping iy: " + iy + " ix: " + ix);
                     // check if inside the grid
                     // and also not directly adjancent to border
                     // |x|x|x|x|x|
@@ -187,6 +192,31 @@ var PeliApp;
                 }
             ];
             return buildings;
+        };
+        ModCreator.prototype.generateHeroParty = function (player, dungeon) {
+            return {
+                type: "explore",
+                heroes: [
+                    {
+                        type: "mage",
+                        attack: 4,
+                        health: 4,
+                        gold: 20
+                    },
+                    {
+                        type: "cleric",
+                        attack: 3,
+                        health: 5,
+                        gold: 30
+                    },
+                    {
+                        type: "warrior",
+                        attack: 6,
+                        health: 5,
+                        gold: 15
+                    },
+                ]
+            };
         };
         return ModCreator;
     })();

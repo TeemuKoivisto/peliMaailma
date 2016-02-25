@@ -1079,22 +1079,28 @@ var PeliApp;
             var dungeonMasters = [
                 {
                     name: "Sorcerer's apprentice",
+                    gold: 50,
                     prestige: 100,
                     health: 6,
+                    attack: 5,
                     magic: 10,
                     info: "Twisted minded pupil of a master wizard, cast away from his peers. Given the proper education and equipment might become a world-renowed sorcerer. No special abilities."
                 },
                 {
                     name: "Baby beholder",
+                    gold: 80,
                     prestige: 180,
                     health: 4,
+                    attack: 4,
                     magic: 8,
                     info: "Small beholder, a size of a human head. Grows into a massive monster that can disintegrate people at will. Unable to equip items."
                 },
                 {
                     name: "Hydra pup",
+                    gold: 40,
                     prestige: 150,
                     health: 8,
+                    attack: 6,
                     magic: 4,
                     info: "Cutish little hydra pup, size of a dog. Grows into an enormous beast that is almost impossible to kill due to regeneration. Unable to equip items except trinkets."
                 },
@@ -1176,7 +1182,7 @@ var PeliApp;
             var available = this.getAvailable(x, y, grid);
             for (var c = 0; c < available.length; c++) {
                 var now = available[c];
-                var newgrid = jQuery.extend(true, {}, grid); // deep copy
+                var newgrid = jQuery.extend(true, [], grid); // deep copy
                 newgrid[now.y][now.x].type = "tunnel";
                 this.createDungeonsOfSize(now.x, now.y, currentsize + 1, wantedsize, newgrid, combinations);
             }
@@ -1187,7 +1193,6 @@ var PeliApp;
             var available = [];
             for (var iy = y - 1; iy <= y + 1; iy++) {
                 for (var ix = x - 1; ix <= x + 1; ix++) {
-                    // console.log("looping iy: " + iy + " ix: " + ix);
                     // check if inside the grid
                     // and also not directly adjancent to border
                     // |x|x|x|x|x|
@@ -1259,6 +1264,31 @@ var PeliApp;
             ];
             return buildings;
         };
+        ModCreator.prototype.generateHeroParty = function (player, dungeon) {
+            return {
+                type: "explore",
+                heroes: [
+                    {
+                        type: "mage",
+                        attack: 4,
+                        health: 4,
+                        gold: 20
+                    },
+                    {
+                        type: "cleric",
+                        attack: 3,
+                        health: 5,
+                        gold: 30
+                    },
+                    {
+                        type: "warrior",
+                        attack: 6,
+                        health: 5,
+                        gold: 15
+                    },
+                ]
+            };
+        };
         return ModCreator;
     })();
     PeliApp.ModCreator = ModCreator;
@@ -1290,6 +1320,7 @@ var PeliApp;
             this.dungeonBuildings = [];
             this.selectedDungeon = "";
             this.selectedBuilding = "";
+            this.enteredHeroParty = "";
         };
         ModEngine.prototype.subscribeToStateChange = function (subscriber) {
             this.subscribers.push(subscriber);
@@ -1327,6 +1358,7 @@ var PeliApp;
             return this.dungeons;
         };
         ModEngine.prototype.selectDungeon = function (index) {
+            debugger;
             this.selectedDungeon = this.dungeons[index].grid;
             this.changeState("changeDungeon");
         };
@@ -1334,6 +1366,7 @@ var PeliApp;
             // change playerDungeon
             // to the one found from purchasable dungeons
             // if enough money? no checks needed atm
+            debugger;
             this.playerDungeon = this.selectedDungeon;
             this.dungeonBuildings = this.creator.generateBuildings(this.playerDungeon);
             this.changeState("buildDungeon");
@@ -1354,16 +1387,40 @@ var PeliApp;
             }
         };
         ModEngine.prototype.buildBuilding = function (y, x) {
-            if (this.selectedBuilding !== "" && this.playerDungeon[y][x].type !== "") {
-                // TODO decrease funds
-                // debugger;
-                // var built = jQuery.extend(true, {}, this.selectedBuilding);
+            if (this.selectedBuilding !== "" && this.playerDungeon[y][x].type !== "" && this.playerDM.gold >= this.selectedBuilding.price) {
+                if (this.playerDungeon[y][x].type !== "tunnel") {
+                }
+                this.playerDM.gold -= this.selectedBuilding.price;
                 this.playerDungeon[y][x] = this.selectedBuilding;
                 this.playerBuildings.push({
                     y: y,
                     x: x,
                     building: this.selectedBuilding
                 });
+            }
+        };
+        ModEngine.prototype.waitForHeroes = function () {
+            this.enteredHeroParty = this.creator.generateHeroParty(this.playerDM, this.playerDungeon);
+            this.changeState("enterHeroes");
+        };
+        ModEngine.prototype.moveHeroes = function () {
+            console.log("moved!");
+            var nextTile = ""; // get it
+            if (nexTile.type === "tunnel") {
+            }
+            else if (nexTile.type === "lair") {
+            }
+            else if (nexTile.type === "dm") {
+            }
+            return;
+            while (true) {
+                var nextTile = ""; // get it
+                if (nexTile.type === "tunnel") {
+                }
+                else if (nexTile.type === "lair") {
+                }
+                else if (nexTile.type === "dm") {
+                }
             }
         };
         ModEngine.prototype.restart = function () {
@@ -1401,8 +1458,9 @@ PeliApp.controller("ModController", function($scope, ModEngine) {
 			$scope.message = "Build dungeon";
 		} else if (newState === "waitHeroes") {
 			
-		} else if (newState === "killHeroes") {
-			
+		} else if (newState === "enterHeroes") {
+			$scope.state = newState;
+			$scope.message = "Kill heroes!";
 		}
 	}
 	
@@ -1514,7 +1572,8 @@ PeliApp.directive("modDmPanel", function(ModEngine) {
         restrict: "E",
         template: "<div class='mod-dm-panel flex-col'>" +
 					"<div>portrait</div>"+
-					"I am {{ dm.name }}"+
+					"<div>I am {{ dm.name }}</div>"+
+					"<div>gold: {{ dm.gold }}</div>"+
 				  "</div>",
         scope: {
             dm: "="
@@ -1566,6 +1625,66 @@ PeliApp.directive("modDungeonGrid", function(ModEngine) {
         }
     };
 });
+PeliApp.directive("modDungeonGridCanvas", function(ModEngine) {
+    return {
+        restrict: "E",
+        template: 	"<div class='mod-dungeon-grid flex-col'>" +
+						"<canvas id='dungeonCanvas' width='{{ width }}' height='{{ height }}' class='mod-dungeon-canvas'></canvas>"+
+						"<button ng-click='draw()'>Draw</button>"+
+						// "<div class='mod-grid-row flex-row' ng-repeat='row in grid'>"+
+							// "<div class='mod-grid-col' ng-repeat='column in row track by $index' ng-click='activateSquare($parent.$index, $index)'>"+
+								// "<mod-dungeon-tile tile='column'></mod-dungeon-tile>"+
+							// "</div>"+
+						// "</div>"+
+					"</div>",
+        scope: {
+            grid: "="
+        },
+        link: function(scope, element, attrs) {
+			scope.width = 250; 
+			scope.height = 250;
+			
+			var selected;
+			
+			var canvas = element.find("canvas")[0];
+			
+			var drawSquare = function(x, y, color) {
+				debugger;
+				var ctx = canvas.getContext("2d");
+				ctx.fillStyle = color;
+				ctx.fillRect(x, y, 50, 50);
+			}
+			
+			scope.activateSquare = function(row, col) {
+				var state = ModEngine.getState();
+				if (state === "buildDungeon") {
+					// should trigger update inside modController which updates this view
+					ModEngine.buildBuilding(row, col);
+				}
+			}
+			
+			scope.draw = function() {
+				// debugger;
+				for(var y = 0; y < scope.grid.length; y++) {
+					for(var x = 0; x < scope.grid[y].length; x++) {
+						
+						if (scope.grid[y][x].type === "") {
+							drawSquare(x*50, y*50, "orange");
+						} else if (scope.grid[y][x].type === "tunnel") {
+							drawSquare(x*50, y*50, "gray");
+						} else if (scope.grid[y][x].type === "lair") {
+							drawSquare(x*50, y*50, "green");
+						}
+					}
+				}
+			}
+			
+			scope.$watch("grid", function(newVal, oldVal) {
+				scope.draw();
+			}, true)
+        }
+    };
+});
 PeliApp.directive("modDungeonTile", function() {
     return {
         restrict: "E",
@@ -1591,6 +1710,29 @@ PeliApp.directive("modDungeonTile", function() {
                     $(span).css({"background-color": color});
                 }
             }, true);
+        }
+    };
+});
+PeliApp.directive("modHeroPanel", function(ModEngine) {
+    return {
+        restrict: "E",
+        template: "<div class='mod-hero-panel flex-col'>" +
+					"<button ng-click='wait()'>Wait for heroes</button>"+
+					"<button ng-click='move()'>Move heroes</button>"+
+					// "<button ng-click='pause()'>Pause</button>"+
+					// "<button ng-click='surrend()'>Surrend</button>"+
+				  "</div>",
+        scope: {
+            dm: "="
+        },
+        link: function(scope, element, attrs) {
+			scope.wait = function() {
+				ModEngine.waitForHeroes();
+			}
+			
+			scope.move = function() {
+				ModEngine.moveHeroes();
+			}
         }
     };
 });

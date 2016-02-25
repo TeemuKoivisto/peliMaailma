@@ -1,6 +1,14 @@
 <div class="mod-container flex-row">
-	<mod-dungeon-grid grid="dungeon"></mod-dungeon-grid>
-	<mod-command class="mleft" message="message" state="state" ></mod-command>
+	<div class="flex-col">
+		<mod-dungeon-grid grid="dungeon"></mod-dungeon-grid>
+		<mod-dungeon-grid-canvas grid="dungeon"></mod-dungeon-grid-canvas>
+	</div>
+	<div class="mleft flex-col">
+		<mod-command message="message" state="state" ></mod-command>
+		<div ng-show="state !== 'pickDM' && state !== 'pickDungeon'">
+			<mod-hero-panel></mod-hero-panel>
+		</div>
+	</div>
 	<div ng-show="state === 'pickDM'" class="mleft">
 		<mod-select-dm></mod-select-dm>
 	</div>
