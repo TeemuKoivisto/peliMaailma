@@ -36,7 +36,12 @@ var PeliApp;
             ];
             return dungeonMasters;
         };
-        ModCreator.prototype.createEmptyDungeon = function (size) {
+        ModCreator.prototype.generateEmptyDungeon = function (size) {
+            return {
+                grid: this.createEmptyGrid(size)
+            };
+        };
+        ModCreator.prototype.createEmptyGrid = function (size) {
             var grid = [];
             for (var y = 0; y < size; y++) {
                 grid.push([]);
@@ -50,13 +55,14 @@ var PeliApp;
             // console.log("created grid ", grid);
             return grid;
         };
+        // TODO fix makes dungeons 1 too big
         ModCreator.prototype.generateDungeons = function (gridsize, tunnelsize) {
             // LogmodEng.start("createDungeonCombinations: gridsize " + gridsize + " tunnelsize " + tunnelsize);
             var direction = Math.floor(Math.random() * 4); // 0 = north, 1 = south, 2 = west, 3 = east
             var entrance = Math.floor(Math.random() * (gridsize - 2) + 1); // anything but the corner square
             // console.log("dir is " + direction + " and entrance " + entrance);
             // LogmodEng.append("dir is " + direction + " and entrance " + entrance);
-            var grid = this.createEmptyDungeon(gridsize);
+            var grid = this.createEmptyGrid(gridsize);
             // debugger;
             // should be in own method
             var start = {};
@@ -90,89 +96,130 @@ var PeliApp;
                 next.x = gridsize - 2;
             }
             grid[start.y][start.x].type = "tunnel";
+            grid[start.y][start.x].adjx = next.x;
+            grid[start.y][start.x].adjy = next.y;
             grid[next.y][next.x].type = "tunnel";
+            var dungeonScaffold = {
+                entrance: start,
+                grid: grid
+            };
             var dungeons = [];
-            this.createDungeonsOfSize(next.x, next.y, 1, tunnelsize, grid, dungeons);
+            this.createDungeonsOfSize(next.x, next.y, 1, tunnelsize, dungeonScaffold, dungeons);
             console.log("dungeons are ", dungeons);
             // LogmodEng.end("FROM createDungeonCombinations: gridsize " + gridsize + " tunnelsize " + tunnelsize + " RETURN dungeons " + dungeons);
             return dungeons;
         };
-        ModCreator.prototype.createDungeonsOfSize = function (x, y, currentsize, wantedsize, grid, combinations) {
+        ModCreator.prototype.createDungeonsOfSize = function (x, y, currentsize, wantedsize, dungeon, combinations) {
             // LogmodEng.start("createDungeonsOfSize: x " + x + " y " + y + " currentsize " + currentsize + " wantedsize " + wantedsize + " grid " + grid + " combinations " + combinations);
             // console.log("creating dungeons x: " + x + " y: " + y + " csize: " + currentsize + " wsize: " + wantedsize);
             if (currentsize === wantedsize) {
-                combinations.push({
-                    grid: grid,
-                    size: currentsize,
-                    type: "rocky" // volcanic, desert etc.
-                });
+                dungeon.dm = {
+                    y: y,
+                    x: x
+                };
+                dungeon.size = currentsize;
+                dungeon.type = "rocky";
+                combinations.push(dungeon);
                 return;
             }
-            var available = this.getAvailable(x, y, grid);
+            var available = this.getAvailable(x, y, dungeon.grid);
             for (var c = 0; c < available.length; c++) {
                 var now = available[c];
-                var newgrid = jQuery.extend(true, [], grid); // deep copy
-                newgrid[now.y][now.x].type = "tunnel";
-                this.createDungeonsOfSize(now.x, now.y, currentsize + 1, wantedsize, newgrid, combinations);
+                var newdungeon = jQuery.extend(true, {}, dungeon); // deep copy
+                newdungeon.grid[now.y][now.x].type = "tunnel";
+                newdungeon.grid[y][x].adjx = now.x;
+                newdungeon.grid[y][x].adjy = now.y;
+                this.createDungeonsOfSize(now.x, now.y, currentsize + 1, wantedsize, newdungeon, combinations);
             }
             // LogmodEng.end("FROM createDungeonsOfSize: x " + x + " y " + y + " currentsize " + currentsize + " wantedsize " + wantedsize + " grid " + grid + " combinations " + combinations);
         };
         ModCreator.prototype.getAvailable = function (x, y, grid) {
             // LogmodEng.start("getAvailable: x " + x + " y " + y + " grid ", grid);
             var available = [];
-            for (var iy = y - 1; iy <= y + 1; iy++) {
-                for (var ix = x - 1; ix <= x + 1; ix++) {
-                    // check if inside the grid
-                    // and also not directly adjancent to border
-                    // |x|x|x|x|x|
-                    // |x|0|0|0|x|
-                    // |x|0|0|0|x|
-                    // |x|0|0|0|0|
-                    // |x|x|x|x|x|
-                    if (iy > 0 && iy < 4 && ix > 0 && ix < 4) {
-                        // if (iy > 0 && iy < grid.length-1 && ix > 0 && ix < grid[iy].length-1) {
-                        // console.log("inside grid ");
-                        // available squares:
-                        // x|0|x
-                        // 0|1|0
-                        // x|0|x
-                        if (iy !== y && ix === x) {
-                            // console.log("top or bottom row");
-                            // checks first if top or bottom row, then only one directly adjancent square
-                            this.addIfAvailable(ix, iy, grid, available);
-                        }
-                        else if (iy === y && ix !== x) {
-                            // console.log("middle row");
-                            this.addIfAvailable(ix, iy, grid, available);
-                        }
-                    }
+            var adjancent = this.getAdjancent(x, y);
+            for (var a = 0; a < adjancent.length; a++) {
+                var ix = adjancent[a].x;
+                var iy = adjancent[a].y;
+                // check if inside the grid
+                // and also not directly adjancent to border
+                // |x|x|x|x|x|
+                // |x|0|0|0|x|
+                // |x|0|0|0|x|
+                // |x|0|0|0|0|
+                // |x|x|x|x|x|
+                if (iy > 0 && iy < (grid.length - 1) && ix > 0 && ix < (grid[iy].length - 1)) {
+                    this.addIfAvailable(x, y, ix, iy, grid, available);
                 }
             }
+            // for(var iy = y-1; iy <= y+1; iy++) {
+            // for(var ix = x-1; ix <= x+1; ix++) {
+            // // check if inside the grid
+            // // and also not directly adjancent to border
+            // // |x|x|x|x|x|
+            // // |x|0|0|0|x|
+            // // |x|0|0|0|x|
+            // // |x|0|0|0|0|
+            // // |x|x|x|x|x|
+            // if (iy > 0 && iy < (grid.length-1) && ix > 0 && ix < (grid[iy].length-1)) {
+            // // if (iy > 0 && iy < grid.length-1 && ix > 0 && ix < grid[iy].length-1) {
+            // // console.log("inside grid ");
+            // // available squares:
+            // // x|0|x
+            // // 0|1|0
+            // // x|0|x
+            // if (iy !== y && ix === x) {
+            // // console.log("top or bottom row");
+            // // checks first if top or bottom row, then only one directly adjancent square
+            // this.addIfAvailable(x, y, ix, iy, grid, available);
+            // } else if (iy === y && ix !== x) {
+            // // console.log("middle row");
+            // this.addIfAvailable(x, y, ix, iy, grid, available);
+            // }
+            // }
+            // }
+            // }
             // console.log("available is ", available);
             // LogmodEng.end("FROM getAvailable: x " + x + " y " + y + " grid " + grid + " RETURN available " + available);
             return available;
         };
-        ModCreator.prototype.addIfAvailable = function (x, y, grid, list) {
+        ModCreator.prototype.getAdjancent = function (x, y) {
+            var adjancent = [];
+            adjancent.push({
+                x: x,
+                y: y - 1
+            });
+            adjancent.push({
+                x: x - 1,
+                y: y
+            });
+            adjancent.push({
+                x: x + 1,
+                y: y
+            });
+            adjancent.push({
+                x: x,
+                y: y + 1
+            });
+            return adjancent;
+        };
+        ModCreator.prototype.addIfAvailable = function (xadj, yadj, x, y, grid, list) {
             // LogmodEng.start("addIfAvailable: x " + x + " y " + y + " grid [big] list " + list);
             // console.log("grid is ", grid);
             if (grid[y][x].type === "") {
-                // console.log("square is empty");
-                // adds to list if only one adjancent square
-                if (grid[y + 1][x].type !== "" && grid[y - 1][x].type === "" && grid[y][x - 1].type === "" && grid[y][x + 1].type === "") {
-                    // console.log("adjancent is top square");
-                    list.push({ x: x, y: y });
+                var adjancent = this.getAdjancent(x, y);
+                var count = 0;
+                for (var a = 0; a < adjancent.length; a++) {
+                    if (grid[adjancent[a].y][adjancent[a].x].type !== "") {
+                        count++;
+                    }
                 }
-                else if (grid[y - 1][x].type !== "" && grid[y + 1][x].type === "" && grid[y][x - 1].type === "" && grid[y][x + 1].type === "") {
-                    // console.log("adjancent is bottom square");
-                    list.push({ x: x, y: y });
-                }
-                else if (grid[y][x - 1].type !== "" && grid[y + 1][x].type === "" && grid[y - 1][x].type === "" && grid[y][x + 1].type === "") {
-                    // console.log("adjancent is left square");
-                    list.push({ x: x, y: y });
-                }
-                else if (grid[y][x + 1].type !== "" && grid[y + 1][x].type === "" && grid[y - 1][x].type === "" && grid[y][x - 1].type === "") {
-                    // console.log("adjancent is right square");
-                    list.push({ x: x, y: y });
+                if (count === 1) {
+                    list.push({
+                        xadj: xadj,
+                        yadj: yadj,
+                        x: x,
+                        y: y
+                    });
                 }
             }
             // console.log("list is ", list);
@@ -196,6 +243,11 @@ var PeliApp;
         ModCreator.prototype.generateHeroParty = function (player, dungeon) {
             return {
                 type: "explore",
+                level: 1,
+                pos: {
+                    x: "",
+                    y: ""
+                },
                 heroes: [
                     {
                         type: "mage",

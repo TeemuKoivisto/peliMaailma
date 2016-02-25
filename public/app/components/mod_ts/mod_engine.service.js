@@ -9,17 +9,12 @@ var PeliApp;
             this.init();
         }
         ModEngine.prototype.init = function () {
+            var dungeonsize = 6, dungeonlength = 9;
             this.playerDM = {};
-            this.playerDungeon = [
-                [{ type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }],
-                [{ type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }],
-                [{ type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }],
-                [{ type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }],
-                [{ type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }]
-            ];
+            this.playerDungeon = this.creator.generateEmptyDungeon(dungeonsize);
             this.playerBuildings = [];
             this.dungeonMasters = this.creator.generateDungeonMasters(); // use parameters?
-            this.dungeons = this.creator.generateDungeons(5, 7);
+            this.dungeons = this.creator.generateDungeons(dungeonsize, dungeonlength);
             this.dungeonBuildings = [];
             this.selectedDungeon = "";
             this.selectedBuilding = "";
@@ -61,15 +56,11 @@ var PeliApp;
             return this.dungeons;
         };
         ModEngine.prototype.selectDungeon = function (index) {
-            debugger;
-            this.selectedDungeon = this.dungeons[index].grid;
+            this.selectedDungeon = this.dungeons[index];
             this.changeState("changeDungeon");
         };
         ModEngine.prototype.pickDungeon = function () {
-            // change playerDungeon
-            // to the one found from purchasable dungeons
-            // if enough money? no checks needed atm
-            debugger;
+            // TODO check if enough money
             this.playerDungeon = this.selectedDungeon;
             this.dungeonBuildings = this.creator.generateBuildings(this.playerDungeon);
             this.changeState("buildDungeon");
@@ -90,11 +81,11 @@ var PeliApp;
             }
         };
         ModEngine.prototype.buildBuilding = function (y, x) {
-            if (this.selectedBuilding !== "" && this.playerDungeon[y][x].type !== "" && this.playerDM.gold >= this.selectedBuilding.price) {
-                if (this.playerDungeon[y][x].type !== "tunnel") {
+            if (this.selectedBuilding !== "" && this.playerDungeon.grid[y][x].type !== "" && this.playerDM.gold >= this.selectedBuilding.price) {
+                if (this.playerDungeon.grid[y][x].type !== "tunnel") {
                 }
                 this.playerDM.gold -= this.selectedBuilding.price;
-                this.playerDungeon[y][x] = this.selectedBuilding;
+                this.playerDungeon.grid[y][x] = this.selectedBuilding;
                 this.playerBuildings.push({
                     y: y,
                     x: x,
@@ -108,22 +99,29 @@ var PeliApp;
         };
         ModEngine.prototype.moveHeroes = function () {
             console.log("moved!");
-            var nextTile = ""; // get it
-            if (nexTile.type === "tunnel") {
+            debugger;
+            if (this.enteredHeroParty.pos.x === "") {
+                var entrance = this.playerDungeon.entrance;
+                this.enteredHeroParty.pos = entrance;
+                this.playerDungeon.grid[entrance.y][entrance.x].occupier = this.enteredHeroParty;
             }
-            else if (nexTile.type === "lair") {
-            }
-            else if (nexTile.type === "dm") {
+            else {
+                // var x = this.enteredHeroParty.pos.x;
+                // var y = this.enteredHeroParty.pos.y;
+                this.playerDungeon.grid[this.enteredHeroParty.pos.y][this.enteredHeroParty.pos.x].occupier = "";
+                var adjx = this.playerDungeon.grid[this.enteredHeroParty.pos.y][this.enteredHeroParty.pos.x].adjx;
+                var adjy = this.playerDungeon.grid[this.enteredHeroParty.pos.y][this.enteredHeroParty.pos.x].adjy;
+                this.enteredHeroParty.pos.x = adjx;
+                this.enteredHeroParty.pos.y = adjy;
+                this.playerDungeon.grid[this.enteredHeroParty.pos.y][this.enteredHeroParty.pos.x].occupier = this.enteredHeroParty;
             }
             return;
-            while (true) {
-                var nextTile = ""; // get it
-                if (nexTile.type === "tunnel") {
-                }
-                else if (nexTile.type === "lair") {
-                }
-                else if (nexTile.type === "dm") {
-                }
+            var nextTile = ""; // get it
+            if (nextTile.type === "tunnel") {
+            }
+            else if (nextTile.type === "lair") {
+            }
+            else if (nextTile.type === "dm") {
             }
         };
         ModEngine.prototype.restart = function () {

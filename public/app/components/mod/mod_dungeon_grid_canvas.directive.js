@@ -22,10 +22,17 @@ PeliApp.directive("modDungeonGridCanvas", function(ModEngine) {
 			var canvas = element.find("canvas")[0];
 			
 			var drawSquare = function(x, y, color) {
-				debugger;
 				var ctx = canvas.getContext("2d");
 				ctx.fillStyle = color;
 				ctx.fillRect(x, y, 50, 50);
+			}
+			
+			var drawHeroes = function(x, y, heroesObj) {
+				var ctx = canvas.getContext("2d");
+				for(var h = 0; h < heroesObj.heroes.length; h++) {
+					ctx.fillStyle = "blue";
+					ctx.fillRect(x+h*20, y+10, 10, 10);
+				}
 			}
 			
 			scope.activateSquare = function(row, col) {
@@ -48,11 +55,17 @@ PeliApp.directive("modDungeonGridCanvas", function(ModEngine) {
 						} else if (scope.grid[y][x].type === "lair") {
 							drawSquare(x*50, y*50, "green");
 						}
+						
+						if (typeof scope.grid[y][x].occupier !== "undefined" && scope.grid[y][x].occupier !== "") {
+							drawHeroes(x*50, y*50, scope.grid[y][x].occupier);
+						}
 					}
 				}
 			}
 			
 			scope.$watch("grid", function(newVal, oldVal) {
+				scope.width = scope.grid[0].length*50; 
+				scope.height = scope.grid.length*50; 
 				scope.draw();
 			}, true)
         }
