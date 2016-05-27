@@ -21,7 +21,6 @@
 }
 
 .chess-table {
-    order: 1;
     padding-left: 50px; 
     flex: 0 0 560px; 
     /* width: 560px; */
@@ -29,7 +28,6 @@
 }
 
 .flexed-container {
-    order: 2;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

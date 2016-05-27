@@ -2,29 +2,33 @@ var PeliApp;
 (function (PeliApp) {
     var TictactoeEngine = (function () {
         function TictactoeEngine() {
-            this.this.board = [
+            this.init();
+        }
+        TictactoeEngine.prototype.init = function () {
+            this.board = [
                 [{ type: "" }, { type: "" }, { type: "" }],
                 [{ type: "" }, { type: "" }, { type: "" }],
                 [{ type: "" }, { type: "" }, { type: "" }]
             ];
             this.nextInTurn = "circle";
+            this.message = "Circle starts";
             this.result = "";
-        }
+        };
         TictactoeEngine.prototype.activateSquare = function (row, col) {
             if (this.board[row][col].type === "" && this.result === "") {
                 this.board[row][col].type = this.nextInTurn;
                 this.nextInTurn = this.nextInTurn === "circle" ? "cross" : "circle";
-                this.result = this.checkResult();
+                this.result = this.getResult();
                 if (this.result !== "") {
-                    message = this.result + " wins";
+                    this.message = this.result + " wins";
                     this.nextInTurn = "";
                 }
                 else if (this.checkIfTie()) {
-                    message = "Tie";
+                    this.message = "Tie";
                     this.nextInTurn = "";
                 }
                 else {
-                    message = this.nextInTurn + " turn";
+                    this.message = this.nextInTurn + " turn";
                 }
             }
         };
@@ -104,14 +108,31 @@ var PeliApp;
                 return "";
             }
         };
-        TictactoeEngine.prototype.reset = function () {
-            for (var row = 0; row < this.board.length; row++) {
-                for (var col = 0; col < this.board.length; col++) {
-                    this.board[row][col].type = "";
-                }
+        TictactoeEngine.prototype.setBoard = function (board) {
+            this.board = board;
+        };
+        TictactoeEngine.prototype.getResult = function () {
+            var horz = this.checkHorizontal();
+            var ver = this.checkVertical();
+            var diag = this.checkDiagonal();
+            var tie = this.checkIfTie();
+            // console.log("horz " + horz + " ver " + ver + " diag " + diag)
+            if (horz !== "") {
+                return horz;
             }
-            this.result = "";
-            this.nextInTurn = "circle";
+            else if (ver !== "") {
+                return ver;
+            }
+            else if (diag !== "") {
+                return diag;
+            }
+            else if (tie) {
+                console.log("yo tie");
+                return "tie";
+            }
+            else {
+                return "";
+            }
         };
         return TictactoeEngine;
     })();

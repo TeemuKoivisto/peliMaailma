@@ -1,117 +1,51 @@
-PeliApp.controller("TictactoeController", function($scope) {
+PeliApp.controller("TictactoeController", function($scope, TictactoeEngine, TictactoeAI) {
 	
-	$scope.message = "Circle starts";
-	$scope.result = "";
-	$scope.nextInTurn = "circle";
-	
-	$scope.board = [
-		[{type: ""}, {type: ""}, {type: ""}],
-		[{type: ""}, {type: ""}, {type: ""}],
-		[{type: ""}, {type: ""}, {type: ""}],
+	$scope.tree_depth = 5;
+	$scope.statistics = [
+		{ empty: 9, factorial: 362880, minmax_loops: "n/a", alphabeta_loops: ""},
+		{ empty: 8, factorial: 40320, minmax_loops: "n/a", alphabeta_loops: ""},
+		{ empty: 7, factorial: 5040, minmax_loops: "8232", alphabeta_loops: ""},
+		{ empty: 6, factorial: 720, minmax_loops: "1349", alphabeta_loops: ""},
+		{ empty: 5, factorial: 120, minmax_loops: "234", alphabeta_loops: ""},
+		{ empty: 4, factorial: 24, minmax_loops: "41", alphabeta_loops: ""},
+		{ empty: 3, factorial: 6, minmax_loops: "8", alphabeta_loops: ""},
+		{ empty: 2, factorial: 2, minmax_loops: "5", alphabeta_loops: ""},
+		{ empty: 1, factorial: 1, minmax_loops: "2", alphabeta_loops: ""},
 	];
 	
+	$scope.init = function() {
+		$scope.message = "Circle starts";
+		$scope.result = "";
+		$scope.nextInTurn = "circle";
+		
+		$scope.board = [
+			[{type: ""}, {type: ""}, {type: ""}],
+			[{type: ""}, {type: ""}, {type: ""}],
+			[{type: ""}, {type: ""}, {type: ""}],
+		];
+	}
+	
 	$scope.activateSquare = function(row, col) {
-		if ($scope.board[row][col].type === "" && $scope.result === "") {
-			$scope.board[row][col].type = $scope.nextInTurn;
-			$scope.nextInTurn = $scope.nextInTurn === "circle" ? "cross" : "circle";
-			$scope.result = $scope.checkResult();
-			if ($scope.result !== "") {
-				$scope.message = $scope.result + " wins";
-				$scope.nextInTurn = "";
-			} else if ($scope.checkIfTie()) {
-				$scope.message = "Tie";
-				$scope.nextInTurn = "";
-			} else {
-				$scope.message = $scope.nextInTurn + " turn";
-			}
-		}
-	}
-	
-	$scope.checkHorizontal = function() {
-		for(var row = 0; row < $scope.board.length; row++) {
-			var firstType = $scope.board[row][0].type;
-			for(var col = 1; col < $scope.board[row].length; col++) {
-				if (firstType !== $scope.board[row][col].type) {
-					firstType = "";
-				}
-			}
-			if (firstType !== "") {
-				return firstType;
-			}
-		}
-		return "";
-	}
-	
-	$scope.checkVertical = function() {
-		for(var col = 0; col < $scope.board[0].length; col++) {
-			var firstType = $scope.board[0][col].type;
-			for(var row = 1; row < $scope.board.length; row++) {
-				if (firstType !== $scope.board[row][col].type) {
-					firstType = "";
-				}
-			}
-			if (firstType !== "") {
-				return firstType;
-			}
-		}
-		return "";
-	}
-	
-	$scope.checkDiagonal = function() {
-		var firstType = $scope.board[0][0].type;
-		for(var i = 1; i < 3; i++) {
-			if (firstType !== $scope.board[i][i].type) {
-				firstType = "";
-			}
-		}
-		if (firstType !== "") {
-			return firstType;
-		}
-		firstType = $scope.board[2][0].type;
-		if (firstType !== $scope.board[1][1].type) {
-			firstType = "";
-		}
-		if (firstType !== $scope.board[0][2].type) {
-			firstType = "";
-		}
-		return firstType;
-	}
-	
-	$scope.checkIfTie = function() {
-		var count = 0;
-		for(var row = 0; row < $scope.board.length; row++) {
-			for(var col = 0; col < $scope.board.length; col++) {
-				if ($scope.board[row][col].type !== "") {
-					count++;
-				}
-			}
-		}
-		return count === 9;
-	}
-	
-	$scope.checkResult = function() {
-		var horz = $scope.checkHorizontal();
-		var ver = $scope.checkVertical();
-		var diag = $scope.checkDiagonal();
-		// console.log("horz " + horz + " ver " + ver + " diag " + diag)
-		if (horz !== "") {
-			return horz;
-		} else if (ver !== "") {
-			return ver;
-		} else if (diag !== "") {
-			return diag;
-		} else {
-			return "";
-		}
+		TictactoeEngine.activateSquare(row, col);
+		
+		$scope.board = TictactoeEngine.board;
+		$scope.result = TictactoeEngine.result;
+		$scope.message = TictactoeEngine.message;
+		$scope.nextInTurn = TictactoeEngine.nextInTurn;
 	}
 	
 	$scope.reset = function() {
-		for(var row = 0; row < $scope.board.length; row++) {
-			for(var col = 0; col < $scope.board.length; col++) {
-				$scope.board[row][col].type = "";
-			}
-		}
-		$scope.result = "";
-		$scope.nextInTurn = "circle";
+		$scope.init();
+		TictactoeEngine.init();
+	}
+	
+	$scope.init();
+	
+	$scope.createTree = function() {
+		TictactoeAI.createTree();
+	}
+	
+	$scope.initAI = function() {
+		TictactoeAI.min_max();
 	}
 });

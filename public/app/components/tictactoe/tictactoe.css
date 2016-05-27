@@ -21,3 +21,12 @@
 	height: 50px;
 	border: 1px solid black;
 }
+
+.stats-box {
+	width: 400px;
+	border: 1px solid black;
+}
+
+.mtop {
+	margin-top: 15px;
+}

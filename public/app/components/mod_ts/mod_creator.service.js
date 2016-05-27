@@ -151,33 +151,6 @@ var PeliApp;
                     this.addIfAvailable(x, y, ix, iy, grid, available);
                 }
             }
-            // for(var iy = y-1; iy <= y+1; iy++) {
-            // for(var ix = x-1; ix <= x+1; ix++) {
-            // // check if inside the grid
-            // // and also not directly adjancent to border
-            // // |x|x|x|x|x|
-            // // |x|0|0|0|x|
-            // // |x|0|0|0|x|
-            // // |x|0|0|0|0|
-            // // |x|x|x|x|x|
-            // if (iy > 0 && iy < (grid.length-1) && ix > 0 && ix < (grid[iy].length-1)) {
-            // // if (iy > 0 && iy < grid.length-1 && ix > 0 && ix < grid[iy].length-1) {
-            // // console.log("inside grid ");
-            // // available squares:
-            // // x|0|x
-            // // 0|1|0
-            // // x|0|x
-            // if (iy !== y && ix === x) {
-            // // console.log("top or bottom row");
-            // // checks first if top or bottom row, then only one directly adjancent square
-            // this.addIfAvailable(x, y, ix, iy, grid, available);
-            // } else if (iy === y && ix !== x) {
-            // // console.log("middle row");
-            // this.addIfAvailable(x, y, ix, iy, grid, available);
-            // }
-            // }
-            // }
-            // }
             // console.log("available is ", available);
             // LogmodEng.end("FROM getAvailable: x " + x + " y " + y + " grid " + grid + " RETURN available " + available);
             return available;

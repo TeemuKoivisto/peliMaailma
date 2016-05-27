@@ -742,29 +742,33 @@ var PeliApp;
 (function (PeliApp) {
     var TictactoeEngine = (function () {
         function TictactoeEngine() {
-            this.this.board = [
+            this.init();
+        }
+        TictactoeEngine.prototype.init = function () {
+            this.board = [
                 [{ type: "" }, { type: "" }, { type: "" }],
                 [{ type: "" }, { type: "" }, { type: "" }],
                 [{ type: "" }, { type: "" }, { type: "" }]
             ];
             this.nextInTurn = "circle";
+            this.message = "Circle starts";
             this.result = "";
-        }
+        };
         TictactoeEngine.prototype.activateSquare = function (row, col) {
             if (this.board[row][col].type === "" && this.result === "") {
                 this.board[row][col].type = this.nextInTurn;
                 this.nextInTurn = this.nextInTurn === "circle" ? "cross" : "circle";
-                this.result = this.checkResult();
+                this.result = this.getResult();
                 if (this.result !== "") {
-                    message = this.result + " wins";
+                    this.message = this.result + " wins";
                     this.nextInTurn = "";
                 }
                 else if (this.checkIfTie()) {
-                    message = "Tie";
+                    this.message = "Tie";
                     this.nextInTurn = "";
                 }
                 else {
-                    message = this.nextInTurn + " turn";
+                    this.message = this.nextInTurn + " turn";
                 }
             }
         };
@@ -844,14 +848,31 @@ var PeliApp;
                 return "";
             }
         };
-        TictactoeEngine.prototype.reset = function () {
-            for (var row = 0; row < this.board.length; row++) {
-                for (var col = 0; col < this.board.length; col++) {
-                    this.board[row][col].type = "";
-                }
+        TictactoeEngine.prototype.setBoard = function (board) {
+            this.board = board;
+        };
+        TictactoeEngine.prototype.getResult = function () {
+            var horz = this.checkHorizontal();
+            var ver = this.checkVertical();
+            var diag = this.checkDiagonal();
+            var tie = this.checkIfTie();
+            // console.log("horz " + horz + " ver " + ver + " diag " + diag)
+            if (horz !== "") {
+                return horz;
             }
-            this.result = "";
-            this.nextInTurn = "circle";
+            else if (ver !== "") {
+                return ver;
+            }
+            else if (diag !== "") {
+                return diag;
+            }
+            else if (tie) {
+                console.log("yo tie");
+                return "tie";
+            }
+            else {
+                return "";
+            }
         };
         return TictactoeEngine;
     })();
@@ -864,170 +885,201 @@ var PeliApp;
     var Engine = PeliApp.TictactoeEngine;
     var TictactoeAI = (function () {
         function TictactoeAI() {
-            this.this.board = [
-                [{ type: "" }, { type: "" }, { type: "" }],
-                [{ type: "" }, { type: "" }, { type: "" }],
-                [{ type: "" }, { type: "" }, { type: "" }]
-            ];
-            this.nextInTurn = "circle";
-            this.result = "";
+            this.engine = new Engine();
+            this.looped = 0;
+            this.nodes = 0;
         }
-        TictactoeAI.prototype.min_max = function () {
-            Engine.reset();
+        TictactoeAI.prototype.createTree = function () {
+            this.nodes = 0;
+            var board = [
+                [{ type: "", nodes: [] }, { type: "", nodes: [] }, { type: "", nodes: [] }],
+                [{ type: "", nodes: [] }, { type: "", nodes: [] }, { type: "", nodes: [] }],
+                [{ type: "", nodes: [] }, { type: "", nodes: [] }, { type: "", nodes: [] }],
+            ];
+            debugger;
+            this.createTreeFrom(0, 4, board, true);
+            console.log("board: ", board);
         };
-        TictactoeAI.prototype.max_value = function (depth) {
-            depth++;
-            var result = Engine.getResult();
-            if (result === "") {
-                var v = Number.MIN_VALUE;
-                var nodes = Engine.getAvailableMoves();
-                for (var i = 0; i < nodes.length; i++) {
-                    Engine.move(nodes[i].x, nodes[i].y);
-                    v = Math.max(v, min_value(nodes));
+        TictactoeAI.prototype.createTreeFrom = function (nowdepth, depth, board, iscircle) {
+            this.nodes++;
+            if (this.nodes > 10) {
+                throw ("safffff ", board);
+            }
+            if (nowdepth === depth) {
+                return;
+            }
+            nowdepth++;
+            for (var row = 0; row < board.length; row++) {
+                for (var col = 0; col < board[row].length; col++) {
+                    if (board[row][col].type === "") {
+                        var newboard = jQuery.extend(true, [], board);
+                        newboard[row][col].type = iscircle;
+                        this.createTreeFrom(nowdepth, depth, newboard, !iscircle);
+                        board[row][col].nodes.push(newboard);
+                    }
                 }
             }
         };
-        TictactoeAI.prototype.estimateBestMove = function (which, board) {
+        TictactoeAI.prototype.min_max = function () {
+            this.looped = 0;
+            var modboard = [
+                [{ type: "circle" }, { type: "cross" }, { type: "circle" }],
+                [{ type: "cross" }, { type: "circle" }, { type: "cross" }],
+                [{ type: "" }, { type: "" }, { type: "" }]
+            ];
+            // var modboard = [
+            // [{type: "circle"}, {type: "cross"}, {type: ""}],
+            // [{type: ""}, {type: ""}, {type: ""}],
+            // [{type: ""}, {type: ""}, {type: ""}]
+            // ]
+            var result = this.max_value(modboard);
+            // var modboard = [
+            // [{type: "circle"}, {type: "cross"}, {type: "circle"}],
+            // [{type: "cross"}, {type: "circle"}, {type: "cross"}],
+            // [{type: ""}, {type: "circle"}, {type: ""}]
+            // ]
+            // var modboard = [
+            // [{type: "circle"}, {type: "cross"}, {type: "circle"}],
+            // [{type: ""}, {type: ""}, {type: ""}],
+            // [{type: ""}, {type: ""}, {type: ""}]
+            // ]
+            // var result = this.min_value(modboard);
+            console.log("result was " + result);
+            console.log("loops: " + this.looped);
         };
-        TictactoeAI.prototype.activateSquare = function (row, col) {
-            if (this.board[row][col].type === "" && this.result === "") {
-                this.board[row][col].type = this.nextInTurn;
-                this.nextInTurn = this.nextInTurn === "circle" ? "cross" : "circle";
-                this.result = this.checkResult();
-                if (this.result !== "") {
-                    message = this.result + " wins";
-                    this.nextInTurn = "";
+        TictactoeAI.prototype.min_value = function (board) {
+            Logtic.start("min_value: board [alot]");
+            this.looped++;
+            if (this.looped > 30) {
+                debugger;
+                if (this.looped > 10000) {
+                    throw ("fux");
                 }
-                else if (this.checkIfTie()) {
-                    message = "Tie";
-                    this.nextInTurn = "";
+            }
+            this.engine.setBoard(board);
+            var result = this.engine.getResult();
+            if (result === "") {
+                // debugger;
+                // var v = Number.MAX_VALUE;
+                var v = 10;
+                for (var row = 0; row < board.length; row++) {
+                    for (var col = 0; col < board[row].length; col++) {
+                        if (board[row][col].type === "") {
+                            var newboard = jQuery.extend(true, [], board);
+                            newboard[row][col].type = "cross";
+                            v = Math.min(v, this.max_value(newboard));
+                        }
+                    }
                 }
-                else {
-                    message = this.nextInTurn + " turn";
+                // console.log("minvalue " + this.looped + " v " + v);
+                Logtic.end("FROM min_value: board [alot] RETURN v " + v);
+                return v;
+            }
+            else {
+                var res = this.turnResultToNumeric(result);
+                // console.log("minvalue " + this.looped + " result " + result);
+                Logtic.end("FROM min_value: board [alot] RETURN res " + res);
+                return res;
+            }
+        };
+        TictactoeAI.prototype.max_value = function (board) {
+            Logtic.start("max_value: board [alot]");
+            this.looped++;
+            this.engine.setBoard(board);
+            var result = this.engine.getResult();
+            if (result === "") {
+                // var v = Number.MIN_VALUE;
+                var v = -10;
+                for (var row = 0; row < board.length; row++) {
+                    for (var col = 0; col < board[row].length; col++) {
+                        if (board[row][col].type === "") {
+                            var newboard = jQuery.extend(true, [], board);
+                            // this.engine.activateSquare(col, row);
+                            newboard[row][col].type = "circle";
+                            v = Math.max(v, this.min_value(newboard));
+                        }
+                    }
                 }
+                // console.log("maxvalue " + this.looped + " v " + v);
+                Logtic.end("FROM max_value: board [alot] RETURN v " + v);
+                return v;
+            }
+            else {
+                var res = this.turnResultToNumeric(result);
+                // console.log("maxvalue " + this.looped + " result " + result);
+                Logtic.end("FROM max_value: board [alot] RETURN res " + res);
+                return res;
+            }
+        };
+        TictactoeAI.prototype.turnResultToNumeric = function (result) {
+            if (result === "circle") {
+                return 1;
+            }
+            else if (result === "cross") {
+                return -1;
+            }
+            else if (result === "tie") {
+                return 0;
+            }
+            else {
+                throw ("wtf was result " + result);
             }
         };
         return TictactoeAI;
     })();
     PeliApp.TictactoeAI = TictactoeAI;
-    angular.module('PeliApp').service('TictactoeAI', TictactoeAI);
+    angular.module("PeliApp").service("TictactoeAI", TictactoeAI);
 })(PeliApp || (PeliApp = {}));
 
-PeliApp.controller("TictactoeController", function($scope) {
+PeliApp.controller("TictactoeController", function($scope, TictactoeEngine, TictactoeAI) {
 	
-	$scope.message = "Circle starts";
-	$scope.result = "";
-	$scope.nextInTurn = "circle";
-	
-	$scope.board = [
-		[{type: ""}, {type: ""}, {type: ""}],
-		[{type: ""}, {type: ""}, {type: ""}],
-		[{type: ""}, {type: ""}, {type: ""}],
+	$scope.tree_depth = 5;
+	$scope.statistics = [
+		{ empty: 9, factorial: 362880, minmax_loops: "n/a", alphabeta_loops: ""},
+		{ empty: 8, factorial: 40320, minmax_loops: "n/a", alphabeta_loops: ""},
+		{ empty: 7, factorial: 5040, minmax_loops: "8232", alphabeta_loops: ""},
+		{ empty: 6, factorial: 720, minmax_loops: "1349", alphabeta_loops: ""},
+		{ empty: 5, factorial: 120, minmax_loops: "234", alphabeta_loops: ""},
+		{ empty: 4, factorial: 24, minmax_loops: "41", alphabeta_loops: ""},
+		{ empty: 3, factorial: 6, minmax_loops: "8", alphabeta_loops: ""},
+		{ empty: 2, factorial: 2, minmax_loops: "5", alphabeta_loops: ""},
+		{ empty: 1, factorial: 1, minmax_loops: "2", alphabeta_loops: ""},
 	];
 	
+	$scope.init = function() {
+		$scope.message = "Circle starts";
+		$scope.result = "";
+		$scope.nextInTurn = "circle";
+		
+		$scope.board = [
+			[{type: ""}, {type: ""}, {type: ""}],
+			[{type: ""}, {type: ""}, {type: ""}],
+			[{type: ""}, {type: ""}, {type: ""}],
+		];
+	}
+	
 	$scope.activateSquare = function(row, col) {
-		if ($scope.board[row][col].type === "" && $scope.result === "") {
-			$scope.board[row][col].type = $scope.nextInTurn;
-			$scope.nextInTurn = $scope.nextInTurn === "circle" ? "cross" : "circle";
-			$scope.result = $scope.checkResult();
-			if ($scope.result !== "") {
-				$scope.message = $scope.result + " wins";
-				$scope.nextInTurn = "";
-			} else if ($scope.checkIfTie()) {
-				$scope.message = "Tie";
-				$scope.nextInTurn = "";
-			} else {
-				$scope.message = $scope.nextInTurn + " turn";
-			}
-		}
-	}
-	
-	$scope.checkHorizontal = function() {
-		for(var row = 0; row < $scope.board.length; row++) {
-			var firstType = $scope.board[row][0].type;
-			for(var col = 1; col < $scope.board[row].length; col++) {
-				if (firstType !== $scope.board[row][col].type) {
-					firstType = "";
-				}
-			}
-			if (firstType !== "") {
-				return firstType;
-			}
-		}
-		return "";
-	}
-	
-	$scope.checkVertical = function() {
-		for(var col = 0; col < $scope.board[0].length; col++) {
-			var firstType = $scope.board[0][col].type;
-			for(var row = 1; row < $scope.board.length; row++) {
-				if (firstType !== $scope.board[row][col].type) {
-					firstType = "";
-				}
-			}
-			if (firstType !== "") {
-				return firstType;
-			}
-		}
-		return "";
-	}
-	
-	$scope.checkDiagonal = function() {
-		var firstType = $scope.board[0][0].type;
-		for(var i = 1; i < 3; i++) {
-			if (firstType !== $scope.board[i][i].type) {
-				firstType = "";
-			}
-		}
-		if (firstType !== "") {
-			return firstType;
-		}
-		firstType = $scope.board[2][0].type;
-		if (firstType !== $scope.board[1][1].type) {
-			firstType = "";
-		}
-		if (firstType !== $scope.board[0][2].type) {
-			firstType = "";
-		}
-		return firstType;
-	}
-	
-	$scope.checkIfTie = function() {
-		var count = 0;
-		for(var row = 0; row < $scope.board.length; row++) {
-			for(var col = 0; col < $scope.board.length; col++) {
-				if ($scope.board[row][col].type !== "") {
-					count++;
-				}
-			}
-		}
-		return count === 9;
-	}
-	
-	$scope.checkResult = function() {
-		var horz = $scope.checkHorizontal();
-		var ver = $scope.checkVertical();
-		var diag = $scope.checkDiagonal();
-		// console.log("horz " + horz + " ver " + ver + " diag " + diag)
-		if (horz !== "") {
-			return horz;
-		} else if (ver !== "") {
-			return ver;
-		} else if (diag !== "") {
-			return diag;
-		} else {
-			return "";
-		}
+		TictactoeEngine.activateSquare(row, col);
+		
+		$scope.board = TictactoeEngine.board;
+		$scope.result = TictactoeEngine.result;
+		$scope.message = TictactoeEngine.message;
+		$scope.nextInTurn = TictactoeEngine.nextInTurn;
 	}
 	
 	$scope.reset = function() {
-		for(var row = 0; row < $scope.board.length; row++) {
-			for(var col = 0; col < $scope.board.length; col++) {
-				$scope.board[row][col].type = "";
-			}
-		}
-		$scope.result = "";
-		$scope.nextInTurn = "circle";
+		$scope.init();
+		TictactoeEngine.init();
+	}
+	
+	$scope.init();
+	
+	$scope.createTree = function() {
+		TictactoeAI.createTree();
+	}
+	
+	$scope.initAI = function() {
+		TictactoeAI.min_max();
 	}
 });
 PeliApp.directive('tictactoeBoard', function() {
@@ -1222,33 +1274,6 @@ var PeliApp;
                     this.addIfAvailable(x, y, ix, iy, grid, available);
                 }
             }
-            // for(var iy = y-1; iy <= y+1; iy++) {
-            // for(var ix = x-1; ix <= x+1; ix++) {
-            // // check if inside the grid
-            // // and also not directly adjancent to border
-            // // |x|x|x|x|x|
-            // // |x|0|0|0|x|
-            // // |x|0|0|0|x|
-            // // |x|0|0|0|0|
-            // // |x|x|x|x|x|
-            // if (iy > 0 && iy < (grid.length-1) && ix > 0 && ix < (grid[iy].length-1)) {
-            // // if (iy > 0 && iy < grid.length-1 && ix > 0 && ix < grid[iy].length-1) {
-            // // console.log("inside grid ");
-            // // available squares:
-            // // x|0|x
-            // // 0|1|0
-            // // x|0|x
-            // if (iy !== y && ix === x) {
-            // // console.log("top or bottom row");
-            // // checks first if top or bottom row, then only one directly adjancent square
-            // this.addIfAvailable(x, y, ix, iy, grid, available);
-            // } else if (iy === y && ix !== x) {
-            // // console.log("middle row");
-            // this.addIfAvailable(x, y, ix, iy, grid, available);
-            // }
-            // }
-            // }
-            // }
             // console.log("available is ", available);
             // LogmodEng.end("FROM getAvailable: x " + x + " y " + y + " grid " + grid + " RETURN available " + available);
             return available;
@@ -1434,7 +1459,8 @@ var PeliApp;
                 if (this.playerDungeon.grid[y][x].type !== "tunnel") {
                 }
                 this.playerDM.gold -= this.selectedBuilding.price;
-                this.playerDungeon.grid[y][x] = this.selectedBuilding;
+                this.playerDungeon.grid[y][x].type = this.selectedBuilding.type;
+                this.playerDungeon.grid[y][x].name = this.selectedBuilding.name;
                 this.playerBuildings.push({
                     y: y,
                     x: x,
@@ -1446,9 +1472,10 @@ var PeliApp;
             this.enteredHeroParty = this.creator.generateHeroParty(this.playerDM, this.playerDungeon);
             this.changeState("enterHeroes");
         };
+        // TODO fix last tile movement
         ModEngine.prototype.moveHeroes = function () {
-            console.log("moved!");
             debugger;
+            console.log("moved!");
             if (this.enteredHeroParty.pos.x === "") {
                 var entrance = this.playerDungeon.entrance;
                 this.enteredHeroParty.pos = entrance;

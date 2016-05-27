@@ -1,20 +1,56 @@
-<div class="tictactoe-container flex-row">
-	<div class="tictactoe-board">
-		<div class="flex-row tictactoe-row" ng-repeat="row in board">
-			<div class="tictactoe-col" ng-repeat="column in row" ng-click="activateSquare($parent.$index, $index)">
-				<tictactoe-square type="column.type"></tictactoe-square>
+<div class="tictactoe-container flex-col">
+	<div class="flex-row">
+		<div class="tictactoe-board">
+			<div class="flex-row tictactoe-row" ng-repeat="row in board">
+				<div class="tictactoe-col" ng-repeat="column in row" ng-click="activateSquare($parent.$index, $index)">
+					<tictactoe-square type="column.type"></tictactoe-square>
+				</div>
 			</div>
+		</div>
+		<div class='flexed-container'>
+			<button ng-click="reset()">Reset</button>
+			<button ng-click="createTree()">Create Tree</button>
+			<button ng-click="initAI()">Solve by AI</button>
+			<button ng-click="initAI()">Use AI once</button>
+			<button ng-click="initAI()">Turn on AI</button>
+			<!-- <div style="flex-row">
+				<label>Set tree depth</label>
+				<input ng-model="tree_depth"></input>
+			</div> -->
+			<!-- <input ng-model="tree_depth"></input> -->
+			<div class="white turnbox-outer">
+				<div class="white turnbox-inner">
+					{{ nextInTurn }}
+				</div>
+			</div>
+			<div class="messagebox">
+				{{ message }}
+			</div>
+		</div>
+		<div class="stats-box mleft">
+			<table>
+				<thead>
+					<tr>
+						<td>Empty tiles</td>
+						<td>Max loops (n!)</td>
+						<td>Apx. loops: Min-max</td>
+						<td>Apx. loops: Alpha-beta</td>
+						<td>Time(ms)</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="stat in statistics">
+						<td>{{ stat.empty }}</td>
+						<td>{{ stat.factorial }}</td>
+						<td>{{ stat.minmax_loops }}</td>
+						<td>??</td>
+						<td>N/A</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
-	<div class='flexed-container'>
-		<button ng-click="reset()">Reset</button>
-		<div class="white turnbox-outer">
-			<div class="white turnbox-inner">
-				{{ nextInTurn }}
-			</div>
-		</div>
-		<div class="messagebox">
-			{{message}}
-		</div>
+	<div class="mleft mtop">
+		maybe add something about the composition of the tree, show how many nodes etc. here
 	</div>
 </div>

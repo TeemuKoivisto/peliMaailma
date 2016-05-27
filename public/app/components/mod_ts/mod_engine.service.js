@@ -85,7 +85,8 @@ var PeliApp;
                 if (this.playerDungeon.grid[y][x].type !== "tunnel") {
                 }
                 this.playerDM.gold -= this.selectedBuilding.price;
-                this.playerDungeon.grid[y][x] = this.selectedBuilding;
+                this.playerDungeon.grid[y][x].type = this.selectedBuilding.type;
+                this.playerDungeon.grid[y][x].name = this.selectedBuilding.name;
                 this.playerBuildings.push({
                     y: y,
                     x: x,
@@ -97,9 +98,10 @@ var PeliApp;
             this.enteredHeroParty = this.creator.generateHeroParty(this.playerDM, this.playerDungeon);
             this.changeState("enterHeroes");
         };
+        // TODO fix last tile movement
         ModEngine.prototype.moveHeroes = function () {
-            console.log("moved!");
             debugger;
+            console.log("moved!");
             if (this.enteredHeroParty.pos.x === "") {
                 var entrance = this.playerDungeon.entrance;
                 this.enteredHeroParty.pos = entrance;

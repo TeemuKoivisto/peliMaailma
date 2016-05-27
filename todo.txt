@@ -1,0 +1,37 @@
+asenna typescript plugari atomiin
+luo metodi pelipuun luomiselle
+>> nykyään tekee duplikaatteja jonka takia
+on niin vitun hidas
+
+tyhjä board
+> yks risti minne tahansa
+> *9
+
+> yks ympärä 9-1 paikkaan
+> *8
+
+> yks risti 9-2 paikkaan
+> *7
+
+..jne
+
+mut tää tekee duplikaatteja
+
+x|o|x
+o|-|-
+-|-|-
+
+1|2|3
+4|-|-
+-|-|-
+
+3|4|1
+2|-|-
+-|-|-
+
+>> siirrot tästä eteenpäin ovat täysin identtiset
+
+jos laitankin Mappiin ja jos löytyy jo samalla arvolla niin
+lopettaa looppauksen
+
+sit lisää tree size näkymään muiden arvojen vierelle

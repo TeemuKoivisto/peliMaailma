@@ -1,38 +1,44 @@
 ﻿module PeliApp {
 
 	export class TictactoeEngine {
-	
-        board: [[{}]];
+
+    board: [[{}]];
 		nextInTurn: string;
+		message: string;
 		result: string;
-		
+
 		constructor() {
-            this.this.board = [
+            this.init();
+		}
+
+		init() {
+			this.board = [
 				[{type: ""}, {type: ""}, {type: ""}],
 				[{type: ""}, {type: ""}, {type: ""}],
 				[{type: ""}, {type: ""}, {type: ""}]
 			];
 			this.nextInTurn = "circle";
+			this.message = "Circle starts";
 			this.result = "";
 		}
-		
+
 		activateSquare(row:number, col:number) {
 			if (this.board[row][col].type === "" && this.result === "") {
 				this.board[row][col].type = this.nextInTurn;
 				this.nextInTurn = this.nextInTurn === "circle" ? "cross" : "circle";
-				this.result = this.checkResult();
+				this.result = this.getResult();
 				if (this.result !== "") {
-					message = this.result + " wins";
+					this.message = this.result + " wins";
 					this.nextInTurn = "";
 				} else if (this.checkIfTie()) {
-					message = "Tie";
+					this.message = "Tie";
 					this.nextInTurn = "";
 				} else {
-					message = this.nextInTurn + " turn";
+					this.message = this.nextInTurn + " turn";
 				}
 			}
 		}
-		
+
 		checkHorizontal() {
 			for(var row = 0; row < this.board.length; row++) {
 				var firstType = this.board[row][0].type;
@@ -47,7 +53,7 @@
 			}
 			return "";
 		}
-		
+
 		checkVertical() {
 			for(var col = 0; col < this.board[0].length; col++) {
 				var firstType = this.board[0][col].type;
@@ -62,7 +68,7 @@
 			}
 			return "";
 		}
-		
+
 		checkDiagonal() {
 			var firstType = this.board[0][0].type;
 			for(var i = 1; i < 3; i++) {
@@ -82,7 +88,7 @@
 			}
 			return firstType;
 		}
-		
+
 		checkIfTie() {
 			var count = 0;
 			for(var row = 0; row < this.board.length; row++) {
@@ -94,7 +100,7 @@
 			}
 			return count === 9;
 		}
-		
+
 		checkResult() {
 			var horz = this.checkHorizontal();
 			var ver = this.checkVertical();
@@ -110,15 +116,29 @@
 				return "";
 			}
 		}
-		
-		reset() {
-			for(var row = 0; row < this.board.length; row++) {
-				for(var col = 0; col < this.board.length; col++) {
-					this.board[row][col].type = "";
-				}
+
+		setBoard(board: [[{}]]) {
+			this.board = board;
+		}
+
+		getResult() {
+			var horz = this.checkHorizontal();
+			var ver = this.checkVertical();
+			var diag = this.checkDiagonal();
+			var tie = this.checkIfTie();
+			// console.log("horz " + horz + " ver " + ver + " diag " + diag)
+			if (horz !== "") {
+				return horz;
+			} else if (ver !== "") {
+				return ver;
+			} else if (diag !== "") {
+				return diag;
+			} else if (tie) {
+				console.log("yo tie");
+				return "tie";
+			} else {
+				return "";
 			}
-			this.result = "";
-			this.nextInTurn = "circle";
 		}
     }
     angular.module('PeliApp').service('TictactoeEngine', TictactoeEngine);
