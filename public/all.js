@@ -1,27 +1,27 @@
 var PeliApp = angular.module('PeliApp', ['ui.router']);
 
 PeliApp.config(function($stateProvider, $urlRouterProvider) {
-	$urlRouterProvider.otherwise("/chess");
-	
+  $urlRouterProvider.otherwise("/chess");
+  
     $stateProvider
-		.state('chess', {
-			url: '/chess',
-			controller: 'ChessController',
-			// controllerAs: 'game',
-			templateUrl: 'app/components/chess/chess.html'
-		})
-		.state('tictactoe', {
-			url: '/tictactoe',
-			controller: 'TictactoeController',
-			// controllerAs: 'game',
-			templateUrl: 'app/components/tictactoe/tictactoe.html'
-		})
-		.state('mod', {
-			url: '/mod',
-			controller: 'ModController',
-			// controllerAs: 'game',
-			templateUrl: 'app/components/mod/mod.html'
-		})
+    .state('chess', {
+      url: '/chess',
+      controller: 'ChessController',
+      // controllerAs: 'game',
+      templateUrl: 'app/components/chess/chess.html'
+    })
+    .state('tictactoe', {
+      url: '/tictactoe',
+      controller: 'TictactoeController',
+      // controllerAs: 'game',
+      templateUrl: 'app/components/tictactoe/tictactoe.html'
+    })
+    .state('mod', {
+      url: '/mod',
+      controller: 'ModController',
+      // controllerAs: 'game',
+      templateUrl: 'app/components/mod/mod.html'
+    })
     });
 var PeliApp;
 (function (PeliApp) {
@@ -521,7 +521,7 @@ PeliApp.controller('ChessController', function ($scope, ChessEngine) {
             var coords = $scope.activatedpiece.edibles[index];
             //$scope.table[coords.y][coords.x].edible = type;
             ChessEngine.table[coords.y][coords.x].edible = type;
-            //console.log("mik� on edibl" + ChessEngine.table[coords.y][coords.x].edible);
+            //console.log("mik� on edibl" + ChessEngine.table[coords.y][coords.x].edible);
         }
     };
 
@@ -581,126 +581,126 @@ PeliApp.directive('chessBoard', function() {
     return {
         restrict: 'E',
         template: 
-				'<button ng-click="logAll()">log</button>',
-				'<div class="shakki-container">',
-					'<div class="shakki-table">',
-						'<div ng-repeat="row in table">',
-							'<div ng-repeat="column in row" ng-click="activateSquare($parent.$index, $index)">',
-								'<square data="table[$parent.$index][$index]" row="$parent.$index" column="$index"></square>',
-							'</div>',
-						'</div>',
-					'</div>',
-				'</div>',
+        '<button ng-click="logAll()">log</button>',
+        '<div class="shakki-container">',
+          '<div class="shakki-table">',
+            '<div ng-repeat="row in table">',
+              '<div ng-repeat="column in row" ng-click="activateSquare($parent.$index, $index)">',
+                '<square data="table[$parent.$index][$index]" row="$parent.$index" column="$index"></square>',
+              '</div>',
+            '</div>',
+          '</div>',
+        '</div>',
         scope: {
             data: '=',
             row: '=',
             column: '='
         },
         link: function(scope, element, attrs) {
-			$scope.message = "White starts";
-			$scope.table = ShakkiEngine.table;
-			$scope.turncolor = "white";
+      $scope.message = "White starts";
+      $scope.table = ShakkiEngine.table;
+      $scope.turncolor = "white";
 
-			$scope.activatedpiece = {};
+      $scope.activatedpiece = {};
 
-			$scope.activateSquare = function(row, column) {
-				if($scope.checkIfAvailableSquareClicked(row, column)) {
-					$scope.movePiece(row, column);
-				} else if ($scope.table[row][column].color===$scope.turncolor && $scope.table[row][column].occupier !== 'none') {
-					if (ShakkiEngine.checks[$scope.turncolor+'-king1'].length!==0) {
-						if ($scope.table[row][column].holder==='king') {
+      $scope.activateSquare = function(row, column) {
+        if($scope.checkIfAvailableSquareClicked(row, column)) {
+          $scope.movePiece(row, column);
+        } else if ($scope.table[row][column].color===$scope.turncolor && $scope.table[row][column].occupier !== 'none') {
+          if (ShakkiEngine.checks[$scope.turncolor+'-king1'].length!==0) {
+            if ($scope.table[row][column].holder==='king') {
 
-						} else {
-							return;
-						}
-					}
-					if (typeof $scope.activatedpiece.y!== "undefined") {
-						$scope.table[$scope.activatedpiece.y][$scope.activatedpiece.x].active = false;
-						$scope.showOrHideMovesAndEdibles(false);
-					}
-					$scope.activatedpiece = ShakkiEngine.pieces[ShakkiEngine.table[row][column].occupier];
-					$scope.table[row][column].active = true;
-					$scope.showOrHideMovesAndEdibles(true);
+            } else {
+              return;
+            }
+          }
+          if (typeof $scope.activatedpiece.y!== "undefined") {
+            $scope.table[$scope.activatedpiece.y][$scope.activatedpiece.x].active = false;
+            $scope.showOrHideMovesAndEdibles(false);
+          }
+          $scope.activatedpiece = ShakkiEngine.pieces[ShakkiEngine.table[row][column].occupier];
+          $scope.table[row][column].active = true;
+          $scope.showOrHideMovesAndEdibles(true);
 
-				//} else if ($scope.table[row][column].occupier !== 'none' && $scope.table[row][column].color===$scope.turncolor) {
-				//    if (typeof $scope.activatedpiece.y!== "undefined") {
-				//        $scope.table[$scope.activatedpiece.y][$scope.activatedpiece.x].active = false;
-				//        $scope.showOrHideMovesAndEdibles(false);
-				//    }
-				//    $scope.activatedpiece = ShakkiEngine.pieces[ShakkiEngine.table[row][column].occupier];
-				//    $scope.table[row][column].active = true;
-				//    $scope.showOrHideMovesAndEdibles(true);
-				}
-			};
+        //} else if ($scope.table[row][column].occupier !== 'none' && $scope.table[row][column].color===$scope.turncolor) {
+        //    if (typeof $scope.activatedpiece.y!== "undefined") {
+        //        $scope.table[$scope.activatedpiece.y][$scope.activatedpiece.x].active = false;
+        //        $scope.showOrHideMovesAndEdibles(false);
+        //    }
+        //    $scope.activatedpiece = ShakkiEngine.pieces[ShakkiEngine.table[row][column].occupier];
+        //    $scope.table[row][column].active = true;
+        //    $scope.showOrHideMovesAndEdibles(true);
+        }
+      };
 
-			$scope.showOrHideMovesAndEdibles = function(type) {
-				//console.log("what ", $scope.activatedpiece.moves);
-				for(var index in $scope.activatedpiece.moves) {
-					//console.log("what is this ", $scope.activatedpiece.moves[index]);
-					var coords = $scope.activatedpiece.moves[index];
-					//$scope.table[coords.y][coords.x].movable = type;
-					ShakkiEngine.table[coords.y][coords.x].movable = type;
-				}
-				for(var index in $scope.activatedpiece.edibles) {
-					var coords = $scope.activatedpiece.edibles[index];
-					//$scope.table[coords.y][coords.x].edible = type;
-					ShakkiEngine.table[coords.y][coords.x].edible = type;
-					//console.log("mikä on edibl" + ShakkiEngine.table[coords.y][coords.x].edible);
-				}
-			};
+      $scope.showOrHideMovesAndEdibles = function(type) {
+        //console.log("what ", $scope.activatedpiece.moves);
+        for(var index in $scope.activatedpiece.moves) {
+          //console.log("what is this ", $scope.activatedpiece.moves[index]);
+          var coords = $scope.activatedpiece.moves[index];
+          //$scope.table[coords.y][coords.x].movable = type;
+          ShakkiEngine.table[coords.y][coords.x].movable = type;
+        }
+        for(var index in $scope.activatedpiece.edibles) {
+          var coords = $scope.activatedpiece.edibles[index];
+          //$scope.table[coords.y][coords.x].edible = type;
+          ShakkiEngine.table[coords.y][coords.x].edible = type;
+          //console.log("mikä on edibl" + ShakkiEngine.table[coords.y][coords.x].edible);
+        }
+      };
 
-			$scope.logAll = function() {
-				console.log("", ShakkiEngine.table);
-				console.log("", ShakkiEngine.pieces);
-				console.log("", ShakkiEngine.squares);
-			};
+      $scope.logAll = function() {
+        console.log("", ShakkiEngine.table);
+        console.log("", ShakkiEngine.pieces);
+        console.log("", ShakkiEngine.squares);
+      };
 
-			$scope.checkIfAvailableSquareClicked = function(row, column) {
-				if (typeof $scope.activatedpiece.y !== 'undefined') {
-					for(var index in $scope.activatedpiece.moves) {
-						var coords = $scope.activatedpiece.moves[index];
-						if (row === coords.y && column === coords.x) {
-							return true;
-						}
-					}
-					for(var index in $scope.activatedpiece.edibles) {
-						var coords = $scope.activatedpiece.edibles[index];
-						if (row === coords.y && column === coords.x) {
-							return true;
-						}
-					}
-				}
-				return false;
-			};
+      $scope.checkIfAvailableSquareClicked = function(row, column) {
+        if (typeof $scope.activatedpiece.y !== 'undefined') {
+          for(var index in $scope.activatedpiece.moves) {
+            var coords = $scope.activatedpiece.moves[index];
+            if (row === coords.y && column === coords.x) {
+              return true;
+            }
+          }
+          for(var index in $scope.activatedpiece.edibles) {
+            var coords = $scope.activatedpiece.edibles[index];
+            if (row === coords.y && column === coords.x) {
+              return true;
+            }
+          }
+        }
+        return false;
+      };
 
-			// TODO
-			// see if soldier can be promoted
+      // TODO
+      // see if soldier can be promoted
 
-			$scope.movePiece = function(row, column) {
-				$scope.table[$scope.activatedpiece.y][$scope.activatedpiece.x].active = false;
-				$scope.showOrHideMovesAndEdibles(false);
+      $scope.movePiece = function(row, column) {
+        $scope.table[$scope.activatedpiece.y][$scope.activatedpiece.x].active = false;
+        $scope.showOrHideMovesAndEdibles(false);
 
-				ShakkiEngine.movePiece($scope.activatedpiece, row, column);
-				$scope.calcAllMoves();
-				//ShakkiEngine.checkForCheckMate();
+        ShakkiEngine.movePiece($scope.activatedpiece, row, column);
+        $scope.calcAllMoves();
+        //ShakkiEngine.checkForCheckMate();
 
-				$scope.activatedpiece = {};
-				var oldcolor = $scope.turncolor;
-				$scope.turncolor = $scope.turncolor==='white' ? 'black' : 'white';
-				$("."+oldcolor).removeClass(oldcolor).addClass($scope.turncolor);
-			};
+        $scope.activatedpiece = {};
+        var oldcolor = $scope.turncolor;
+        $scope.turncolor = $scope.turncolor==='white' ? 'black' : 'white';
+        $("."+oldcolor).removeClass(oldcolor).addClass($scope.turncolor);
+      };
 
-			$scope.calcAllMoves = function() {
-				ShakkiEngine.checks['white-king1']=[];
-				ShakkiEngine.checks['black-king1']=[];
-				for(var name in ShakkiEngine.pieces) {
-					ShakkiEngine.calculatePossibleMovesForPiece(name);
-				}
-			};
+      $scope.calcAllMoves = function() {
+        ShakkiEngine.checks['white-king1']=[];
+        ShakkiEngine.checks['black-king1']=[];
+        for(var name in ShakkiEngine.pieces) {
+          ShakkiEngine.calculatePossibleMovesForPiece(name);
+        }
+      };
 
-			$scope.calcAllMoves();
-		}
-	};
+      $scope.calcAllMoves();
+    }
+  };
 });*/
 PeliApp.directive('square', function() {
     return {
@@ -1032,55 +1032,55 @@ var PeliApp;
 })(PeliApp || (PeliApp = {}));
 
 PeliApp.controller("TictactoeController", function($scope, TictactoeEngine, TictactoeAI) {
-	
-	$scope.tree_depth = 5;
-	$scope.statistics = [
-		{ empty: 9, factorial: 362880, minmax_loops: "n/a", alphabeta_loops: ""},
-		{ empty: 8, factorial: 40320, minmax_loops: "n/a", alphabeta_loops: ""},
-		{ empty: 7, factorial: 5040, minmax_loops: "8232", alphabeta_loops: ""},
-		{ empty: 6, factorial: 720, minmax_loops: "1349", alphabeta_loops: ""},
-		{ empty: 5, factorial: 120, minmax_loops: "234", alphabeta_loops: ""},
-		{ empty: 4, factorial: 24, minmax_loops: "41", alphabeta_loops: ""},
-		{ empty: 3, factorial: 6, minmax_loops: "8", alphabeta_loops: ""},
-		{ empty: 2, factorial: 2, minmax_loops: "5", alphabeta_loops: ""},
-		{ empty: 1, factorial: 1, minmax_loops: "2", alphabeta_loops: ""},
-	];
-	
-	$scope.init = function() {
-		$scope.message = "Circle starts";
-		$scope.result = "";
-		$scope.nextInTurn = "circle";
-		
-		$scope.board = [
-			[{type: ""}, {type: ""}, {type: ""}],
-			[{type: ""}, {type: ""}, {type: ""}],
-			[{type: ""}, {type: ""}, {type: ""}],
-		];
-	}
-	
-	$scope.activateSquare = function(row, col) {
-		TictactoeEngine.activateSquare(row, col);
-		
-		$scope.board = TictactoeEngine.board;
-		$scope.result = TictactoeEngine.result;
-		$scope.message = TictactoeEngine.message;
-		$scope.nextInTurn = TictactoeEngine.nextInTurn;
-	}
-	
-	$scope.reset = function() {
-		$scope.init();
-		TictactoeEngine.init();
-	}
-	
-	$scope.init();
-	
-	$scope.createTree = function() {
-		TictactoeAI.createTree();
-	}
-	
-	$scope.initAI = function() {
-		TictactoeAI.min_max();
-	}
+  
+  $scope.tree_depth = 5;
+  $scope.statistics = [
+    { empty: 9, factorial: 362880, minmax_loops: "n/a", alphabeta_loops: ""},
+    { empty: 8, factorial: 40320, minmax_loops: "n/a", alphabeta_loops: ""},
+    { empty: 7, factorial: 5040, minmax_loops: "8232", alphabeta_loops: ""},
+    { empty: 6, factorial: 720, minmax_loops: "1349", alphabeta_loops: ""},
+    { empty: 5, factorial: 120, minmax_loops: "234", alphabeta_loops: ""},
+    { empty: 4, factorial: 24, minmax_loops: "41", alphabeta_loops: ""},
+    { empty: 3, factorial: 6, minmax_loops: "8", alphabeta_loops: ""},
+    { empty: 2, factorial: 2, minmax_loops: "5", alphabeta_loops: ""},
+    { empty: 1, factorial: 1, minmax_loops: "2", alphabeta_loops: ""},
+  ];
+  
+  $scope.init = function() {
+    $scope.message = "Circle starts";
+    $scope.result = "";
+    $scope.nextInTurn = "circle";
+    
+    $scope.board = [
+      [{type: ""}, {type: ""}, {type: ""}],
+      [{type: ""}, {type: ""}, {type: ""}],
+      [{type: ""}, {type: ""}, {type: ""}],
+    ];
+  }
+  
+  $scope.activateSquare = function(row, col) {
+    TictactoeEngine.activateSquare(row, col);
+    
+    $scope.board = TictactoeEngine.board;
+    $scope.result = TictactoeEngine.result;
+    $scope.message = TictactoeEngine.message;
+    $scope.nextInTurn = TictactoeEngine.nextInTurn;
+  }
+  
+  $scope.reset = function() {
+    $scope.init();
+    TictactoeEngine.init();
+  }
+  
+  $scope.init();
+  
+  $scope.createTree = function() {
+    TictactoeAI.createTree();
+  }
+  
+  $scope.initAI = function() {
+    TictactoeAI.min_max();
+  }
 });
 PeliApp.directive('tictactoeBoard', function() {
     return {
@@ -1090,7 +1090,7 @@ PeliApp.directive('tictactoeBoard', function() {
             data: '='
         },
         link: function(scope, element, attrs) {
-			
+      
         }
     };
 });
@@ -1098,8 +1098,8 @@ PeliApp.directive("tictactoeSquare", function() {
     return {
         restrict: "E",
         template: "<div class=\"tictactoe-square\">" +
-					"{{ type }}" +
-				  "</span>",
+          "{{ type }}" +
+          "</span>",
         scope: {
             type: "="
         },
@@ -1511,85 +1511,85 @@ var PeliApp;
 })(PeliApp || (PeliApp = {}));
 
 PeliApp.controller("ModController", function($scope, ModEngine) {
-	
-	$scope.init = function() {
-		$scope.message = "Pick a DM";
-		$scope.state = ModEngine.getState();
-		$scope.dungeon = ModEngine.getPlayerDungeon();
-		$scope.dm = ModEngine.getPlayerDM();
-	}
-	
-	$scope.changeView = function(newState) {
-		console.log("change view " + newState);
-		if (newState === "pickDM") {
-			$scope.init();
-		} else if (newState === "pickDungeon") {
-			$scope.dm = ModEngine.getPlayerDM();
-			$scope.state = newState;
-			$scope.message = "Pick a dungeon";
-		} else if (newState === "changeDungeon") {
-			$scope.dungeon = ModEngine.getSelectedDungeon();
-		} else if (newState === "buildDungeon") {
-			$scope.dungeon = ModEngine.getPlayerDungeon();
-			$scope.state = newState;
-			$scope.message = "Build dungeon";
-		} else if (newState === "waitHeroes") {
-			
-		} else if (newState === "enterHeroes") {
-			$scope.state = newState;
-			$scope.message = "Kill heroes!";
-		}
-	}
-	
-	ModEngine.subscribeToStateChange($scope.changeView);
-	// ModEngine.start(); ?? rather than call init() here?
-	
-	$scope.init();
+  
+  $scope.init = function() {
+    $scope.message = "Pick a DM";
+    $scope.state = ModEngine.getState();
+    $scope.dungeon = ModEngine.getPlayerDungeon();
+    $scope.dm = ModEngine.getPlayerDM();
+  }
+  
+  $scope.changeView = function(newState) {
+    console.log("change view " + newState);
+    if (newState === "pickDM") {
+      $scope.init();
+    } else if (newState === "pickDungeon") {
+      $scope.dm = ModEngine.getPlayerDM();
+      $scope.state = newState;
+      $scope.message = "Pick a dungeon";
+    } else if (newState === "changeDungeon") {
+      $scope.dungeon = ModEngine.getSelectedDungeon();
+    } else if (newState === "buildDungeon") {
+      $scope.dungeon = ModEngine.getPlayerDungeon();
+      $scope.state = newState;
+      $scope.message = "Build dungeon";
+    } else if (newState === "waitHeroes") {
+      
+    } else if (newState === "enterHeroes") {
+      $scope.state = newState;
+      $scope.message = "Kill heroes!";
+    }
+  }
+  
+  ModEngine.subscribeToStateChange($scope.changeView);
+  // ModEngine.start(); ?? rather than call init() here?
+  
+  $scope.init();
 });
 PeliApp.directive("modBuildDungeon", function(ModEngine) {
     return {
         restrict: "E",
         template: "<div class='mod-build-dungeon flex-col'>" +
-					"<div ng-repeat='building in buildings'>"+
-						"<div ng-click='select($index)' class='mod-build-dungeon-item flex-row'>"+
-							"<div class='mod-build-dungeon-item-portrait'>picture</div>"+
-							"<div class='mod-build-dungeon-item-info flex-col'>"+
-								"<p>name: {{ building.name }}</p>"+
-								"<p>type: {{ building.type }}</p>"+
-								"<p>price: {{ building.price }}</p>"+
-							"</div>"+
-						"</div>"+
-						// "<mod-build-dungeon-item ng-click='select($index)' building='item'></mod-build-dungeon-item>"+
-					"</div>"+
-				  "</div>",
+          "<div ng-repeat='building in buildings'>"+
+            "<div ng-click='select($index)' class='mod-build-dungeon-item flex-row'>"+
+              "<div class='mod-build-dungeon-item-portrait'>picture</div>"+
+              "<div class='mod-build-dungeon-item-info flex-col'>"+
+                "<p>name: {{ building.name }}</p>"+
+                "<p>type: {{ building.type }}</p>"+
+                "<p>price: {{ building.price }}</p>"+
+              "</div>"+
+            "</div>"+
+            // "<mod-build-dungeon-item ng-click='select($index)' building='item'></mod-build-dungeon-item>"+
+          "</div>"+
+          "</div>",
         scope: {
             type: "="
         },
         link: function(scope, element, attrs) {
-			var selected;
-			scope.buildings = [];
-			
-			scope.refreshBuildings = function(state) {
-				if (state === "buildDungeon") {
-					scope.buildings = ModEngine.getBuildings();
-				}
-			}
-			
-			scope.select = function(index) {
-				// console.log("selected on " + selected);
-				// check if possible the build
-				if (ModEngine.selectBuilding(index)) {
-					if (typeof selected === "number") {
-						var old = element.find(".mod-build-dungeon-item")[selected];
-						old.className = old.className.replace( /(?:^|\s)dm-selected(?!\S)/g , '' );
-					}
-					var div = element.find(".mod-build-dungeon-item")[index];
-					div.className += " dm-selected";
-					selected = index;
-				}
-			}
-			
-			ModEngine.subscribeToStateChange(scope.refreshBuildings);
+      var selected;
+      scope.buildings = [];
+      
+      scope.refreshBuildings = function(state) {
+        if (state === "buildDungeon") {
+          scope.buildings = ModEngine.getBuildings();
+        }
+      }
+      
+      scope.select = function(index) {
+        // console.log("selected on " + selected);
+        // check if possible the build
+        if (ModEngine.selectBuilding(index)) {
+          if (typeof selected === "number") {
+            var old = element.find(".mod-build-dungeon-item")[selected];
+            old.className = old.className.replace( /(?:^|\s)dm-selected(?!\S)/g , '' );
+          }
+          var div = element.find(".mod-build-dungeon-item")[index];
+          div.className += " dm-selected";
+          selected = index;
+        }
+      }
+      
+      ModEngine.subscribeToStateChange(scope.refreshBuildings);
         }
     };
 });
@@ -1597,15 +1597,15 @@ PeliApp.directive("modBuildDungeonItem", function(ModEngine) {
     return {
         restrict: "E",
         template: "<div class='mod-select-dungeon-item flex-col'>" +
-					"<div class='mod-select-dungeon-item-grid'>"+
-						"dungeon here"+
-						// "<div>name: {{ dm.name }}</div>"+
-						// "<div>prestige: {{ dm.prestige }}</div>"+
-						// "<div>health: {{ dm.health }}</div>"+
-						// "<div>magic: {{ dm.magic }}</div>"+
-						// "<div>info: {{ dm.info }}</div>"+
-					"</div>"+
-				  "</div>",
+          "<div class='mod-select-dungeon-item-grid'>"+
+            "dungeon here"+
+            // "<div>name: {{ dm.name }}</div>"+
+            // "<div>prestige: {{ dm.prestige }}</div>"+
+            // "<div>health: {{ dm.health }}</div>"+
+            // "<div>magic: {{ dm.magic }}</div>"+
+            // "<div>info: {{ dm.info }}</div>"+
+          "</div>"+
+          "</div>",
         scope: {
             building: "="
         },
@@ -1616,31 +1616,31 @@ PeliApp.directive("modBuildDungeonItem", function(ModEngine) {
 PeliApp.directive("modCommand", function(ModEngine) {
     return {
         restrict: "E",
-        template: 	"<div class='flex-col'>"+
-						"<button ng-click='restart()'>Restart</button>"+
-						// "<button ng-click='save()'>Save</button>"+
-						"<div class='white turnbox-outer'>"+
-							"<div class='white turnbox-inner'>"+
-								"{{ state }}"+
-							"</div>"+
-						"</div>"+
-						"<div class='messagebox'>"+
-							"{{ message }}"+
-						"</div>"+
-					"</div>",
+        template:   "<div class='flex-col'>"+
+            "<button ng-click='restart()'>Restart</button>"+
+            // "<button ng-click='save()'>Save</button>"+
+            "<div class='white turnbox-outer'>"+
+              "<div class='white turnbox-inner'>"+
+                "{{ state }}"+
+              "</div>"+
+            "</div>"+
+            "<div class='messagebox'>"+
+              "{{ message }}"+
+            "</div>"+
+          "</div>",
         scope: {
             message: "=",
-			state: "="
+      state: "="
         },
         link: function(scope, element, attrs) {
-			
-			scope.restart = function() {
-				ModEngine.restart();
-			}
-			
-			scope.save = function() {
-				
-			}
+      
+      scope.restart = function() {
+        ModEngine.restart();
+      }
+      
+      scope.save = function() {
+        
+      }
         }
     };
 });
@@ -1648,130 +1648,130 @@ PeliApp.directive("modDmPanel", function(ModEngine) {
     return {
         restrict: "E",
         template: "<div class='mod-dm-panel flex-col'>" +
-					"<div>portrait</div>"+
-					"<div>I am {{ dm.name }}</div>"+
-					"<div>gold: {{ dm.gold }}</div>"+
-				  "</div>",
+          "<div>portrait</div>"+
+          "<div>I am {{ dm.name }}</div>"+
+          "<div>gold: {{ dm.gold }}</div>"+
+          "</div>",
         scope: {
             dm: "="
         },
         link: function(scope, element, attrs) {
-			// var selected;
-			// scope.dms = ModEngine.getDMs();
-			
-			// scope.select = function(index) {
-				// // console.log("selected on " + selected);
-				// if (typeof selected === "number") {
-					// var old = element.find(".mod-select-dm-item-portrait")[selected];
-					// old.className = old.className.replace( /(?:^|\s)dm-selected(?!\S)/g , '' );
-				// }
-				// var div = element.find(".mod-select-dm-item-portrait")[index];
-				// div.className += " dm-selected";
-				// selected = index;
-			// }
-			
-			// scope.pick = function() {
-				// ModEngine.pickDM(selected);
-			// }
+      // var selected;
+      // scope.dms = ModEngine.getDMs();
+      
+      // scope.select = function(index) {
+        // // console.log("selected on " + selected);
+        // if (typeof selected === "number") {
+          // var old = element.find(".mod-select-dm-item-portrait")[selected];
+          // old.className = old.className.replace( /(?:^|\s)dm-selected(?!\S)/g , '' );
+        // }
+        // var div = element.find(".mod-select-dm-item-portrait")[index];
+        // div.className += " dm-selected";
+        // selected = index;
+      // }
+      
+      // scope.pick = function() {
+        // ModEngine.pickDM(selected);
+      // }
         }
     };
 });
 PeliApp.directive("modDungeonGrid", function(ModEngine) {
     return {
         restrict: "E",
-        template: 	"<div class='mod-dungeon-grid'>" +
-						"<div class='mod-grid-row flex-row' ng-repeat='row in grid'>"+
-							"<div class='mod-grid-col' ng-repeat='column in row track by $index' ng-click='activateSquare($parent.$index, $index)'>"+
-								"<mod-dungeon-tile tile='column'></mod-dungeon-tile>"+
-							"</div>"+
-						"</div>"+
-					"</div>",
+        template:   "<div class='mod-dungeon-grid'>" +
+            "<div class='mod-grid-row flex-row' ng-repeat='row in grid'>"+
+              "<div class='mod-grid-col' ng-repeat='column in row track by $index' ng-click='activateSquare($parent.$index, $index)'>"+
+                "<mod-dungeon-tile tile='column'></mod-dungeon-tile>"+
+              "</div>"+
+            "</div>"+
+          "</div>",
         scope: {
             grid: "="
         },
         link: function(scope, element, attrs) {
-			var selected;
-			
-			scope.activateSquare = function(row, col) {
-				var state = ModEngine.getState();
-				if (state === "buildDungeon") {
-					// should trigger update inside modController which updates this view
-					ModEngine.buildBuilding(row, col);
-				}
-			}
+      var selected;
+      
+      scope.activateSquare = function(row, col) {
+        var state = ModEngine.getState();
+        if (state === "buildDungeon") {
+          // should trigger update inside modController which updates this view
+          ModEngine.buildBuilding(row, col);
+        }
+      }
         }
     };
 });
 PeliApp.directive("modDungeonGridCanvas", function(ModEngine) {
     return {
         restrict: "E",
-        template: 	"<div class='mod-dungeon-grid flex-col'>" +
-						"<canvas id='dungeonCanvas' width='{{ width }}' height='{{ height }}' class='mod-dungeon-canvas'></canvas>"+
-						"<button ng-click='draw()'>Draw</button>"+
-						// "<div class='mod-grid-row flex-row' ng-repeat='row in grid'>"+
-							// "<div class='mod-grid-col' ng-repeat='column in row track by $index' ng-click='activateSquare($parent.$index, $index)'>"+
-								// "<mod-dungeon-tile tile='column'></mod-dungeon-tile>"+
-							// "</div>"+
-						// "</div>"+
-					"</div>",
+        template:   "<div class='mod-dungeon-grid flex-col'>" +
+            "<canvas id='dungeonCanvas' width='{{ width }}' height='{{ height }}' class='mod-dungeon-canvas'></canvas>"+
+            "<button ng-click='draw()'>Draw</button>"+
+            // "<div class='mod-grid-row flex-row' ng-repeat='row in grid'>"+
+              // "<div class='mod-grid-col' ng-repeat='column in row track by $index' ng-click='activateSquare($parent.$index, $index)'>"+
+                // "<mod-dungeon-tile tile='column'></mod-dungeon-tile>"+
+              // "</div>"+
+            // "</div>"+
+          "</div>",
         scope: {
             grid: "="
         },
         link: function(scope, element, attrs) {
-			scope.width = 250; 
-			scope.height = 250;
-			
-			var selected;
-			
-			var canvas = element.find("canvas")[0];
-			
-			var drawSquare = function(x, y, color) {
-				var ctx = canvas.getContext("2d");
-				ctx.fillStyle = color;
-				ctx.fillRect(x, y, 50, 50);
-			}
-			
-			var drawHeroes = function(x, y, heroesObj) {
-				var ctx = canvas.getContext("2d");
-				for(var h = 0; h < heroesObj.heroes.length; h++) {
-					ctx.fillStyle = "blue";
-					ctx.fillRect(x+h*20, y+10, 10, 10);
-				}
-			}
-			
-			scope.activateSquare = function(row, col) {
-				var state = ModEngine.getState();
-				if (state === "buildDungeon") {
-					// should trigger update inside modController which updates this view
-					ModEngine.buildBuilding(row, col);
-				}
-			}
-			
-			scope.draw = function() {
-				// debugger;
-				for(var y = 0; y < scope.grid.length; y++) {
-					for(var x = 0; x < scope.grid[y].length; x++) {
-						
-						if (scope.grid[y][x].type === "") {
-							drawSquare(x*50, y*50, "orange");
-						} else if (scope.grid[y][x].type === "tunnel") {
-							drawSquare(x*50, y*50, "gray");
-						} else if (scope.grid[y][x].type === "lair") {
-							drawSquare(x*50, y*50, "green");
-						}
-						
-						if (typeof scope.grid[y][x].occupier !== "undefined" && scope.grid[y][x].occupier !== "") {
-							drawHeroes(x*50, y*50, scope.grid[y][x].occupier);
-						}
-					}
-				}
-			}
-			
-			scope.$watch("grid", function(newVal, oldVal) {
-				scope.width = scope.grid[0].length*50; 
-				scope.height = scope.grid.length*50; 
-				scope.draw();
-			}, true)
+      scope.width = 250; 
+      scope.height = 250;
+      
+      var selected;
+      
+      var canvas = element.find("canvas")[0];
+      
+      var drawSquare = function(x, y, color) {
+        var ctx = canvas.getContext("2d");
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, 50, 50);
+      }
+      
+      var drawHeroes = function(x, y, heroesObj) {
+        var ctx = canvas.getContext("2d");
+        for(var h = 0; h < heroesObj.heroes.length; h++) {
+          ctx.fillStyle = "blue";
+          ctx.fillRect(x+h*20, y+10, 10, 10);
+        }
+      }
+      
+      scope.activateSquare = function(row, col) {
+        var state = ModEngine.getState();
+        if (state === "buildDungeon") {
+          // should trigger update inside modController which updates this view
+          ModEngine.buildBuilding(row, col);
+        }
+      }
+      
+      scope.draw = function() {
+        // debugger;
+        for(var y = 0; y < scope.grid.length; y++) {
+          for(var x = 0; x < scope.grid[y].length; x++) {
+            
+            if (scope.grid[y][x].type === "") {
+              drawSquare(x*50, y*50, "orange");
+            } else if (scope.grid[y][x].type === "tunnel") {
+              drawSquare(x*50, y*50, "gray");
+            } else if (scope.grid[y][x].type === "lair") {
+              drawSquare(x*50, y*50, "green");
+            }
+            
+            if (typeof scope.grid[y][x].occupier !== "undefined" && scope.grid[y][x].occupier !== "") {
+              drawHeroes(x*50, y*50, scope.grid[y][x].occupier);
+            }
+          }
+        }
+      }
+      
+      scope.$watch("grid", function(newVal, oldVal) {
+        scope.width = scope.grid[0].length*50; 
+        scope.height = scope.grid.length*50; 
+        scope.draw();
+      }, true)
         }
     };
 });
@@ -1779,9 +1779,9 @@ PeliApp.directive("modDungeonTile", function() {
     return {
         restrict: "E",
         template: "<div class='mod-dungeon-tile'>" +
-					"{{ tile.type }}" +
-					"{{ tile.name }}" +
-				  "</span>",
+          "{{ tile.type }}" +
+          "{{ tile.name }}" +
+          "</span>",
         scope: {
             tile: "="
         },
@@ -1807,22 +1807,22 @@ PeliApp.directive("modHeroPanel", function(ModEngine) {
     return {
         restrict: "E",
         template: "<div class='mod-hero-panel flex-col'>" +
-					"<button ng-click='wait()'>Wait for heroes</button>"+
-					"<button ng-click='move()'>Move heroes</button>"+
-					// "<button ng-click='pause()'>Pause</button>"+
-					// "<button ng-click='surrend()'>Surrend</button>"+
-				  "</div>",
+          "<button ng-click='wait()'>Wait for heroes</button>"+
+          "<button ng-click='move()'>Move heroes</button>"+
+          // "<button ng-click='pause()'>Pause</button>"+
+          // "<button ng-click='surrend()'>Surrend</button>"+
+          "</div>",
         scope: {
             dm: "="
         },
         link: function(scope, element, attrs) {
-			scope.wait = function() {
-				ModEngine.waitForHeroes();
-			}
-			
-			scope.move = function() {
-				ModEngine.moveHeroes();
-			}
+      scope.wait = function() {
+        ModEngine.waitForHeroes();
+      }
+      
+      scope.move = function() {
+        ModEngine.moveHeroes();
+      }
         }
     };
 });
@@ -1830,34 +1830,34 @@ PeliApp.directive("modSelectDm", function(ModEngine) {
     return {
         restrict: "E",
         template: "<div class='mod-select flex-col'>" +
-					"<div ng-repeat='dungeonmaster in dms'>"+
-						"<mod-select-dm-item ng-click='select($index)' dm='dungeonmaster'></mod-select-dm-item>"+
-					"</div>"+
-					"<button ng-click='pick()'>Pick</button>"+
-				  "</div>",
+          "<div ng-repeat='dungeonmaster in dms'>"+
+            "<mod-select-dm-item ng-click='select($index)' dm='dungeonmaster'></mod-select-dm-item>"+
+          "</div>"+
+          "<button ng-click='pick()'>Pick</button>"+
+          "</div>",
         scope: {
             type: "="
         },
         link: function(scope, element, attrs) {
-			var selected;
-			scope.dms = ModEngine.getDMs();
-			
-			scope.select = function(index) {
-				// console.log("selected on " + selected);
-				if (typeof selected === "number") {
-					var old = element.find(".mod-select-dm-item-portrait")[selected];
-					old.className = old.className.replace( /(?:^|\s)dm-selected(?!\S)/g , '' );
-				}
-				var div = element.find(".mod-select-dm-item-portrait")[index];
-				div.className += " dm-selected";
-				selected = index;
-			}
-			
-			scope.pick = function() {
-				ModEngine.pickDM(selected);
-				var old = element.find(".mod-select-dm-item-portrait")[selected];
-				old.className = old.className.replace( /(?:^|\s)dm-selected(?!\S)/g , '' );
-			}
+      var selected;
+      scope.dms = ModEngine.getDMs();
+      
+      scope.select = function(index) {
+        // console.log("selected on " + selected);
+        if (typeof selected === "number") {
+          var old = element.find(".mod-select-dm-item-portrait")[selected];
+          old.className = old.className.replace( /(?:^|\s)dm-selected(?!\S)/g , '' );
+        }
+        var div = element.find(".mod-select-dm-item-portrait")[index];
+        div.className += " dm-selected";
+        selected = index;
+      }
+      
+      scope.pick = function() {
+        ModEngine.pickDM(selected);
+        var old = element.find(".mod-select-dm-item-portrait")[selected];
+        old.className = old.className.replace( /(?:^|\s)dm-selected(?!\S)/g , '' );
+      }
         }
     };
 });
@@ -1865,15 +1865,15 @@ PeliApp.directive("modSelectDmItem", function(ModEngine) {
     return {
         restrict: "E",
         template: "<div class='mod-select-dm-item flex-col'>" +
-					"<div class='mod-select-dm-item-portrait'>top dm</div>"+
-					"<div class='mod-select-dm-item-stats'>"+
-						"<div>name: {{ dm.name }}</div>"+
-						// "<div>prestige: {{ dm.prestige }}</div>"+
-						// "<div>health: {{ dm.health }}</div>"+
-						// "<div>magic: {{ dm.magic }}</div>"+
-						"<div>info: {{ dm.info }}</div>"+
-					"</div>"+
-				  "</div>",
+          "<div class='mod-select-dm-item-portrait'>top dm</div>"+
+          "<div class='mod-select-dm-item-stats'>"+
+            "<div>name: {{ dm.name }}</div>"+
+            // "<div>prestige: {{ dm.prestige }}</div>"+
+            // "<div>health: {{ dm.health }}</div>"+
+            // "<div>magic: {{ dm.magic }}</div>"+
+            "<div>info: {{ dm.info }}</div>"+
+          "</div>"+
+          "</div>",
         scope: {
             dm: "="
         },
@@ -1885,39 +1885,39 @@ PeliApp.directive("modSelectDungeon", function(ModEngine) {
     return {
         restrict: "E",
         template: "<div class='mod-select-dungeon flex-col'>" +
-					"<div ng-repeat='dungeon in dungeons'>"+
-						"<div ng-click='select($index)' class='mod-select-dungeon-item'>"+
-							"I am a dungeon!"+
-						"</div>"+
-						// "<mod-select-dungeon-item ng-click='select($index)' dungeon='dungeon'></mod-select-dungeon-item>"+
-					"</div>"+
-					"<button ng-click='pick()'>Pick</button>"+
-				  "</div>",
+          "<div ng-repeat='dungeon in dungeons'>"+
+            "<div ng-click='select($index)' class='mod-select-dungeon-item'>"+
+              "I am a dungeon!"+
+            "</div>"+
+            // "<mod-select-dungeon-item ng-click='select($index)' dungeon='dungeon'></mod-select-dungeon-item>"+
+          "</div>"+
+          "<button ng-click='pick()'>Pick</button>"+
+          "</div>",
         scope: {
             type: "="
         },
         link: function(scope, element, attrs) {
-			var selected;
-			scope.dungeons = ModEngine.getDungeons();
-			
-			scope.select = function(index) {
-				// console.log("selected on " + selected);
-				if (typeof selected === "number") {
-					var old = element.find(".mod-select-dungeon-item")[selected];
-					old.className = old.className.replace( /(?:^|\s)dm-selected(?!\S)/g , '' );
-				}
-				var div = element.find(".mod-select-dungeon-item")[index];
-				div.className += " dm-selected";
-				selected = index;
-				// debugger;
-				ModEngine.selectDungeon(index);
-			}
-			
-			scope.pick = function() {
-				ModEngine.pickDungeon();
-				var old = element.find(".mod-select-dungeon-item")[selected];
-				old.className = old.className.replace( /(?:^|\s)dm-selected(?!\S)/g , '' );
-			}
+      var selected;
+      scope.dungeons = ModEngine.getDungeons();
+      
+      scope.select = function(index) {
+        // console.log("selected on " + selected);
+        if (typeof selected === "number") {
+          var old = element.find(".mod-select-dungeon-item")[selected];
+          old.className = old.className.replace( /(?:^|\s)dm-selected(?!\S)/g , '' );
+        }
+        var div = element.find(".mod-select-dungeon-item")[index];
+        div.className += " dm-selected";
+        selected = index;
+        // debugger;
+        ModEngine.selectDungeon(index);
+      }
+      
+      scope.pick = function() {
+        ModEngine.pickDungeon();
+        var old = element.find(".mod-select-dungeon-item")[selected];
+        old.className = old.className.replace( /(?:^|\s)dm-selected(?!\S)/g , '' );
+      }
         }
     };
 });
@@ -1925,10 +1925,10 @@ PeliApp.directive("modSelectDungeonItem", function(ModEngine) {
     return {
         restrict: "E",
         template: "<div class='mod-select-dungeon-item flex-col'>" +
-					// "<div class='mod-select-dungeon-item-grid'>"+
-						"dungeon here"+
-					// "</div>"+
-				  "</div>",
+          // "<div class='mod-select-dungeon-item-grid'>"+
+            "dungeon here"+
+          // "</div>"+
+          "</div>",
         scope: {
             dungeon: "="
         },

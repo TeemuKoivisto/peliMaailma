@@ -1,24 +1,24 @@
 <div class="mod-container flex-row">
-	<div class="flex-col">
-		<mod-dungeon-grid grid="dungeon.grid"></mod-dungeon-grid>
-		<mod-dungeon-grid-canvas grid="dungeon.grid"></mod-dungeon-grid-canvas>
-	</div>
-	<div class="mleft flex-col">
-		<mod-command message="message" state="state" ></mod-command>
-		<div ng-show="state !== 'pickDM' && state !== 'pickDungeon'">
-			<mod-hero-panel></mod-hero-panel>
-		</div>
-	</div>
-	<div ng-show="state === 'pickDM'" class="mleft">
-		<mod-select-dm></mod-select-dm>
-	</div>
-	<div ng-show="state === 'pickDungeon'" class="mleft">
-		<mod-select-dungeon></mod-select-dungeon>
-	</div>
-	<div ng-show="state === 'buildDungeon'" class="mleft">
-		<mod-build-dungeon></mod-build-dungeon>
-	</div>
-	<div ng-show="state !== 'pickDM'" class="mleft">
-		<mod-dm-panel dm="dm"></mod-dm-panel>
-	</div>
+  <div class="flex-col">
+    <mod-dungeon-grid grid="dungeon.grid"></mod-dungeon-grid>
+    <mod-dungeon-grid-canvas grid="dungeon.grid"></mod-dungeon-grid-canvas>
+  </div>
+  <div class="mleft flex-col">
+    <mod-command message="message" state="state" ></mod-command>
+    <div ng-show="state !== 'pickDM' && state !== 'pickDungeon'">
+      <mod-hero-panel></mod-hero-panel>
+    </div>
+  </div>
+  <div ng-show="state === 'pickDM'" class="mleft">
+    <mod-select-dm></mod-select-dm>
+  </div>
+  <div ng-show="state === 'pickDungeon'" class="mleft">
+    <mod-select-dungeon></mod-select-dungeon>
+  </div>
+  <div ng-show="state === 'buildDungeon'" class="mleft">
+    <mod-build-dungeon></mod-build-dungeon>
+  </div>
+  <div ng-show="state !== 'pickDM'" class="mleft">
+    <mod-dm-panel dm="dm"></mod-dm-panel>
+  </div>
 </div>

@@ -2,8 +2,8 @@ PeliApp.directive("tictactoeSquare", function() {
     return {
         restrict: "E",
         template: "<div class=\"tictactoe-square\">" +
-					"{{ type }}" +
-				  "</span>",
+          "{{ type }}" +
+          "</span>",
         scope: {
             type: "="
         },

@@ -2,9 +2,9 @@ PeliApp.directive("modDungeonTile", function() {
     return {
         restrict: "E",
         template: "<div class='mod-dungeon-tile'>" +
-					"{{ tile.type }}" +
-					"{{ tile.name }}" +
-				  "</span>",
+          "{{ tile.type }}" +
+          "{{ tile.name }}" +
+          "</span>",
         scope: {
             tile: "="
         },

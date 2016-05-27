@@ -6,7 +6,7 @@ PeliApp.directive('tictactoeBoard', function() {
             data: '='
         },
         link: function(scope, element, attrs) {
-			
+      
         }
     };
 });

@@ -16,16 +16,16 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       
-		"public/bower_components/angular/angular.min.js",
-		"public/bower_components/angular-ui-router/release/angular-ui-router.min.js",
-		"public/bower_components/jquery/dist/jquery.min.js",
-		"public/bower_components/bootstrap/dist/js/bootsrap.min.js",
+    "public/bower_components/angular/angular.min.js",
+    "public/bower_components/angular-ui-router/release/angular-ui-router.min.js",
+    "public/bower_components/jquery/dist/jquery.min.js",
+    "public/bower_components/bootstrap/dist/js/bootsrap.min.js",
 
-		'node_modules/angular-mocks/angular-mocks.js',
+    'node_modules/angular-mocks/angular-mocks.js',
 
-		"public/app/all.js",
-		"test/**/*.js"
-		],
+    "public/app/all.js",
+    "test/**/*.js"
+    ],
 
 
     // list of files to exclude
@@ -36,12 +36,12 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-		"public/app/all.js": ['coverage']
+    "public/app/all.js": ['coverage']
     },
 
-	coverageReporter: {
-		type: 'text'
-	},
+  coverageReporter: {
+    type: 'text'
+  },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
@@ -65,15 +65,15 @@ module.exports = function(config) {
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
 
-	plugins : [
+  plugins : [
       'karma-phantomjs-launcher',
-	  'karma-coverage',
+    'karma-coverage',
       'karma-jasmine'
     ],
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     // browsers: ['Chrome'],
-	browsers: ['PhantomJS'],
+  browsers: ['PhantomJS'],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits

@@ -2,8 +2,8 @@
 
     import Igniter = PeliApp.ChessIgniter;
     
-	export class ChessEngine {
-	
+  export class ChessEngine {
+  
         table:[[{}]];
         pieces: {};
         quantity: {};
@@ -11,7 +11,7 @@
         checks:{};
         edibleby:{}; 
 
-		constructor() {
+    constructor() {
             this.table = [];
             this.pieces = {};
             this.quantity = {};
@@ -24,13 +24,13 @@
 
             var igniter = new Igniter();
             igniter.initAll(this.table, this.pieces, this.quantity, this.squares);
-		}
+    }
 
         movePiece(piece:{}, row:number, column:number) {
             var target = this.table[row][column];
             if (target.occupier!=="none") {
                 // eat
-                // vois myös hakee pieces objektista tyypin eikä tarvis holderia
+                // vois myï¿½s hakee pieces objektista tyypin eikï¿½ tarvis holderia
                 this.quantity[target.color][target.holder]--;
 
             }

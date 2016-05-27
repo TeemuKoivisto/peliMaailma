@@ -3,7 +3,7 @@
     import Square = PeliApp.ChessSquare;
 
     export class ChessIgniter {
-	
+  
         types:[string];
 
         constructor() {

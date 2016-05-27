@@ -42,7 +42,7 @@ var logmon = (function() {
         
         this.log = [];
         this.currentIndent = '';
-		this.indent = '--- '
+    this.indent = '--- '
 
         this.timer = {};
         
@@ -103,10 +103,10 @@ var logmon = (function() {
 
     Logger.prototype.start = function (string) {
         if (this.testing || this.testRunning.length !== 0) {
-			var asString = "";
-			for(var i = 0; i < arguments.length; i++) {
-				asString += arguments[i].toString();
-			}
+      var asString = "";
+      for(var i = 0; i < arguments.length; i++) {
+        asString += arguments[i].toString();
+      }
             if (!this.testing && this.testRunning.length !== 0) {
                 if (string.indexOf(this.testRunning) !== -1) {
                     this.testing = true;
@@ -117,8 +117,8 @@ var logmon = (function() {
             var logged = this.currentIndent + string;
             // if (this.consoling) {
                 // console.log(logged);
-				// console.log("arguments size " + arguments.length);
-				// console.log(arguments);
+        // console.log("arguments size " + arguments.length);
+        // console.log(arguments);
             // }
             if (this.log.length === this.size) {
                 this.log.splice(0, 1);

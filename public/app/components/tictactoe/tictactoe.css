@@ -1,32 +1,32 @@
 .tictactoe-container {
-	margin-left: 15px;
+  margin-left: 15px;
 }
 
 .tictactoe-board {
-	/* border: 1px solid black; */
-	margin-right: 15px;
+  /* border: 1px solid black; */
+  margin-right: 15px;
 }
 
 .tictactoe-row {
 }
 
 .tictactoe-col {
-	/* width: 50px;
-	height: 50px;
-	border: 1px solid black; */
+  /* width: 50px;
+  height: 50px;
+  border: 1px solid black; */
 }
 
 .tictactoe-square {
-	width: 50px;
-	height: 50px;
-	border: 1px solid black;
+  width: 50px;
+  height: 50px;
+  border: 1px solid black;
 }
 
 .stats-box {
-	width: 400px;
-	border: 1px solid black;
+  width: 400px;
+  border: 1px solid black;
 }
 
 .mtop {
-	margin-top: 15px;
+  margin-top: 15px;
 }

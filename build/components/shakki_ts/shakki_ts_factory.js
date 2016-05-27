@@ -80,7 +80,7 @@ var peliApp;
             }
         };
         ;
-		function ShakkiEngine() {
+    function ShakkiEngine() {
             this.initTable(this.table);
         }
         return ShakkiEngine;
